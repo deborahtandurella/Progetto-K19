@@ -1,14 +1,13 @@
 <component name="libraryTable">
-  <library name="javafx">
+  <library name="javaFX">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx-swt.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.base.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.controls.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.fxml.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.graphics.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.media.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.swing.jar!/" />
-      <root url="jar://$PROJECT_DIR$/docs/libraries/javafx/javafx.web.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx-swt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.base.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.controls.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.fxml.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.media.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.swing.jar!/" />
+      <root url="jar://$PROJECT_DIR$/docs/lib/javafx/javafx.web.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
