@@ -1,6 +1,8 @@
-package MainPackage.Domain.AuctionMechanism;
+package Domain.AuctionMechanism;
 
-import MainPackage.Domain.People.User;
+
+
+import Domain.People.User;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;

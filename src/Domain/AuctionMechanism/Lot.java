@@ -1,6 +1,6 @@
-package MainPackage.Domain.AuctionMechanism;
+package Domain.AuctionMechanism;
 
-import MainPackage.Domain.People.User;
+import Domain.People.User;
 
 public class Lot {
     private String id, description;

@@ -1,7 +1,7 @@
-package MainPackage.Domain;
+package Domain;
 
-import MainPackage.Domain.AuctionMechanism.Lot;
-import MainPackage.Domain.People.User;
+import Domain.AuctionMechanism.Lot;
+import Domain.People.User;
 
 import java.util.ArrayList;
 
