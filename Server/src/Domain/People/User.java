@@ -12,4 +12,9 @@ public class User {
     private String address, city;
     private String eMail, phoneNumber;
     private Feedback evaluation;
+
+    public User(Username username, Password password) {
+        this.username = username;
+        this.password = password;
+    }
 }
