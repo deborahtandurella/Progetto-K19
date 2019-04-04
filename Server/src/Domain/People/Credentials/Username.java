@@ -16,14 +16,6 @@ public class Username {
         if (username.getLine().length() > 0) {
             if (username.getLine().length() <= 16) {
                 if (!username.isSpecialChar()) {
-                    /*if (controlloDoppioni()) {
-                        System.out.println("USERNAME CREATO");
-                        return username;
-                    } else {
-                        System.out.println("USERNAME INVALIDO\nUSERNAME SCELTO NON DISPONIBILE");
-                        return username = null;
-                    }*/
-                    System.out.println("USERNAME SUCCESSFULLY CREATED");
                     return username;
                 } else {
                     System.out.println("USERNAME REJECTED\nONLY LETTERS AND NUMBERS ALLOWED");
@@ -41,6 +33,14 @@ public class Username {
 
     // getUsername() stampa l'oggetto username come una stringa
     public String getUsername() {
-        return username.getLine();
+        try {
+            if (username.getLine().isEmpty())
+                return null;
+            else
+                return username.getLine();
+        }
+        catch (NullPointerException e){
+            return null;
+        }
     }
 }

@@ -1,6 +1,10 @@
 // CRIS
 package Domain.People.Credentials;
 
+import jdk.nashorn.internal.runtime.ECMAException;
+
+import java.util.Scanner;
+
 // Classe responsabile della creazione, controllo conformita e stampa password
 public class Password {
 
@@ -20,7 +24,6 @@ public class Password {
                 if (password.isUpperCase()) {
                     if (password.isDigit()) {
                         if (password.isSpecialChar()) {
-                            System.out.println("PASSWORD SUCCESSFULLY CREATED");
                             return password;
                         } else {
                             System.out.println("PASSWORD REJECTED: SPECIAL CHARACTER REQUIRED");
@@ -40,13 +43,21 @@ public class Password {
             }
         } else {
             System.out.println("PASSWORD REJECTED: MINIMUM DIMESION ALLOWED 8 CHARACTERS");
-            return password = null;
-        }
+            return password = null; }
     }
 
     // getPassword() stampa l'oggetto password come una stringa
     public String getPassword() {
-        return password.getLine();
+        try {
+            if (password.getLine().isEmpty())
+                return null;
+            else
+                return password.getLine();
+        }
+        catch (NullPointerException e){
+            return null;
+        }
     }
+
 }
 

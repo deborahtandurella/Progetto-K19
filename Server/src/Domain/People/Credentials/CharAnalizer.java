@@ -1,5 +1,9 @@
+// CRIS
+
 package Domain.People.Credentials;
 
+// CharAnalizer è preposto al riconoscimento dei caratteri (se normali, maiuscoli, numerici o speciali)
+// e alla loro stampa
 public class CharAnalizer {
     private String line;
 
