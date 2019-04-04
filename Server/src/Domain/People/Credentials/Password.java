@@ -26,7 +26,7 @@ public class Password {
                         if (password.isSpecialChar()) {
                             return password;
                         } else {
-                            System.out.println("PASSWORD REJECTED: SPECIAL CHARACTER REQUIRED");
+                            System.out.println("PASSWORD REJCTED: SPECIAL CHARACTER REQUIRED");
                             return password = null;
                         }
                     } else {
