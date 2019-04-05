@@ -12,12 +12,17 @@ public class User {
     private String address, city;
     private String eMail, phoneNumber;
     private Feedback evaluation;
+    private boolean logged;
 
     public User(Username username, Password password) {
         this.username = username;
         this.password = password;
+        this.logged = false;
     }
 
+    public boolean logInOut(boolean b) {
+        return this.logged = b;
+    }
     @Override
     public String toString() {
         return "User{" +
@@ -28,5 +33,13 @@ public class User {
 
     public String getUsername() {
         return username.getUsername();
+    }
+
+    public String getPassword() {
+        return password.getPassword();
+    }
+
+    public boolean isLogged() {
+        return logged;
     }
 }

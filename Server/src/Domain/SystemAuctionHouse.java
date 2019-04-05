@@ -26,25 +26,23 @@ public class SystemAuctionHouse {
 
     public void createUser() {
         Scanner scanner = new Scanner(java.lang.System.in);
-        java.lang.System.out.println("CREATE USERNAME: ");
+        System.out.println("CREATE USERNAME: ");
         Username username = new Username(scanner.nextLine());
-        if(!(username.getUsername() == null)) {
+        if(!(username.getUsername() == null) && (uniqueness(username))) {
             scanner = new Scanner(java.lang.System.in);
-            java.lang.System.out.println("CREATE PASSWORD: ");
+            System.out.println("CREATE PASSWORD: ");
             Password password = new Password(scanner.nextLine());
             if(!(password.getPassword() == null)) {
-                if(uniqueness(username)) {
                     Username_list.add(username);
                     Users_list.add(new User(username, password));
-                    java.lang.System.out.println("USER CREATED ");
-                } else  {
-                    java.lang.System.out.println("USERNAME ALREADY TAKEN");
-                }
+                    System.out.println("USER CREATED ");
+
             } else {
                 createUser();
             }
         }
         else {
+            System.out.println("USERNAME ALREADY TAKEN");
             createUser();
         }
     }
@@ -58,33 +56,48 @@ public class SystemAuctionHouse {
                 String[] word = line.split("\t");
                 Username username = new Username(word[0]);
                 if(uniqueness(username)) {
-                Password password = new Password(word[1]);
-                Users_list.add(new User(username, password)); }
+                    Password password = new Password(word[1]);
+                    Users_list.add(new User(username, password));
+                    Username_list.add(username);
+                }
             }
             fr.close();
             br.close();
         } catch (FileNotFoundException ex1) {
-            java.lang.System.out.println(ex1);
+            System.out.println(ex1);
         }
         catch (IOException ex2) {
-            java.lang.System.out.println(ex2);
+            System.out.println(ex2);
         }
     }
 
-    public boolean uniqueness(Username username) {
-        for(Username u: Username_list) {
-            if(username.getUsername() == u.getUsername()) {
+    private boolean uniqueness(Username username) {
+        for (Username u : Username_list) {
+            if (username.getUsername().equals(u.getUsername())) {
                 return false;
             }
         }
         return true;
     }
 
-    public void uniquenessprint(Username username) {
-        for(Username u: Username_list) {
-            System.out.println(u.getUsername());
-            System.out.println(username.getUsername());
+    public void logIn() {
+        User user = null;
+        System.out.println("USERNAME:");
+        Scanner scanner = new Scanner(System.in);
+        String username = scanner.nextLine();
+        System.out.println("PASSWORD:");
+        scanner = new Scanner(System.in);
+        String password = scanner.nextLine();
+        for (User u : Users_list) {
+            if (username.equals(u.getUsername())) {
+                user = u;
+                System.out.println(user.getUsername());
+                if(u.getPassword().equals(password)) {
+                    user.logInOut(true);
+                }
+            }
         }
+        user.logInOut(false);
     }
 
     public void printUsers() {
@@ -92,4 +105,13 @@ public class SystemAuctionHouse {
             java.lang.System.out.println(user.toString());
         }
     }
+
+    public void printLogged() {
+        for (User u : Users_list) {
+            if (u.isLogged()) {
+                System.out.println(u.getUsername());
+            }
+        }
+    }
+
 }
