@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+// SystemAH ha i metodi per creare user da tastiera, da file(in automatico) che utilizzano un metodo per il controllo dell'unicità
+// dell'username, qui incluso, un metodo per il login ed i metodi di stampa
+
 public class SystemAuctionHouse {
     private ArrayList<User> Users_list;
     private ArrayList<Username> Username_list;
@@ -24,6 +27,8 @@ public class SystemAuctionHouse {
         loadUsers();
     }
 
+    // crea user assicurandosi unicita username, validita password. Aggiunge user in array user_list
+    // e username in username_list(questo array è poi utile per il controllo unicità degli username)
     public void createUser() {
         Scanner scanner = new Scanner(java.lang.System.in);
         System.out.println("CREATE USERNAME: ");
@@ -47,6 +52,7 @@ public class SystemAuctionHouse {
         }
     }
 
+    // loader di utenti da file txt
     private void loadUsers() {
         try{
             FileReader fr = new FileReader("utenti.txt");
@@ -71,6 +77,7 @@ public class SystemAuctionHouse {
         }
     }
 
+    // uniqueness assicura che gli username creati in createUser siano univoci
     private boolean uniqueness(Username username) {
         for (Username u : Username_list) {
             if (username.getUsername().equals(u.getUsername())) {
@@ -80,6 +87,7 @@ public class SystemAuctionHouse {
         return true;
     }
 
+    // questo credo si spieghi da se. in ogni caso si appoggia alla classe user
     public void logIn() {
         User user = null;
         System.out.println("USERNAME:");

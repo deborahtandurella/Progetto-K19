@@ -5,6 +5,8 @@ import Domain.People.Credentials.Password;
 import Domain.People.Credentials.RecoveryAnswer;
 import Domain.People.Credentials.Username;
 
+
+// User è il nostro utente. Qui ci sono i suoi attributi, il metodo per il login e le getter
 public class User {
     private Username username;
     private Password password;

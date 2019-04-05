@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4cca503b-5272-455c-97a0-6b722d1e5475" name="Default Changelist" comment="" />
+    <list default="true" id="4cca503b-5272-455c-97a0-6b722d1e5475" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/Domain/People/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/Domain/People/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/../OutputK19/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,11 +33,15 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
+            <state relative-caret-position="75">
+              <caret line="8" column="92" selection-start-line="8" selection-start-column="92" selection-end-line="8" selection-end-column="92" />
               <folding>
-                <element signature="e#803#804#0" expanded="true" />
-                <element signature="e#833#834#0" expanded="true" />
+                <element signature="e#659#660#0" expanded="true" />
+                <element signature="e#687#688#0" expanded="true" />
+                <element signature="e#881#882#0" expanded="true" />
+                <element signature="e#912#913#0" expanded="true" />
+                <element signature="e#1002#1003#0" expanded="true" />
+                <element signature="e#1031#1032#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,20 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/Credentials/Username.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="218">
+            <state relative-caret-position="435">
               <caret line="29" column="34" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-712">
-              <caret line="16" column="46" lean-forward="true" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -72,8 +68,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Server/src/TesterMain.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state relative-caret-position="135">
+              <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="89" column="79" selection-start-line="89" selection-start-column="79" selection-end-line="89" selection-end-column="79" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -110,9 +118,9 @@
         <option value="$PROJECT_DIR$/Server/src/Domain/People/Credentials/Password.java" />
         <option value="$PROJECT_DIR$/Server/src/Domain/People/Credentials/Username.java" />
         <option value="$PROJECT_DIR$/Server/src/Domain/System.java" />
+        <option value="$PROJECT_DIR$/Server/src/TesterMain.java" />
         <option value="$PROJECT_DIR$/Server/src/Domain/People/User.java" />
         <option value="$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java" />
-        <option value="$PROJECT_DIR$/Server/src/TesterMain.java" />
       </list>
     </option>
   </component>
@@ -126,7 +134,39 @@
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Progetto-K19" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Progetto-K19" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Progetto-K19" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Progetto-K19" type="462c0819:PsiDirectoryNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Progetto-K19" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Progetto-K19" type="462c0819:PsiDirectoryNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Progetto-K19" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Progetto-K19" type="462c0819:PsiDirectoryNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Domain" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -190,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1554380699552</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="correzioni minori ed aggiunta del meccanismo di login">
+      <created>1554488774698</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1554488774698</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -206,7 +253,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3293348" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3293348" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.29880044" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991276" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -225,7 +272,7 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.23519646" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23519646" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -255,7 +302,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Cris aggiunge Password e Username, crea una classe CharAnalizer necessaria alle due precedenti" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cris aggiunge Password e Username, crea una classe CharAnalizer necessaria alle due precedenti" />
+    <MESSAGE value="correzioni minori ed aggiunta del meccanismo di login" />
+    <option name="LAST_COMMIT_MESSAGE" value="correzioni minori ed aggiunta del meccanismo di login" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/UtilitiesServices/Scanner.java" />
@@ -274,6 +322,23 @@
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/SystemPKG/SystemUtilities/CreateUser.java" />
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/Credentials/PasswordFile.java" />
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/Credentials/UsernameFile.java" />
+    <entry file="file://$PROJECT_DIR$/Server/src/Domain/RegisterLogInLogOut.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Server/src/TesterMain.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/Credentials/Password.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
@@ -286,18 +351,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="29" column="37" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
+        <state relative-caret-position="75">
+          <caret line="8" column="92" selection-start-line="8" selection-start-column="92" selection-end-line="8" selection-end-column="92" />
           <folding>
-            <element signature="e#803#804#0" expanded="true" />
-            <element signature="e#833#834#0" expanded="true" />
+            <element signature="e#659#660#0" expanded="true" />
+            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#881#882#0" expanded="true" />
+            <element signature="e#912#913#0" expanded="true" />
+            <element signature="e#1002#1003#0" expanded="true" />
+            <element signature="e#1031#1032#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/People/Credentials/Username.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
+        <state relative-caret-position="435">
           <caret line="29" column="34" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="34" />
         </state>
       </provider>
@@ -309,20 +378,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Server/src/TesterMain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Server/src/Domain/SystemAuctionHouse.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-712">
-          <caret line="16" column="46" lean-forward="true" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
+        <state relative-caret-position="75">
+          <caret line="89" column="79" selection-start-line="89" selection-start-column="79" selection-end-line="89" selection-end-column="79" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
