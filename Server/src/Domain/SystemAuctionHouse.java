@@ -1,6 +1,7 @@
 package Domain;
 
 import Domain.AuctionMechanism.Auction;
+import Domain.AuctionMechanism.Bid;
 import Domain.AuctionMechanism.Lot;
 import Domain.People.Credentials.Password;
 import Domain.People.Credentials.Username;
@@ -126,11 +127,20 @@ public class SystemAuctionHouse {
         }
     }
 
-    public void createAuction( Lot lot, GregorianCalendar date){
+    public ArrayList<User> getUsers_list() {
+        return Users_list;
+    }
+
+    public void createAuction(Lot lot, GregorianCalendar date){
         Auction_list.add(new Auction(lot, date));
     }
 
     public ArrayList<Auction> getAuction_list() {
         return Auction_list;
+    }
+    public boolean makeAnOffer(User user,int amount,int id){
+        Auction auction=Auction_list.get(Auction_list.indexOf(id));
+        auction.makeBid(user,amount);
+        return true;
     }
 }

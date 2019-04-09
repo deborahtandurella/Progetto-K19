@@ -14,7 +14,11 @@ public class TesterMain {
         s.createAuction(lot1, gregorianCalendar00);
         s.createAuction(lot1, gregorianCalendar00);
         s.createAuction(lot1, gregorianCalendar00);
-        System.out.println(s.getAuction_list());
+        User user=s.getUsers_list().get(0);
+        s.getAuction_list().get(0).makeBid(user,200);
+        s.getAuction_list().get(0).makeBid(user,100);
+        System.out.println(s.getAuction_list().get(0).getBidsList());
+
 
 
     }

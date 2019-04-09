@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class Auction {
-    private static int id=0;
+    private static int count=0;
+    private int id;
     private ArrayList<User> partecipantsList;
     private Lot lot;
     private ArrayList<Bid> bidsList;
@@ -16,9 +17,12 @@ public class Auction {
     private int raise;
 
     public Auction(Lot lot, GregorianCalendar openingDate) {
-        id++;
+        id=count;
+        count++;
         this.lot = lot;
         this.openingDate = openingDate;
+        partecipantsList=new ArrayList<>();
+        bidsList=new ArrayList<>();
     }
     //Fai una offerta e aggiungi partecipante se non è in lista
     public void makeBid(User user, int amount) {
@@ -34,6 +38,26 @@ public class Auction {
             partecipantsList.add(user);
             return true;
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Auction){
+            if(((Auction) o).getId()==this.getId())
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
+
+    public ArrayList<Bid> getBidsList() {
+        return bidsList;
     }
 
     @Override

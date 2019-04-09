@@ -14,4 +14,12 @@ public class Bid {
     public User getActor() {
         return actor;
     }
+
+    @Override
+    public String toString() {
+        return "Bid{" +
+                "actor=" + actor +
+                ", amount=" + amount +
+                '}';
+    }
 }
