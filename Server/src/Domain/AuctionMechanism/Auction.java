@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class Auction {
+    private static int id=0;
     private ArrayList<User> partecipantsList;
     private Lot lot;
     private ArrayList<Bid> bidsList;
@@ -15,6 +16,7 @@ public class Auction {
     private int raise;
 
     public Auction(Lot lot, GregorianCalendar openingDate) {
+        id++;
         this.lot = lot;
         this.openingDate = openingDate;
     }
@@ -32,5 +34,11 @@ public class Auction {
             partecipantsList.add(user);
             return true;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Auction{" + this.id+
+                '}';
     }
 }

@@ -126,8 +126,11 @@ public class SystemAuctionHouse {
         }
     }
 
-    public void createAuction(String user, Lot lot, GregorianCalendar date){
+    public void createAuction( Lot lot, GregorianCalendar date){
         Auction_list.add(new Auction(lot, date));
     }
 
+    public ArrayList<Auction> getAuction_list() {
+        return Auction_list;
+    }
 }
