@@ -1,5 +1,6 @@
 package Domain;
 
+import Domain.AuctionMechanism.Auction;
 import Domain.AuctionMechanism.Lot;
 import Domain.People.Credentials.Password;
 import Domain.People.Credentials.Username;
@@ -10,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 // SystemAH ha i metodi per creare user da tastiera, da file(in automatico) che utilizzano un metodo per il controllo dell'unicità
@@ -18,13 +20,15 @@ import java.util.Scanner;
 public class SystemAuctionHouse {
     private ArrayList<User> Users_list;
     private ArrayList<Username> Username_list;
-    private ArrayList<Lot> Lots_list;
+    private ArrayList<Lot> Lot_list;
+    private ArrayList<Auction> Auction_list;
     private ArrayList<Lot> Sold_lots_list;
 
     public SystemAuctionHouse() {
         Users_list = new ArrayList<>();
         Username_list = new ArrayList<>();
         loadUsers();
+        this.Auction_list = new ArrayList<>();
     }
 
     // crea user assicurandosi unicita username, validita password. Aggiunge user in array user_list
@@ -120,6 +124,10 @@ public class SystemAuctionHouse {
                 System.out.println(u.getUsername());
             }
         }
+    }
+
+    public void createAuction(String user, Lot lot, GregorianCalendar date){
+        Auction_list.add(new Auction(lot, date));
     }
 
 }

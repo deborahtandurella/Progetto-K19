@@ -6,14 +6,13 @@ public class Lot {
     private String id, description;
     private int basePrice;
     private String pathImage;
-    private User owner;
+    private String owner;
     private CategoryEN category;
 
-    public Lot(String id, String description, int basePrice, String pathImage, User owner) {
+    public Lot(String id, String description, int basePrice, String owner) {
         this.id = id;
         this.description = description;
         this.basePrice = basePrice;
-        this.pathImage = pathImage;
         this.owner = owner;
     }
 }
