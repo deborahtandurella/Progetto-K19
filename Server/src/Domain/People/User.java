@@ -44,4 +44,18 @@ public class User {
     public boolean isLogged() {
         return logged;
     }
+
+ // User sono confrontabili mediante username
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User){
+            User other=(User) obj;
+            if(other.getUsername().equals(this.getUsername()))
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    }
 }
