@@ -10,7 +10,7 @@ public class TesterMain {
     public static void main(String[] args) {
         SystemAuctionHouse s = new SystemAuctionHouse();
         Lot lot1 = new Lot("00", "gatto di giordano", 100, "utente08");
-        GregorianCalendar gregorianCalendar00 = new GregorianCalendar(2020, 01,01);
+        GregorianCalendar gregorianCalendar00 = new GregorianCalendar(2020, 1,1);
         s.createAuction(lot1, gregorianCalendar00);
         s.createAuction(lot1, gregorianCalendar00);
         s.createAuction(lot1, gregorianCalendar00);

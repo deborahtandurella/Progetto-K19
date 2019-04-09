@@ -47,10 +47,7 @@ public class Auction {
     @Override
     public boolean equals(Object o) {
         if(o instanceof Auction){
-            if(((Auction) o).getId()==this.getId())
-                return true;
-            else
-                return false;
+            return ((Auction) o).getId()==this.getId();
         }
         else
             return false;

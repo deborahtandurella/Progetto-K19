@@ -62,7 +62,7 @@ public class SystemAuctionHouse {
         try{
             FileReader fr = new FileReader("utenti.txt");
             BufferedReader br = new BufferedReader(fr);
-            String line = null;
+            String line;
             while((line = br.readLine()) != null) {
                 String[] word = line.split("\t");
                 Username username = new Username(word[0]);
@@ -75,10 +75,10 @@ public class SystemAuctionHouse {
             fr.close();
             br.close();
         } catch (FileNotFoundException ex1) {
-            System.out.println(ex1);
+            System.out.println(ex1.getMessage());
         }
-        catch (IOException ex2) {
-            System.out.println(ex2);
+        catch (Exception ex2) {
+            System.out.println(ex2.getMessage());
         }
     }
 
@@ -110,7 +110,12 @@ public class SystemAuctionHouse {
                 }
             }
         }
-        user.logInOut(false);
+        try {
+            user.logInOut(false);
+        }
+        catch (NullPointerException e){
+            System.out.println(e.getMessage());
+        }
     }
 
     public void printUsers() {
