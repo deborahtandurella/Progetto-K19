@@ -15,6 +15,7 @@ public class Auction {
     private ArrayList<Bid> bidsList;
     private GregorianCalendar openingDate;
     private int raise;
+    private TimerAuction timerAuction;
 
     public Auction(Lot lot, GregorianCalendar openingDate) {
         id=count;
@@ -23,6 +24,7 @@ public class Auction {
         this.openingDate = openingDate;
         partecipantsList=new ArrayList<>();
         bidsList=new ArrayList<>();
+        this.timerAuction = new TimerAuction();
     }
     //Fai una offerta e aggiungi partecipante se non è in lista
     public void makeBid(User user, int amount) {
