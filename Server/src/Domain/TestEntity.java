@@ -1,6 +1,6 @@
 package Domain;
 
-import javax.persistence.Basic;
+/*mport javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -50,4 +50,4 @@ public class TestEntity {
         result = 31 * result + (pass != null ? pass.hashCode() : 0);
         return result;
     }
-}
+}*/

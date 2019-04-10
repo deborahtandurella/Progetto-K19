@@ -2,6 +2,7 @@ package Domain.AuctionMechanism;
 
 import Domain.People.User;
 
+// classe lotto
 public class Lot {
     private String id, description;
     private int basePrice;
@@ -14,5 +15,9 @@ public class Lot {
         this.description = description;
         this.basePrice = basePrice;
         this.owner = owner;
+    }
+
+    public int getBasePrice() {
+        return basePrice;
     }
 }

@@ -143,9 +143,12 @@ public class SystemAuctionHouse {
     public ArrayList<Auction> getAuction_list() {
         return Auction_list;
     }
+
     public boolean makeAnOffer(User user,int amount,int id){
         Auction auction=Auction_list.get(Auction_list.indexOf(id));
         auction.makeBid(user,amount);
         return true;
     }
+
+
 }
