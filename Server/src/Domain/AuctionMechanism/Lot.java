@@ -19,4 +19,8 @@ public class Lot {
     public int getBasePrice() {
         return basePrice;
     }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }

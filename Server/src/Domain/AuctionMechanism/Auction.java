@@ -4,6 +4,7 @@ package Domain.AuctionMechanism;
 
 import Domain.People.User;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -50,12 +51,14 @@ public class Auction {
                         }
                 else
                     {
-                            System.out.println("AUCTION SCHEDULED FOR " + openingDate.getGregorianChange());
+                            System.out.println("AUCTION SCHEDULED FOR " + printDate(openingDate));
                     }
         }
         else
             {
-                System.out.println("AUCTION WON BY " + user.getUsername());
+                System.out.println("AUCTION WON BY " + user.getUsername() + " FOR " + total);
+                lot.setOwner(user);
+                isClose = true;
         }
 
     }
@@ -105,16 +108,16 @@ public class Auction {
             timerAuction.setInterval(10);
         }
     }
-    // verifica che il timer dell'asta sia ancora maggiore di zero
-    /*private boolean AuctionIsOpen() {
 
+    private String printDate(Calendar date) {
+        return date.get(Calendar.DAY_OF_MONTH)+"/"+(date.get(Calendar.MONTH)+1)+"/"+date.get(Calendar.YEAR);
     }
-
-    private boolean checkDate() {
-
-    }*/
 
     private void startingBid() {
         timerAuction = new TimerAuction();
+    }
+
+    public boolean isClose() {
+        return isClose;
     }
 }

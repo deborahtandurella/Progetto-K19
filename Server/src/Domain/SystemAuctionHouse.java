@@ -178,6 +178,7 @@ public class SystemAuctionHouse {
     }
 
     public ArrayList<Auction> getAuction_list() {
+        deleteAuction();
         return Auction_list;
     }
 
@@ -185,6 +186,14 @@ public class SystemAuctionHouse {
         Auction auction=Auction_list.get(Auction_list.indexOf(id));
         auction.makeBid(user);
         return true;
+    }
+
+    public void deleteAuction(){
+        for(Auction auction: Auction_list) {
+            if (auction.isClose()) {
+                Auction_list.remove(auction);
+            }
+        }
     }
 
 
