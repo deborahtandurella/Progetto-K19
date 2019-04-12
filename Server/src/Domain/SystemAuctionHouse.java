@@ -30,6 +30,7 @@ public class SystemAuctionHouse {
         Username_list = new ArrayList<>();
         loadUsers();
         this.Auction_list = new ArrayList<>();
+        loadAuctions();
     }
 
     // crea user assicurandosi unicita username, validita password. Aggiunge user in array user_list
@@ -82,6 +83,27 @@ public class SystemAuctionHouse {
         }
     }
 
+    private void loadAuctions() {
+        try{
+            FileReader fr = new FileReader("Aste.txt");
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while((line = br.readLine()) != null) {
+                String[] word = line.split("\t");
+                Lot lot = new Lot(word[0], Integer.parseInt(word[1]), getUsers(word[2]));
+                GregorianCalendar gregorianCalendar = new GregorianCalendar(Integer.parseInt(word[3]), Integer.parseInt(word[4]), Integer.parseInt(word[5]), Integer.parseInt(word[6]), Integer.parseInt(word[7]));
+                createAuction(lot, gregorianCalendar);
+            }
+            fr.close();
+            br.close();
+        } catch (FileNotFoundException ex1) {
+            System.out.println(ex1.getMessage());
+        }
+        catch (Exception ex2) {
+            System.out.println(ex2.getMessage());
+        }
+    }
+
     // uniqueness assicura che gli username creati in createUser siano univoci
     private boolean uniqueness(Username username) {
         for (Username u : Username_list) {
@@ -121,6 +143,21 @@ public class SystemAuctionHouse {
     public void printUsers() {
         for(User user: Users_list) {
             java.lang.System.out.println(user.toString());
+        }
+    }
+
+    public User getUsers(String username) {
+        for(User user: Users_list) {
+            if(username == user.getUsername()) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public void printAuctions() {
+        for(Auction a: Auction_list) {
+            java.lang.System.out.println(a.toString());
         }
     }
 

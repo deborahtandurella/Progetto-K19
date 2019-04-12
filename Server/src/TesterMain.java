@@ -9,12 +9,14 @@ import java.util.GregorianCalendar;
 public class TesterMain {
     public static void main(String[] args) {
         SystemAuctionHouse s = new SystemAuctionHouse();
-        Lot lot1 = new Lot("00", "gatto di giordano", 200, "utente08");
+        s.printUsers();
+        Lot lot1 = new Lot("gatto di giordano", 200, s.getUsers_list().get(1));
         GregorianCalendar gregorianCalendar00 = new GregorianCalendar(2019, 4,10,17,30);
         s.createAuction(lot1, gregorianCalendar00);
-        User user=s.getUsers_list().get(0);
+        /*User user=s.getUsers_list().get(0);
         s.getAuction_list().get(0).makeBid(user,200);
-        s.getAuction_list().get(0).makeBid(user,100);
+        s.getAuction_list().get(0).makeBid(user,100);*/
+        s.printAuctions();
 
 
     }

@@ -4,14 +4,13 @@ import Domain.People.User;
 
 // classe lotto
 public class Lot {
-    private String id, description;
+    private String description;
     private int basePrice;
     private String pathImage;
-    private String owner;
+    private User owner;
     private CategoryEN category;
 
-    public Lot(String id, String description, int basePrice, String owner) {
-        this.id = id;
+    public Lot(String description, int basePrice, User owner) {
         this.description = description;
         this.basePrice = basePrice;
         this.owner = owner;
