@@ -41,7 +41,7 @@ public class Auction {
             startingBid();
         }
         if(timerAuction.getInterval() != 0){
-                if (openingDate.equals(GregorianCalendar.getInstance())) {
+                if (openingDate.getTime().getHours() == (GregorianCalendar.getInstance().getTime().getHours())) {
                         if (amount > total) {
                                         addPartecipant(user);
                                         bidsList.add(new Bid(user, amount));
@@ -52,6 +52,8 @@ public class Auction {
                 else
                     {
                             System.out.println("AUCTION SCHEDULED FOR " + printDate(openingDate));
+                        System.out.println(GregorianCalendar.getInstance().getTime());
+                        System.out.println(openingDate.getTime());
                     }
         }
         else
