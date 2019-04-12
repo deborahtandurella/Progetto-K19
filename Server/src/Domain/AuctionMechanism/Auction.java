@@ -7,6 +7,7 @@ import Domain.People.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Scanner;
 
 
 // Auction è la nostra classe asta. Questa è caratterizzata da un ID univoco assegnatogli dal sistema, un vettore per i partecipanti, un lotto,
@@ -19,6 +20,7 @@ public class Auction {
     private ArrayList<Bid> bidsList;
     private GregorianCalendar openingDate;
     private TimerAuction timerAuction;
+    private boolean isClose;
 
     public Auction(Lot lot, GregorianCalendar openingDate) {
         id=count;
@@ -27,30 +29,41 @@ public class Auction {
         this.openingDate = openingDate;
         partecipantsList=new ArrayList<>();
         bidsList=new ArrayList<>();
-        this.timerAuction = new TimerAuction();
+        this.timerAuction = null;
         this.total = lot.getBasePrice();
     }
     //Fai una offerta, aggiungi partecipante se non è in lista, se la sua offerta è maggiore del piatto ed eventualmente aggiorna il timer se si è sotto il tempo limite
-    public void makeBid(User user, int amount) {
-        if(checkDate()) {
-            if (AuctionIsOpen()) {
-                if(amount > total) {
-                    Bid bid = new Bid(user, amount);
-                    bidsList.add(bid);
-                    addPartecipant(user);
-                    updateTimer();
-                    total = bid.getAmount();
-                }
-            }
+    public void makeBid(User user) {
+        Scanner scanner = new Scanner(System.in);
+        int amount = scanner.nextInt();
+        if (bidsList.size() == 0 && amount > total) {
+            startingBid();
         }
-        else {
-            System.out.println("AUCTION SCHEDULED FOR " + openingDate);
+        if(timerAuction.getInterval() != 0){
+                if (openingDate.equals(GregorianCalendar.getInstance())) {
+                        if (amount > total) {
+                                        addPartecipant(user);
+                                        bidsList.add(new Bid(user, amount));
+                                        total = amount;
+                                        updateTimer();
+                                    }
+                        }
+                else
+                    {
+                            System.out.println("AUCTION SCHEDULED FOR " + openingDate.getGregorianChange());
+                    }
         }
+        else
+            {
+                System.out.println("AUCTION WON BY " + user.getUsername());
+        }
+
     }
 
     // dovrebbe chiudere l'asta MA NON FUNZIONA
     private void closeAuction() {
         if(timerAuction.getInterval() == 0) {
+            this.isClose=true;
             System.out.println("LOT WIN FROM USER " + partecipantsList.get(partecipantsList.size()-1));
         }
     }
@@ -89,29 +102,19 @@ public class Auction {
     // metodo che aggiorna il timer se sotto il tempo limite
     private void updateTimer() {
         if(timerAuction.getInterval() <= 60) {
-            timerAuction.setInterval(20);
+            timerAuction.setInterval(10);
         }
     }
     // verifica che il timer dell'asta sia ancora maggiore di zero
-    private boolean AuctionIsOpen() {
-        if(timerAuction.getInterval() > 0) {
-            return true;
-        }
-        else
-            return false;
+    /*private boolean AuctionIsOpen() {
+
     }
 
     private boolean checkDate() {
-        Calendar g = GregorianCalendar.getInstance();
-        if((g.get(Calendar.YEAR))==(openingDate.get(GregorianCalendar.YEAR))) {
-            if ((g.get(Calendar.MONTH) + 1) == (openingDate.get(GregorianCalendar.MONTH))) {
-                if ((g.get(Calendar.DAY_OF_MONTH)) == (openingDate.get(GregorianCalendar.DAY_OF_MONTH))) {
-                    if ((g.get(Calendar.HOUR_OF_DAY)) == (openingDate.get(GregorianCalendar.HOUR_OF_DAY))) {
-                            return true;
-                    }
-                }
-            }
-        }
-        return false;
+
+    }*/
+
+    private void startingBid() {
+        timerAuction = new TimerAuction();
     }
 }

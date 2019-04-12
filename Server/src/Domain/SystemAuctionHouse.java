@@ -30,7 +30,7 @@ public class SystemAuctionHouse {
         Username_list = new ArrayList<>();
         loadUsers();
         this.Auction_list = new ArrayList<>();
-        loadAuctions();
+        //loadAuctions();
     }
 
     // crea user assicurandosi unicita username, validita password. Aggiunge user in array user_list
@@ -183,7 +183,7 @@ public class SystemAuctionHouse {
 
     public boolean makeAnOffer(User user,int amount,int id){
         Auction auction=Auction_list.get(Auction_list.indexOf(id));
-        auction.makeBid(user,amount);
+        auction.makeBid(user);
         return true;
     }
 

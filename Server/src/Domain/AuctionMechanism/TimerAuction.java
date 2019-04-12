@@ -14,7 +14,7 @@ public class TimerAuction {
         this.timer = new Timer();
         this.delay = 1000;
         this.period = 1000;
-        interval =  Integer.parseInt("15");
+        interval =  Integer.parseInt("5");
         setInterval();
         setTimer();
     }
@@ -23,7 +23,7 @@ public class TimerAuction {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                System.out.println(setInterval());
+                setInterval();
             }
         }, delay, period);
     }
