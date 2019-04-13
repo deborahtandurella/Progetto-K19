@@ -52,26 +52,29 @@ public class Auction {
                 else
                     {
                             System.out.println("AUCTION SCHEDULED FOR " + printDate(openingDate));
-                        System.out.println(GregorianCalendar.getInstance().getTime());
-                        System.out.println(openingDate.getTime());
+                        System.out.println("TODAY: " + GregorianCalendar.getInstance().getTime());
+                        System.out.println("AUCTION'S DATE: "+openingDate.getTime());
                     }
         }
-        else
-            {
+        else {
                 System.out.println("AUCTION WON BY " + user.getUsername() + " FOR " + total);
                 lot.setOwner(user);
                 isClose = true;
+                //GIORDANO
+                /*String s = "AUCTION WON BY " + user.getUsername() + " FOR " + total;
+                timerAuction.setWinner(s);*/
+
         }
 
     }
 
     // dovrebbe chiudere l'asta MA NON FUNZIONA
-    private void closeAuction() {
+    /*private void closeAuction() {
         if(timerAuction.getInterval() == 0) {
             this.isClose=true;
             System.out.println("LOT WIN FROM USER " + partecipantsList.get(partecipantsList.size()-1));
         }
-    }
+    }*/
     //Aggiungi partecipante all'asta contorllando che non ci siano doppioni
     private boolean addPartecipant(User user) {
         if(partecipantsList.contains(user))

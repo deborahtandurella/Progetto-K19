@@ -10,10 +10,11 @@ public class TesterMain {
     public static void main(String[] args) {
         SystemAuctionHouse s = new SystemAuctionHouse();
         Lot lot1 = new Lot("gatto di giordano", 20, s.getUsers_list().get(1));
-        GregorianCalendar gregorianCalendar00 = new GregorianCalendar(2019, 3,12,14, 00);
+        GregorianCalendar gregorianCalendar00 = new GregorianCalendar(2019, 3,13,17, 00);
         s.createAuction(lot1, gregorianCalendar00);
         User user=s.getUsers_list().get(0);
         s.getAuction_list().get(0).makeBid(user);
         s.getAuction_list().get(0).makeBid(user);
+
     }
 }
