@@ -1,0 +1,27 @@
+funzionalità
+
+login  : 1.controllo se esiste
+         2.controlla la password
+         3.setto login true
+
+logout : 1.setto login false
+
+registrazione: 1. controllo se esiste già username
+               2. controllo password
+               3.aggiungo nuovo utente
+
+
+crea Asta:  1.crea lotto e genera la data desiderata
+            2.crea asta con data apertura
+            3.inserisci nella lista di aste
+
+offerta a un'asta:
+                1.user crea offerta
+                2.asta controlla che l'offerta sia valida
+                3.asta aggiunge o respinge l'offerta
+
+
+
+Classi: user,bid,lot,char analizer ok
+
+        auction,sysauc!
