@@ -9,6 +9,7 @@ public class TimerAuction {
     private static int interval;
     private static Timer timer;
     private static int delay, period;
+    private static String winner;
 
     public TimerAuction() {
         this.timer = new Timer();
@@ -24,6 +25,12 @@ public class TimerAuction {
             @Override
             public void run() {
                 setInterval();
+                System.out.println(getInterval());
+                /*GIORDANO
+                if(interval==0){
+                    System.out.println("AUCTION OVER: "+winner);
+                    System.exit(0);
+                }*/
             }
         }, delay, period);
     }
@@ -41,6 +48,10 @@ public class TimerAuction {
     public static void setInterval(int interval) {
         TimerAuction.interval = interval;
     }
+/* GIORDANO
+    public static final void setWinner(String s) {
+        winner = s;
+    }*/
 }
 
 
