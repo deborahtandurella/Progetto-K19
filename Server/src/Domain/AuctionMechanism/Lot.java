@@ -1,26 +1,28 @@
 package Domain.AuctionMechanism;
 
-import Domain.People.User;
 
-// classe lotto
 public class Lot {
-    private String description;
-    private int basePrice;
-    private String pathImage;
-    private User owner;
-    private CategoryEN category;
+        private String description;
+        private int basePrice;
+        private String pathImage;
+        private String vendor;
+        private String winner;
 
-    public Lot(String description, int basePrice, User owner) {
-        this.description = description;
-        this.basePrice = basePrice;
-        this.owner = owner;
+        public Lot(String description, int basePrice, String owner) {
+            this.description = description;
+            this.basePrice = basePrice;
+            this.vendor = owner;
+        }
+
+        public int getBasePrice() {
+            return basePrice;
+        }
+
+    public String getVendor() {
+        return vendor;
     }
 
-    public int getBasePrice() {
-        return basePrice;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public String getWinner() {
+        return winner;
     }
 }

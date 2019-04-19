@@ -1,8 +1,8 @@
 funzionalità
 
-login  : 1.controllo se esiste
-         2.controlla la password
-         3.setto login true
+login  : 1.controllo se esiste FATTO
+         2.controlla la password FATTO
+         3.setto login true FATTO
 
 logout : 1.setto login false
 

@@ -3,198 +3,137 @@ package Domain;
 import Domain.AuctionMechanism.Auction;
 import Domain.AuctionMechanism.Bid;
 import Domain.AuctionMechanism.Lot;
-import Domain.People.Credentials.Password;
-import Domain.People.Credentials.Username;
 import Domain.People.User;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Scanner;
+import java.util.Date;
 
-// SystemAH ha i metodi per creare user da tastiera, da file(in automatico) che utilizzano un metodo per il controllo dell'unicità
-// dell'username, qui incluso, un metodo per il login ed i metodi di stampa
-
-public class SystemAuctionHouse {
+public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
     private ArrayList<User> Users_list;
-    private ArrayList<Username> Username_list;
-    private ArrayList<Lot> Lot_list;
+    //private ArrayList<Lot> Lot_list;
     private ArrayList<Auction> Auction_list;
-    private ArrayList<Lot> Sold_lots_list;
+    //private ArrayList<Lot> Sold_lots_list;
 
-    public SystemAuctionHouse() {
-        Users_list = new ArrayList<>();
-        Username_list = new ArrayList<>();
-        loadUsers();
-        this.Auction_list = new ArrayList<>();
-        //loadAuctions();
+
+    public void createUser(String username, String password){
+            User user = new User(username,password);
+            addUser(user);
     }
 
-    // crea user assicurandosi unicita username, validita password. Aggiunge user in array user_list
-    // e username in username_list(questo array è poi utile per il controllo unicità degli username)
-    public void createUser() {
-        Scanner scanner = new Scanner(java.lang.System.in);
-        System.out.println("CREATE USERNAME: ");
-        Username username = new Username(scanner.nextLine());
-        if(!(username.getUsername() == null) && (uniqueness(username))) {
-            scanner = new Scanner(java.lang.System.in);
-            System.out.println("CREATE PASSWORD: ");
-            Password password = new Password(scanner.nextLine());
-            if(!(password.getPassword() == null)) {
-                    Username_list.add(username);
-                    Users_list.add(new User(username, password));
-                    System.out.println("USER CREATED ");
-
-            } else {
-                createUser();
-            }
-        }
-        else {
-            System.out.println("USERNAME ALREADY TAKEN");
-            createUser();
-        }
-    }
-
-    // loader di utenti da file txt
-    private void loadUsers() {
+    public boolean createAuction(User extUser, Lot lot, Date date){
         try{
-            FileReader fr = new FileReader("utenti.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            while((line = br.readLine()) != null) {
-                String[] word = line.split("\t");
-                Username username = new Username(word[0]);
-                if(uniqueness(username)) {
-                    Password password = new Password(word[1]);
-                    Users_list.add(new User(username, password));
-                    Username_list.add(username);
-                }
+            User activeUser=getUser(extUser);
+            if(activeUser.isLoggedIn()) {
+                    addAuction(new Auction(lot, date));
+                    return true;
             }
-            fr.close();
-            br.close();
-        } catch (FileNotFoundException ex1) {
-            System.out.println(ex1.getMessage());
+            else
+            return false;
         }
-        catch (Exception ex2) {
-            System.out.println(ex2.getMessage());
+        catch (Exception e){
+            return false;
         }
     }
 
-    private void loadAuctions() {
-        try{
-            FileReader fr = new FileReader("Aste.txt");
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            while((line = br.readLine()) != null) {
-                String[] word = line.split("\t");
-                Lot lot = new Lot(word[0], Integer.parseInt(word[1]), getUsers(word[2]));
-                GregorianCalendar gregorianCalendar = new GregorianCalendar(Integer.parseInt(word[3]), Integer.parseInt(word[4]), Integer.parseInt(word[5]), Integer.parseInt(word[6]), Integer.parseInt(word[7]));
-                createAuction(lot, gregorianCalendar);
-            }
-            fr.close();
-            br.close();
-        } catch (FileNotFoundException ex1) {
-            System.out.println(ex1.getMessage());
-        }
-        catch (Exception ex2) {
-            System.out.println(ex2.getMessage());
-        }
-    }
-
-    // uniqueness assicura che gli username creati in createUser siano univoci
-    private boolean uniqueness(Username username) {
-        for (Username u : Username_list) {
-            if (username.getUsername().equals(u.getUsername())) {
-                return false;
-            }
-        }
+    public boolean logoutS(String username) {
+        userListed(username).setLoggedIn(false);
         return true;
     }
 
-    // questo credo si spieghi da se. in ogni caso si appoggia alla classe user
-    public void logIn() {
-        User user = null;
-        System.out.println("USERNAME:");
-        Scanner scanner = new Scanner(System.in);
-        String username = scanner.nextLine();
-        System.out.println("PASSWORD:");
-        scanner = new Scanner(System.in);
-        String password = scanner.nextLine();
-        for (User u : Users_list) {
-            if (username.equals(u.getUsername())) {
-                user = u;
-                System.out.println(user.getUsername());
-                if(u.getPassword().equals(password)) {
-                    user.logInOut(true);
-                }
+    public boolean makeBid(User extUser,int amount,Auction auction){
+        User activeUser=getUser(extUser);
+        if(activeUser.isLoggedIn()){
+                Bid bid=activeUser.makeBid(amount);
+                Auction request=getAuction(auction);
+                return request.makeBid(bid);
+        }
+        return false;
+    }
+
+    public Auction getAuction(Auction auction){
+        return Auction_list.get(Auction_list.indexOf(auction));
+    }
+
+    public void addUser(User user){
+        Users_list.add(user);
+    }
+
+
+    /**
+     * Il metodo effettua il controllo sull'utilizzo dell'username.
+     * Se l'username e' gia' utilizzato chiede all'utente di inserirne uno nuovo finche non ne trova uno valido.
+     * @param username
+     *
+     */
+    public boolean alredyTakenUsername(String username){
+        for(User user : Users_list) {
+            if(user.getUsername().equalsIgnoreCase(username)) {
+                return true;
             }
         }
-        try {
-            user.logInOut(false);
-        }
-        catch (NullPointerException e){
-            System.out.println(e.getMessage());
+        return false;
+    }
+
+    public User getUser(User user){
+        return  Users_list.get(Users_list.indexOf(user));
+    }
+
+    public void addAuction(Auction auction){
+        Auction_list.add(auction);
+    }
+
+    public void removeAllClosedAuction(){
+        for (Auction auction: Auction_list){
+            if (auction.isClosed()){
+                Auction_list.remove(auction);
+            }
         }
     }
 
-    public void printUsers() {
-        for(User user: Users_list) {
-            java.lang.System.out.println(user.toString());
+    /**
+     * Il metodo controlla se e' gia' loggato un utente nel servizio, in tal caso consiglia il logout
+     * Il metodo effettua il controllo sulla presenza effettiva nella lista utente, altrimenti non permette il login
+     * Se le due condizioni sopra non si avverano allora permette il login
+     * @param username
+     * @return
+     */
+    public boolean checkLogin(String username,String pass) {
+        User userToCheck = userListed(username);
+        if(userToCheck.checkPassword(pass)) {
+            userToCheck.setLoggedIn(true);
+            return true;
         }
+        return false;
     }
 
-    public User getUsers(String username) {
-        for(User user: Users_list) {
-            if(username == user.getUsername()) {
+    private User userListed(String username) {
+        for(User user  : Users_list) {
+            if (user.getUsername().equalsIgnoreCase(username)) {
                 return user;
             }
         }
         return null;
     }
 
-    public void printAuctions() {
-        for(Auction a: Auction_list) {
-            java.lang.System.out.println(a.toString());
+    public SystemAuctionHouse() throws RemoteException {
+        Users_list = new ArrayList<>();
+        Users_list.add(new User("alessio","alessio"));
+        Auction_list = new ArrayList<>();
+
+    }
+
+    public static void main(String[] args) throws RemoteException {
+        try{
+            Registry reg = LocateRegistry.createRegistry(9999);
+            reg.rebind("hii",new SystemAuctionHouse());
+            System.out.println("Server Ready");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
-    public void printLogged() {
-        for (User u : Users_list) {
-            if (u.isLogged()) {
-                System.out.println(u.getUsername());
-            }
-        }
-    }
-
-    public ArrayList<User> getUsers_list() {
-        return Users_list;
-    }
-
-    public void createAuction(Lot lot, GregorianCalendar date){
-        Auction_list.add(new Auction(lot, date));
-    }
-
-    public ArrayList<Auction> getAuction_list() {
-        deleteAuction();
-        return Auction_list;
-    }
-
-    public boolean makeAnOffer(User user,int amount,int id){
-        Auction auction=Auction_list.get(Auction_list.indexOf(id));
-        auction.makeBid(user);
-        return true;
-    }
-
-    public void deleteAuction(){
-        for(Auction auction: Auction_list) {
-            if (auction.isClose()) {
-                Auction_list.remove(auction);
-            }
-        }
-    }
-
-
 }
+

@@ -1,61 +1,68 @@
 package Domain.People;
 
-import Domain.AuctionMechanism.Feedback;
-import Domain.People.Credentials.Password;
-import Domain.People.Credentials.RecoveryAnswer;
-import Domain.People.Credentials.Username;
+import Domain.AuctionMechanism.Bid;
+import Domain.AuctionMechanism.Lot;
+import Domain.People.Credentials.CharAnalizer;
 
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-// User è il nostro utente. Qui ci sono i suoi attributi, il metodo per il login e le getter
 public class User {
-    private Username username;
-    private Password password;
-    private RecoveryAnswer recAnswer;
-    private String address, city;
-    private String eMail, phoneNumber;
-    private Feedback evaluation;
-    private boolean logged;
+    private String username;
+    private String password;
+    private boolean isLoggedIn;
 
-    public User(Username username, Password password) {
-        this.username = username;
-        this.password = password;
-        this.logged = false;
+    //BASE PACK
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
-
-    public boolean logInOut(boolean b) {
-        return this.logged = b;
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
-    @Override
-    public String toString() {
-        return "User{" +
-                "username=" + username.getUsername()+
-                ", password=" + password.getPassword()+
-                '}';
-    }
-
-    public String getUsername() {
-        return username.getUsername();
-    }
-
     public String getPassword() {
-        return password.getPassword();
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public boolean isLogged() {
-        return logged;
-    }
-
- // User sono confrontabili mediante username
-    @Override
     public boolean equals(Object obj) {
-        if(obj instanceof User){
-            User other=(User) obj;
-            if(other.getUsername().equals(this.getUsername()))
-                return true;
-            else
-                return false;
-        }
+        if (obj instanceof User)
+            return username.equals(((User)obj).getUsername());
         else
             return false;
+    }
+
+    public Lot createLot(String description, int basePrice){
+        return new Lot(description,basePrice,this.username);
+    }
+    public Bid makeBid(int amount){
+        return new Bid(this.username,amount);
+    }
+    public boolean checkPassword(String password){
+        return this.password.equals(password);
+    }
+
+    /***
+     * @param month  use Calendar.JANUARY,Calendar.FEBRUARY,etc...
+     *
+     */
+    public Date generateDate(int year,int month,int date){
+        Calendar calendar=new GregorianCalendar();
+        calendar.set(year,month,date);
+        return calendar.getTime();
+    }
+
+    public User(String username,String password) {
+        this.username = username;
+        this.password = password;
     }
 }
