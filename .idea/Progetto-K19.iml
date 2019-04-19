@@ -19,8 +19,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="javadocs" level="project" />
-    <orderEntry type="library" exported="" name="Java EE 6-Java EE 6" level="project" />
-    <orderEntry type="library" exported="" name="Hibernate 5.4.2-5.4.2" level="project" />
   </component>
 </module>
