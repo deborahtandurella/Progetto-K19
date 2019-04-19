@@ -94,6 +94,7 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         }
     }
 
+
     /**
      * Il metodo controlla se e' gia' loggato un utente nel servizio, in tal caso consiglia il logout
      * Il metodo effettua il controllo sulla presenza effettiva nella lista utente, altrimenti non permette il login
