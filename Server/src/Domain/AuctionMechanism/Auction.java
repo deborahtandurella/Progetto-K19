@@ -1,35 +1,25 @@
 package Domain.AuctionMechanism;
 
 import Domain.People.User;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Auction {
-    private static int count = 0;
     private int id, total;
     private ArrayList<User> partecipantsList;
     private Lot lot;
     private ArrayList<Bid> bidsList;
-    private Date openingDate;
+    private LocalDateTime openingDate;
     private boolean isClosed;
     private TimerAuction timerAuction;
     //BASE PACK
     public int getId() {
         return id;
     }
-    public Auction(int id) {
-        this.id = id;
-    }
-    public Auction(Lot lot, Date openingDate) {
-        id=count;
-        count++;
-        this.openingDate=openingDate;
-        this.partecipantsList=new ArrayList<>();
-        this.timerAuction=new TimerAuction();
-        this.lot=lot;
-        this.total=lot.getBasePrice();
-        this.bidsList= new ArrayList<>();
-    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
@@ -53,7 +43,7 @@ public class Auction {
     //PRINCIPAL FUNCTIONS
 
     public boolean makeBid(Bid bid){
-        boolean suc=checkBid(bid) && checkIfIsOpened(new Date());
+        boolean suc=checkBid(bid) && checkIfIsOpened(LocalDateTime.now());
         if(isFirstBid()){
             startingBid();
         }
@@ -78,8 +68,8 @@ public class Auction {
     public void addBid(Bid bid){
         bidsList.add(bid);
     }
-    public  boolean checkIfIsOpened(Date date){
-        return openingDate.before(date);
+    public  boolean checkIfIsOpened(LocalDateTime date){
+        return openingDate.isBefore(date);
     }
     public boolean isTimeNotOut(){
         return false;
@@ -95,8 +85,23 @@ public class Auction {
             timerAuction.setInterval(10);
         }
     }
+
+    public String auctionInformation() {
+        return "Id:"+ getId() + "\t" + "Current value:" + getTotal() + "\t" + lot.Information() + "\t" +  "Data Inizio:" + openingDate.toString();
+    }
     private void closeAuction(){
         isClosed=true;
     }
+
+    public Auction(int id,Lot lot, LocalDateTime openingDate) {
+        this.id = id;
+        this.openingDate=openingDate;
+        this.partecipantsList=new ArrayList<>();
+        this.timerAuction=new TimerAuction();
+        this.lot=lot;
+        this.total=lot.getBasePrice();
+        this.bidsList= new ArrayList<>();
+    }
+
 }
 

@@ -9,13 +9,14 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
     private ArrayList<User> Users_list;
-    //private ArrayList<Lot> Lot_list;
     private ArrayList<Auction> Auction_list;
+    private int auctionIdCounter = 0; //Fare attenzione, ogni volta che spengo il server il valore non e' salvato
     //private ArrayList<Lot> Sold_lots_list;
 
 
@@ -23,7 +24,7 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
             User user = new User(username,password);
             addUser(user);
     }
-
+/*
     public boolean createAuction(User extUser, Lot lot, Date date){
         try{
             User activeUser=getUser(extUser);
@@ -38,7 +39,7 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
             return false;
         }
     }
-
+*/
     public boolean logoutS(String username) {
         userListed(username).setLoggedIn(false);
         return true;
@@ -77,13 +78,26 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         }
         return false;
     }
+    public String showAllActiveAuctions() {
+        String toPrint = null;
+        for(Auction a : Auction_list) {
+            toPrint = a.auctionInformation();
+        }
+        if(Auction_list.size() == 0) {
+            toPrint = "Nessun Inserzione Esistente" + "\n";
+        }
+        return toPrint;
+    }
 
     public User getUser(User user){
         return  Users_list.get(Users_list.indexOf(user));
     }
 
-    public void addAuction(Auction auction){
-        Auction_list.add(auction);
+    public void addAuction(String title, int price, String vendor, LocalDateTime d) {
+        Lot lot = new Lot(title,price,vendor);
+        Auction au = new Auction(auctionIdCounter,lot,d);
+        Auction_list.add(au);
+
     }
 
     public void removeAllClosedAuction(){
@@ -104,9 +118,12 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
      */
     public boolean checkLogin(String username,String pass) {
         User userToCheck = userListed(username);
-        if(userToCheck.checkPassword(pass)) {
-            userToCheck.setLoggedIn(true);
-            return true;
+        if(userToCheck != null) {
+            if (userToCheck.checkPassword(pass)) {
+                userToCheck.setLoggedIn(true);
+                return true;
+            }
+            return false;
         }
         return false;
     }

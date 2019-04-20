@@ -22,6 +22,12 @@ public class Lot {
         return vendor;
     }
 
+    public String getDescription() { return description; }
+
+    public String Information() {
+        return "\t" + "Name:" + description + "\t" + "Vendor:" + vendor + "\t" + "Base Price:" + basePrice + "\n";
+    }
+
     public String getWinner() {
         return winner;
     }
