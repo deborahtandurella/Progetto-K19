@@ -15,12 +15,12 @@ public class ClientManager  {
     private Proxy ad;
 
     /**
-     * Consente il logout solo se vi e' un utente loggato, in caso di logout setta la stringa utente a null e non permette nessun'azione
+     * Consente il logout solo se vi e' un utente loggato nel client, in caso di logout setta la stringa utente a null e non permette nessun'azione.
      * PER UNA MAGGIORE SICUREZZA SI POTREBBE INSERIRE UN ID GENERATO CASUALMENTE ED ASSEGNATO AD OGNI UTENTE OLTRE ALL'username, IN QUESTO MODO E' PIU DIFFICILE SPACCIARSI PER QUALCUN ALTRO
      * UN ULTERIORE LIVELLO DI SICUREZZA SI PUO' OTTENERE ASSEGNANDO UN NUOVO ID CASUALE AD OGNI NUOVO LOGIN.
      * @throws RemoteException
      */
-    public boolean logout() throws RemoteException {
+    private boolean logout() throws RemoteException {
         if(!(loggedUser == null)) {
             System.out.println("Effettuo la disconnessione per l'account: " + loggedUser );
             if (ad.logoutS(loggedUser)) {
@@ -39,7 +39,10 @@ public class ClientManager  {
         return false;
     }
 
-    public void createAccount() {
+    /**
+     * Crea un account solo se la password rispetta le specifiche del Char Analizer e se l'username non e' in uso.
+     */
+    private void createAccount() {
         try {
             Scanner scan = new Scanner(System.in);
             System.out.println("//-------------------------//");
@@ -60,11 +63,7 @@ public class ClientManager  {
         }
     }
 
-    /**
-     * Attenzione per ore,per scelta progettuale, il login blocca finche non si inseriscono i dati corretti, in extremis inserire alessio alessio per uscire
-     * @throws RemoteException
-     */
-    public boolean login() throws RemoteException {
+    private boolean login() throws RemoteException {
         boolean retry = true;
         if (loggedUser == null) {
             while (retry) {
@@ -83,7 +82,6 @@ public class ClientManager  {
                     System.out.println("Invalid Login ID or password. Please try again.");
                     return false;
                 }
-
             }
         } else {
             System.out.println("Sei gia' loggato,effettua prima il logout");
@@ -123,33 +121,51 @@ public class ClientManager  {
         System.out.print("Inserisci la data d'inizio dell'asta (formato dd/mm/yy hs:min),LASCIARE VUOTO AFFINCHE PARTA SUBITO:");
         String line = scn.nextLine();
         LocalDateTime d = formatDate(line);
-        String vendor = loggedUser;
-        ad.addAuction(name,price,vendor,d);
-        System.out.println("Aggiunta con successo!");
-
+        if(!d.isBefore(LocalDateTime.now())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
+            String vendor = loggedUser;
+            ad.addAuction(name, price, vendor, d);
+            System.out.println("Aggiunta con successo!");
+        }
+        else
+            System.out.println("La data inserita e' precedente all'orario attuale, non e' stato possibile creare l'asta!");
     }
 
+    /**
+     * Permette l'offerta SOLO su aste esistenti
+     * Fa si che il creatore non possa offrire sulla sua stessa asta
+     * Permette l'offerta solo se l'importo e' superiore all'offerta piu' alta precedente
+     * @throws RemoteException
+     */
     private void makeOffer() throws RemoteException {
         Scanner scn = new Scanner(System.in);
         System.out.println("Inserisci l'id dell'asta su cui vuoi offrire:");
         int id = Integer.parseInt(scn.nextLine());
+
         if(ad.checkExistingAuction(id)) {
-            int higherOffer = ad.higherOffer(id);
-            System.out.println("Offerta massima attuale:" + higherOffer);
-            System.out.println("Inserisci la tua offerta:");
-            int amount = Integer.parseInt(scn.nextLine());
-            if(amount > higherOffer) {
-                ad.makeBid(loggedUser,amount,id);
-                System.out.print("Offerta accettata! Sei il nuovo offerente migliore");
+            if(!(ad.vendorOfAuction(id,loggedUser))) {
+                int higherOffer = ad.higherOffer(id);
+                System.out.println("Offerta massima attuale:" + higherOffer);
+                System.out.println("Inserisci la tua offerta:");
+                int amount = Integer.parseInt(scn.nextLine());
+                if (amount > higherOffer) {
+                    ad.makeBid(loggedUser, amount, id);
+                    System.out.println("Offerta accettata! Sei il nuovo offerente migliore");
+                } else {
+                    System.out.println("Offerta Rifiutata, importo troppo basso");
+                }
             }
-            else {
-                System.out.print("Offerta Rifiutata, importo troppo basso");
-            }
+            else
+                System.out.println("Non puoi effettuare offerte su un oggetto da te venduto!");
         }
         else
             System.out.println("L'id inserito non e' abbinato a nessun'asta esistente");
     }
 
+    /**
+     * Metodo usato per la formattazione della data inserita.
+     * @param line
+     * @return
+     */
     private LocalDateTime formatDate(String line) {
         LocalDateTime d;
         if(line.equalsIgnoreCase("")) {
@@ -166,14 +182,18 @@ public class ClientManager  {
         return d;
     }
 
-    private String showAllActiveAuctions() throws RemoteException {
+    private String activeAuctions() throws RemoteException {
         return ad.showAllActiveAuctions();
     }
 
+    /**
+     * Menu base
+     * @throws RemoteException
+     */
     private void menu() throws RemoteException {
         int decision = 0;
         while (decision != 99) {
-            System.out.println("Benvenuto nel sistema gestione d'aste,scegli cosa fare: 1)CREATE USER  2)LOGIN   100)CLOSE");
+            System.out.println("Benvenuto nel sistema gestione d'aste , scegli cosa fare:   1)CREATE USER   2)LOGIN   100)CLOSE");
             Scanner tastiera = new Scanner(System.in);
             decision = Integer.parseInt(tastiera.nextLine());
             switch (decision) {
@@ -192,6 +212,10 @@ public class ClientManager  {
         }
     }
 
+    /**
+     * Menu avanzato attivo solo una volta che nel client e' loggato un utente
+     * @throws RemoteException
+     */
     private void loggedMenu() throws RemoteException {
         int decision = 0;
         while (decision != 99) {
@@ -203,7 +227,7 @@ public class ClientManager  {
                     createAuction();
                     break;
                 case 2:
-                    System.out.println(showAllActiveAuctions());
+                    System.out.println(activeAuctions());
                     break;
                 case 3:
                     makeOffer();
@@ -215,7 +239,6 @@ public class ClientManager  {
                     break;
             }
         }
-
     }
 
     private void connect() throws RemoteException {
@@ -228,7 +251,7 @@ public class ClientManager  {
         }
     }
 
-    public ClientManager() throws RemoteException  { }
+    public ClientManager()  { }
 
     public static void main(String[] args) throws RemoteException {
         ClientManager c = new ClientManager();

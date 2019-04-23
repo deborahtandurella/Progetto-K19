@@ -28,27 +28,11 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
             User user = new User(username,password);
             addUser(user);
     }
-/*
-    public boolean createAuction(User extUser, Lot lot, Date date){
-        try{
-            User activeUser=getUser(extUser);
-            if(activeUser.isLoggedIn()) {
-                    addAuction(new Auction(lot, date));
-                    return true;
-            }
-            else
-            return false;
-        }
-        catch (Exception e){
-            return false;
-        }
-    }
-*/
+
     public boolean logoutS(String username) {
         userListed(username).setLoggedIn(false);
         return true;
     }
-
 
     public Auction getAuction(Auction auction){
         return Auction_list.get(Auction_list.indexOf(auction));
@@ -73,10 +57,11 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         }
         return false;
     }
+
     public String showAllActiveAuctions() {
-        String toPrint = null;
+        String toPrint = "";
         for(Auction a : Auction_list) {
-            toPrint = a.auctionInformation();
+            toPrint =  toPrint + a.auctionInformation();
         }
         if(Auction_list.size() == 0) {
             toPrint = "Nessun Inserzione Esistente" + "\n";
@@ -84,34 +69,13 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         return toPrint;
     }
 
-    public User getUser(User user){
-        return  Users_list.get(Users_list.indexOf(user));
-    }
 
     public void addAuction(String title, int price, String vendor, LocalDateTime d) {
         Lot lot = new Lot(title,price,vendor);
         Auction au = new Auction(auctionIdCounter,lot,d);
         Auction_list.add(au);
-
+        auctionIdCounter++;
     }
-/*
-    public void removeAllClosedAuction(){
-        for (Auction auction: Auction_list){
-            if (auction.isClosed()){
-                Auction_list.remove(auction);
-            }
-        }
-    }
-
-    public void openAuctions() {
-        for (Auction a : Auction_list) {
-            if(a.getOpeningDate().isEqual(LocalDateTime.now()) && !(openAuction.contains(a))) {
-                a.setOpen(true);
-                openAuction.add(a);
-            }
-        }
-    }
-    */
 
     /**
      * Il metodo controlla se e' gia' loggato un utente nel servizio, in tal caso consiglia il logout
@@ -159,6 +123,14 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         return -1;
     }
 
+    public boolean vendorOfAuction(int idAuction,String logged) {
+        if(auctionListed(idAuction).getLot().getVendor().equalsIgnoreCase(logged)) {
+            return true;
+        }
+        return false;
+    }
+
+
     private Auction auctionListed(int idAuction) {
         for(Auction auction  : Auction_list) {
             if (auction.getId() == idAuction) {
@@ -170,11 +142,9 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
 
 
     public void makeBid(String user, int amount,int id){
-
-        User activeUser = userListed(user);
         Bid bid = new Bid(user,amount);
         Auction request = auctionListed(id);
-        //request.makeBid(bid);
+        request.addBid(bid);
 
     }
 
@@ -191,9 +161,11 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
             Registry reg = LocateRegistry.createRegistry(9999);
             reg.rebind("hii", new SystemAuctionHouse());
             System.out.println("Server Ready");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }
 

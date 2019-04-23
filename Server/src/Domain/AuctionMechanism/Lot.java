@@ -2,21 +2,16 @@ package Domain.AuctionMechanism;
 
 
 public class Lot {
-        private String description;
-        private int basePrice;
-        private String pathImage;
-        private String vendor;
-        private String winner;
+    private String description;
+    private int basePrice;
+    private String pathImage;
+    private String vendor;
+    private String winner;
 
-        public Lot(String description, int basePrice, String owner) {
-            this.description = description;
-            this.basePrice = basePrice;
-            this.vendor = owner;
-        }
 
-        public int getBasePrice() {
-            return basePrice;
-        }
+    public int getBasePrice() {
+        return basePrice;
+    }
 
     public String getVendor() {
         return vendor;
@@ -24,10 +19,16 @@ public class Lot {
 
     public String getDescription() { return description; }
 
-    public String Information() {
+    public String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
     public String getWinner() {
         return winner;
+    }
+
+    public Lot(String description, int basePrice, String owner) {
+        this.description = description;
+        this.basePrice = basePrice;
+        this.vendor = owner;
     }
 }

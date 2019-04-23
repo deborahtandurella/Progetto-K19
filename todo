@@ -1,6 +1,6 @@
 Funzionalita':
 
-- Registrazione
+- Registrazione :
 
 login  : 1.controllo se esiste FATTO
          2.controlla la password FATTO
@@ -24,3 +24,5 @@ offerta a un'asta:
                 2.asta controlla che l'offerta sia valida
                 3.asta aggiunge o respinge l'offerta
                 N.B = Usare Pattern Observer per notificare l'aggiunta di un'offerta
+
+                ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura

@@ -2,9 +2,7 @@ package Domain.People;
 
 import Domain.AuctionMechanism.Bid;
 import Domain.AuctionMechanism.Lot;
-import Domain.People.Credentials.CharAnalizer;
 
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

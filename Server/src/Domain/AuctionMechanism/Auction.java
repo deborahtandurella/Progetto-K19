@@ -18,7 +18,6 @@ public class Auction {
     private LocalDateTime closingDate;
 
 
-
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
@@ -27,13 +26,18 @@ public class Auction {
             return false;
     }
 
+    public void addBid(Bid bid) {
+        bidsList.add(bid);
+        higherOffer = bid.getAmount();
+    }
 
     public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String openDate = openingDate.format(formatter);
         String closeDate = closingDate.format(formatter);
-        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.Information() + "\t" +  "Data Inizio:" + openDate +"\t" + "Data Fine:" + closeDate;
+        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t" +  "Data Inizio:" + openDate +"\t" + "Data Fine:" + closeDate + "\n";
     }
+
 
     public int getId() { return id; }
 
@@ -61,8 +65,6 @@ public class Auction {
         this.lot=lot;
         this.higherOffer=lot.getBasePrice();
         this.bidsList= new ArrayList<>();
-
     }
 
 }
-
