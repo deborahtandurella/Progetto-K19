@@ -120,7 +120,7 @@ public class ClientManager  {
             e.printStackTrace();
         }
 
-        System.out.print("Inserisci la data d'inizio dell'asta (formato dd/mm/yy hs:min):");
+        System.out.print("Inserisci la data d'inizio dell'asta (formato dd/mm/yy hs:min),LASCIARE VUOTO AFFINCHE PARTA SUBITO:");
         String line = scn.nextLine();
         LocalDateTime d = formatDate(line);
         String vendor = loggedUser;
@@ -129,12 +129,40 @@ public class ClientManager  {
 
     }
 
-    private LocalDateTime formatDate(String line) {
-        String[] line1 = line.split(" ");
-        String[] date = line1[0].split("/");
-        String[] hour = line1[1].split(":");
+    private void makeOffer() throws RemoteException {
+        Scanner scn = new Scanner(System.in);
+        System.out.println("Inserisci l'id dell'asta su cui vuoi offrire:");
+        int id = Integer.parseInt(scn.nextLine());
+        if(ad.checkExistingAuction(id)) {
+            int higherOffer = ad.higherOffer(id);
+            System.out.println("Offerta massima attuale:" + higherOffer);
+            System.out.println("Inserisci la tua offerta:");
+            int amount = Integer.parseInt(scn.nextLine());
+            if(amount > higherOffer) {
+                ad.makeBid(loggedUser,amount,id);
+                System.out.print("Offerta accettata! Sei il nuovo offerente migliore");
+            }
+            else {
+                System.out.print("Offerta Rifiutata, importo troppo basso");
+            }
+        }
+        else
+            System.out.println("L'id inserito non e' abbinato a nessun'asta esistente");
+    }
 
-        LocalDateTime d = LocalDateTime.of(Integer.parseInt(date[2]),Integer.parseInt(date[1]),Integer.parseInt(date[0]),Integer.parseInt(hour[0]),Integer.parseInt(hour[1]));
+    private LocalDateTime formatDate(String line) {
+        LocalDateTime d;
+        if(line.equalsIgnoreCase("")) {
+            d = LocalDateTime.now();
+        }
+        else {
+            String[] line1 = line.split(" ");
+            String[] date = line1[0].split("/");
+            String[] hour = line1[1].split(":");
+
+            d = LocalDateTime.of(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), Integer.parseInt(hour[0]), Integer.parseInt(hour[1]));
+
+        }
         return d;
     }
 
@@ -147,7 +175,7 @@ public class ClientManager  {
         while (decision != 99) {
             System.out.println("Benvenuto nel sistema gestione d'aste,scegli cosa fare: 1)CREATE USER  2)LOGIN   100)CLOSE");
             Scanner tastiera = new Scanner(System.in);
-            decision = tastiera.nextInt();
+            decision = Integer.parseInt(tastiera.nextLine());
             switch (decision) {
                 case 1:
                     createAccount();
@@ -169,13 +197,16 @@ public class ClientManager  {
         while (decision != 99) {
             System.out.println("Sei nella tua area privata " + loggedUser + " scegli cosa fare: 1)CREATE AN AUCTION  2)VIEW ALL AUCTION ITEMS  3)BID FOR AN ITEM  4)LOGOUT  ");
             Scanner tastiera = new Scanner(System.in);
-            decision = tastiera.nextInt();
+            decision = Integer.parseInt(tastiera.nextLine());
             switch (decision) {
                 case 1:
                     createAuction();
                     break;
                 case 2:
                     System.out.println(showAllActiveAuctions());
+                    break;
+                case 3:
+                    makeOffer();
                     break;
                 case 4:
                     if(logout()) {

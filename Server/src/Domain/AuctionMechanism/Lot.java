@@ -25,9 +25,8 @@ public class Lot {
     public String getDescription() { return description; }
 
     public String Information() {
-        return "\t" + "Name:" + description + "\t" + "Vendor:" + vendor + "\t" + "Base Price:" + basePrice + "\n";
+        return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
-
     public String getWinner() {
         return winner;
     }

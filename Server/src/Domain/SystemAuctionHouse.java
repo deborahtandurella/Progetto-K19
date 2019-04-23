@@ -9,13 +9,17 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
     private ArrayList<User> Users_list;
     private ArrayList<Auction> Auction_list;
+    private ArrayList<Auction> openAuction;
     private int auctionIdCounter = 0; //Fare attenzione, ogni volta che spengo il server il valore non e' salvato
     //private ArrayList<Lot> Sold_lots_list;
 
@@ -45,15 +49,6 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         return true;
     }
 
-    public boolean makeBid(User extUser,int amount,Auction auction){
-        User activeUser=getUser(extUser);
-        if(activeUser.isLoggedIn()){
-                Bid bid=activeUser.makeBid(amount);
-                Auction request=getAuction(auction);
-                return request.makeBid(bid);
-        }
-        return false;
-    }
 
     public Auction getAuction(Auction auction){
         return Auction_list.get(Auction_list.indexOf(auction));
@@ -99,7 +94,7 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         Auction_list.add(au);
 
     }
-
+/*
     public void removeAllClosedAuction(){
         for (Auction auction: Auction_list){
             if (auction.isClosed()){
@@ -108,6 +103,15 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         }
     }
 
+    public void openAuctions() {
+        for (Auction a : Auction_list) {
+            if(a.getOpeningDate().isEqual(LocalDateTime.now()) && !(openAuction.contains(a))) {
+                a.setOpen(true);
+                openAuction.add(a);
+            }
+        }
+    }
+    */
 
     /**
      * Il metodo controlla se e' gia' loggato un utente nel servizio, in tal caso consiglia il logout
@@ -137,17 +141,55 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         return null;
     }
 
+    public boolean checkExistingAuction (int idAuction) {
+        for(Auction a : Auction_list) {
+            if (a.getId() == idAuction) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int higherOffer(int id) {
+        for (Auction a : Auction_list) {
+            if (a.getId() == id) {
+                return a.getHigherOffer();
+            }
+        }
+        return -1;
+    }
+
+    private Auction auctionListed(int idAuction) {
+        for(Auction auction  : Auction_list) {
+            if (auction.getId() == idAuction) {
+                return auction;
+            }
+        }
+        return null;
+    }
+
+
+    public void makeBid(String user, int amount,int id){
+
+        User activeUser = userListed(user);
+        Bid bid = new Bid(user,amount);
+        Auction request = auctionListed(id);
+        //request.makeBid(bid);
+
+    }
+
     public SystemAuctionHouse() throws RemoteException {
         Users_list = new ArrayList<>();
         Users_list.add(new User("alessio","alessio"));
         Auction_list = new ArrayList<>();
+        openAuction = new ArrayList<>();
 
     }
 
     public static void main(String[] args) throws RemoteException {
-        try{
+        try {
             Registry reg = LocateRegistry.createRegistry(9999);
-            reg.rebind("hii",new SystemAuctionHouse());
+            reg.rebind("hii", new SystemAuctionHouse());
             System.out.println("Server Ready");
         } catch (Exception e) {
             e.printStackTrace();
