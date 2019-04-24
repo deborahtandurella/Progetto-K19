@@ -7,6 +7,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -118,7 +120,7 @@ public class ClientManager  {
             e.printStackTrace();
         }
 
-        System.out.print("Inserisci la data d'inizio dell'asta (formato dd/mm/yy hs:min),LASCIARE VUOTO AFFINCHE PARTA SUBITO:");
+        System.out.print("Inserisci la fine dell'asta (formato dd/mm/yy hs:min),Se lasci vuoto termina dopo 1 minuti:");
         String line = scn.nextLine();
         LocalDateTime d = formatDate(line);
         if(!d.isBefore(LocalDateTime.now())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
@@ -169,7 +171,7 @@ public class ClientManager  {
     private LocalDateTime formatDate(String line) {
         LocalDateTime d;
         if(line.equalsIgnoreCase("")) {
-            d = LocalDateTime.now();
+            d = LocalDateTime.now().plusMinutes(1); // dura un minuto
         }
         else {
             String[] line1 = line.split(" ");
@@ -184,6 +186,10 @@ public class ClientManager  {
 
     private String activeAuctions() throws RemoteException {
         return ad.showAllActiveAuctions();
+    }
+
+    private String closedAuctions() throws RemoteException {
+        return ad.showClosedAuctions();
     }
 
     /**
@@ -219,7 +225,7 @@ public class ClientManager  {
     private void loggedMenu() throws RemoteException {
         int decision = 0;
         while (decision != 99) {
-            System.out.println("Sei nella tua area privata " + loggedUser + " scegli cosa fare: 1)CREATE AN AUCTION  2)VIEW ALL AUCTION ITEMS  3)BID FOR AN ITEM  4)LOGOUT  ");
+            System.out.println("Sei nella tua area privata " + loggedUser + " scegli cosa fare: 1)CREATE AN AUCTION  2)VIEW ACTIVE AUCTIONS  3)BID FOR AN ITEM 4)VIEW CLOSED AUCTIONS  5 )LOGOUT  ");
             Scanner tastiera = new Scanner(System.in);
             decision = Integer.parseInt(tastiera.nextLine());
             switch (decision) {
@@ -233,6 +239,9 @@ public class ClientManager  {
                     makeOffer();
                     break;
                 case 4:
+                    System.out.println(closedAuctions());
+                    break;
+                case 5:
                     if(logout()) {
                         decision = 99;
                     }

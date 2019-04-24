@@ -2,6 +2,7 @@ package Domain;
 
 import Domain.AuctionMechanism.Auction;
 import Domain.AuctionMechanism.Bid;
+import Domain.AuctionMechanism.LifeCycleAuctionTask;
 import Domain.AuctionMechanism.Lot;
 import Domain.People.User;
 
@@ -11,17 +12,19 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
+
     private ArrayList<User> Users_list;
-    private ArrayList<Auction> Auction_list;
-    private ArrayList<Auction> openAuction;
+    private ConcurrentHashMap<Integer,Auction> auctionList;
+    private HashMap<Integer,Auction> closedAuction;
+    private HashMap<LifeCycleAuctionTask, Long> timerTasks;
     private int auctionIdCounter = 0; //Fare attenzione, ogni volta che spengo il server il valore non e' salvato
-    //private ArrayList<Lot> Sold_lots_list;
+    private transient Timer timer;
 
 
     public void createUser(String username, String password){
@@ -34,9 +37,6 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         return true;
     }
 
-    public Auction getAuction(Auction auction){
-        return Auction_list.get(Auction_list.indexOf(auction));
-    }
 
     public void addUser(User user){
         Users_list.add(user);
@@ -60,20 +60,40 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
 
     public String showAllActiveAuctions() {
         String toPrint = "";
-        for(Auction a : Auction_list) {
-            toPrint =  toPrint + a.auctionInformation();
+        for (Map.Entry<Integer,Auction> entry : auctionList.entrySet()) {
+            Auction entryValue = entry.getValue();
+            toPrint =  toPrint + entryValue.auctionInformation();
         }
-        if(Auction_list.size() == 0) {
+        if(auctionList.isEmpty()) {
             toPrint = "Nessun Inserzione Esistente" + "\n";
         }
         return toPrint;
     }
 
+    public String showClosedAuctions() {
+        String toPrint = "";
+        for (Map.Entry<Integer,Auction> entry : closedAuction.entrySet()) {
+            Auction entryValue = entry.getValue();
+            toPrint =  toPrint + entryValue.closedAuctionInformation();
+        }
+        if(closedAuction.isEmpty()) {
+            toPrint = "Nessun Inserzione Chiusa" + "\n";
+        }
+        return toPrint;
+    }
 
-    public void addAuction(String title, int price, String vendor, LocalDateTime d) {
+    public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         Lot lot = new Lot(title,price,vendor);
-        Auction au = new Auction(auctionIdCounter,lot,d);
-        Auction_list.add(au);
+        Auction au = new Auction(auctionIdCounter,lot,closingTime);
+        auctionList.put(auctionIdCounter,au);
+        // Timer for ending the auction
+        ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
+        long millis = zdt.toInstant().toEpochMilli();
+        LifeCycleAuctionTask t = new LifeCycleAuctionTask(auctionIdCounter);
+        t.passArgument(auctionList,closedAuction,timerTasks);
+        timer.schedule(t, (millis - System.currentTimeMillis()));
+        timerTasks.put(t, millis );
+
         auctionIdCounter++;
     }
 
@@ -106,21 +126,18 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
     }
 
     public boolean checkExistingAuction (int idAuction) {
-        for(Auction a : Auction_list) {
-            if (a.getId() == idAuction) {
-                return true;
-            }
-        }
-        return false;
+        if (auctionList.containsKey(idAuction))
+            return true;
+
+        else
+            return false;
     }
 
     public int higherOffer(int id) {
-        for (Auction a : Auction_list) {
-            if (a.getId() == id) {
-                return a.getHigherOffer();
-            }
-        }
-        return -1;
+        if (auctionList.containsKey(id))
+            return auctionList.get(id).getHigherOffer();
+        else
+            return -1;
     }
 
     public boolean vendorOfAuction(int idAuction,String logged) {
@@ -132,12 +149,10 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
 
 
     private Auction auctionListed(int idAuction) {
-        for(Auction auction  : Auction_list) {
-            if (auction.getId() == idAuction) {
-                return auction;
-            }
-        }
-        return null;
+        if(auctionList.containsKey(idAuction))
+            return auctionList.get(idAuction);
+        else
+            return null;
     }
 
 
@@ -145,21 +160,30 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         Bid bid = new Bid(user,amount);
         Auction request = auctionListed(id);
         request.addBid(bid);
-
     }
 
     public SystemAuctionHouse() throws RemoteException {
         Users_list = new ArrayList<>();
         Users_list.add(new User("alessio","alessio"));
-        Auction_list = new ArrayList<>();
-        openAuction = new ArrayList<>();
-
+        auctionList = new ConcurrentHashMap<>();
+        closedAuction = new HashMap<>();
+        timer = new Timer();
+        timerTasks = new HashMap<>();
     }
+
+    public ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
+
+    public HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
+
+    public HashMap<LifeCycleAuctionTask, Long> getTimerTasks() { return timerTasks; }
+
+
 
     public static void main(String[] args) throws RemoteException {
         try {
             Registry reg = LocateRegistry.createRegistry(9999);
-            reg.rebind("hii", new SystemAuctionHouse());
+            SystemAuctionHouse sys = new SystemAuctionHouse();
+            reg.rebind("hii", sys);
             System.out.println("Server Ready");
 
         } catch (Exception e) {

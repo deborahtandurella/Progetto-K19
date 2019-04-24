@@ -2,7 +2,7 @@ package Domain.People.Credentials;
 
 public class CharAnalizer {
     private String line;
-    //PRINCIPAL FUNCTION
+
     public boolean validatePassword(String password){
         if(password.length() >= 8) {
             if (password.length() <= 16) {
@@ -33,8 +33,6 @@ public class CharAnalizer {
 
 
 
-
-   //SUBFUNCTIONS
     protected boolean isLetter(String line) {
         for(char c: line.toCharArray()) {
             if(Character.isLetter(c)) {
@@ -68,9 +66,6 @@ public class CharAnalizer {
         return false;
     }
 
-    public CharAnalizer(String line) {
-        this.line = line;
-    }
 
     public CharAnalizer() { }
 }

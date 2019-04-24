@@ -22,9 +22,16 @@ public class Lot {
     public String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
+
+    public String closedInformation() {
+        return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + winner + "\n";
+    }
+
     public String getWinner() {
         return winner;
     }
+
+    public void setWinner(String winner) { this.winner = winner; }
 
     public Lot(String description, int basePrice, String owner) {
         this.description = description;

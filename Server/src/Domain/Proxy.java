@@ -18,4 +18,5 @@ public interface Proxy extends Remote {
     public int higherOffer(int id) throws RemoteException;
     public void makeBid(String user, int amount,int id) throws RemoteException;
     public boolean vendorOfAuction(int idAuction,String logged) throws RemoteException;
+    public String showClosedAuctions() throws RemoteException;
 }

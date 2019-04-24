@@ -12,9 +12,6 @@ public class Auction {
     private ArrayList<String> partecipantsList;
     private Lot lot;
     private ArrayList<Bid> bidsList;
-    private LocalDateTime openingDate;
-    private boolean isOpen;
-    private boolean openBid;
     private LocalDateTime closingDate;
 
 
@@ -33,9 +30,22 @@ public class Auction {
 
     public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String openDate = openingDate.format(formatter);
         String closeDate = closingDate.format(formatter);
-        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t" +  "Data Inizio:" + openDate +"\t" + "Data Fine:" + closeDate + "\n";
+        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
+    }
+
+    public String closedAuctionInformation() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String closeDate = closingDate.format(formatter);
+        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
+    }
+
+    public Bid getLastBid() {
+        if(bidsList.size() != 0) {
+            return bidsList.get((bidsList.size()-1));
+        }
+        else
+            return null;
     }
 
 
@@ -49,19 +59,12 @@ public class Auction {
 
     public ArrayList<Bid> getBidsList() { return bidsList; }
 
-    public LocalDateTime getOpeningDate() { return openingDate; }
-
-    public boolean isOpen() { return isOpen; }
-
-    public boolean isOpenBid() { return openBid; }
-
     public LocalDateTime getClosingDate() { return closingDate; }
 
-    public Auction(int id, Lot lot, LocalDateTime openingDate) {
+    public Auction(int id, Lot lot, LocalDateTime closingDate) {
         this.id = id;
-        this.openingDate=openingDate;
         this.partecipantsList=new ArrayList<>();
-        closingDate = openingDate.plusHours(48); //OGNI ASTA DURA MASSIMO 48 ORE, QUESTO PUO ESSERE VARIATO
+        this.closingDate = closingDate;
         this.lot=lot;
         this.higherOffer=lot.getBasePrice();
         this.bidsList= new ArrayList<>();

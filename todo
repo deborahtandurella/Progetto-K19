@@ -1,28 +1,38 @@
 Funzionalita':
 
 - Registrazione :
+    [X] Controllo pre-esistenza username
+    [X] Controllo correttezza password
+    [X] Aggiunta utente alla lista utenti
+    []  Catch eventuali errori di immissione testo e annessa gestione
 
-login  : 1.controllo se esiste FATTO
-         2.controlla la password FATTO
-         3.setto login true FATTO
+- Login :
+    [X] Controllo esistenza username nella lista utenti registrati
+    [X] Controllo correttezza password e in caso di mismatching ritorno SOLO informazione sul mismatching non il motivo per evitare di dare informazioni sul contenuto del database
+    [X] Setto il login dell'utente a true e lato client setto il client con il suo nome utente
+    [X] Abilito funzioni da utente loggato
+    [] Catch eventuali errori di immissione testo e annessa gestione
 
-logout : 1.setto login false FATTO
+- Logout :
+    [X] Setto login a false ed impedisco azioni da utente loggato
+    [] Catch eventuali errori di immissione testo e annessa gestione
 
-registrazione: 1. controllo se esiste già username FATTO
-               2. controllo password FATTO
-               3.aggiungo nuovo utente FATTO
+- Creazione Asta :
+    [X] Crea lotto e immissione data chiusura desiderata, creazione del timer relativo all'inserzione
+    [] Gestione eventuale formattazione errata nell'inserimento della data
+    [X] Inserimento nella lista delle inserzioni aperte
+    [X] Chiusura automatica e settagggio eventuale vincitore dell'asta
+    [] Catch eventuali errori di immissione testo e annessa gestione
 
+- Offerta Asta :
+    [] User crea offerta su asta in base all'id
+    [] Asta controlla che l'offerta sia valida
+    [] Asta aggiunge o respinge offerta
 
-crea Asta:  1.crea lotto e genera la data desiderata FATTO
-            2.crea asta con data apertura FATTO
-            3.inserisci nella lista di aste FATTO
-            4.si deve poterla aprire istantaneamente con date.now()
-            5.va settato il tempo di chiusura che e' dopo 24, 72 ore dall'apertura
+-ALTRI :
 
-offerta a un'asta:
-                1.user crea offerta
-                2.asta controlla che l'offerta sia valida
-                3.asta aggiunge o respinge l'offerta
-                N.B = Usare Pattern Observer per notificare l'aggiunta di un'offerta
-
-                ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura
+    [] Usare Pattern Observer per notificare l'aggiunta di un'offerta
+    [] ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura
+    [] Lettura da file per popolamento del sistema, con reset del timer in caso crash del sistema
+    [] GUI Client
+    [] Logger per Server
