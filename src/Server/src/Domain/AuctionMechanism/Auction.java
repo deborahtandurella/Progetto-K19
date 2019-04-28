@@ -2,12 +2,13 @@ package Domain.AuctionMechanism;
 
 import Domain.People.User;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Auction {
+public class Auction implements Serializable {
     private int id, higherOffer;
     private ArrayList<String> partecipantsList;
     private Lot lot;

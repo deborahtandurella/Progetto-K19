@@ -1,6 +1,8 @@
 package Domain.AuctionMechanism;
 
-public class Bid {
+import java.io.Serializable;
+
+public class Bid implements Serializable {
 
     private String actor;
     private int amount;

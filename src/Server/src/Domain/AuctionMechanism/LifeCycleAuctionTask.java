@@ -1,5 +1,6 @@
 package Domain.AuctionMechanism;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -7,9 +8,9 @@ import java.util.HashMap;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class LifeCycleAuctionTask extends TimerTask {
+public class LifeCycleAuctionTask extends TimerTask implements Serializable {
     private int id;
-    private long started;
+    private long closeMillis;
     private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
 
     private ConcurrentHashMap<Integer,Auction> openAuction;
@@ -28,14 +29,16 @@ public class LifeCycleAuctionTask extends TimerTask {
      * @return
     */
     public long getTimeLeft() {
-        return System.currentTimeMillis() - started;
+        return closeMillis - System.currentTimeMillis();
     }
 
-    public LifeCycleAuctionTask(int auctionId) {
+    public LifeCycleAuctionTask(int auctionId, long millis) {
         this.id = auctionId;
-        ZonedDateTime zdt = LocalDateTime.now().atZone(ZoneId.of("Europe/Rome"));
-        long millis = zdt.toInstant().toEpochMilli();
-        this.started = millis;
+        this.closeMillis = millis;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

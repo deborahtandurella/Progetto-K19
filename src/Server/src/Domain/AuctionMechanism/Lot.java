@@ -1,7 +1,9 @@
 package Domain.AuctionMechanism;
 
 
-public class Lot {
+import java.io.Serializable;
+
+public class Lot implements Serializable {
     private String description;
     private int basePrice;
     private String pathImage;
