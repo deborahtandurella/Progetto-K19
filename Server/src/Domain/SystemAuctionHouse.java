@@ -171,6 +171,8 @@ public class SystemAuctionHouse extends UnicastRemoteObject implements Proxy {
         timerTasks = new HashMap<>();
     }
 
+    public void probe() throws RemoteException {}
+
     public ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
 
     public HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
