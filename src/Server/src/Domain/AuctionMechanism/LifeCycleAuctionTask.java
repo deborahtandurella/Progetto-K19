@@ -1,9 +1,6 @@
 package Domain.AuctionMechanism;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,20 +18,14 @@ public class LifeCycleAuctionTask extends TimerTask implements Serializable {
         this.openAuction = openAuction;
         this.closedAuction = closedAuction;
         this.timerTasks = timerTasks;
-
     }
 
     /**
-     * How much time this task has left to run
+     * Il metodo ritorna il numero di millisecondi che mancano alla fine dell'asta, e' usato nello schedulare i timer
      * @return
     */
     public long getTimeLeft() {
         return closeMillis - System.currentTimeMillis();
-    }
-
-    public LifeCycleAuctionTask(int auctionId, long millis) {
-        this.id = auctionId;
-        this.closeMillis = millis;
     }
 
     public int getId() {
@@ -68,5 +59,10 @@ public class LifeCycleAuctionTask extends TimerTask implements Serializable {
             // Remove this task from map
             timerTasks.remove(this);
         }
+    }
+
+    public LifeCycleAuctionTask(int auctionId, long millis) {
+        this.id = auctionId;
+        this.closeMillis = millis;
     }
 }

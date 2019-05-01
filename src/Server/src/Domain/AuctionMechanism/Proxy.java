@@ -1,11 +1,8 @@
-package Domain;
-
-import Domain.People.User;
+package Domain.AuctionMechanism;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public interface Proxy extends Remote {
     public boolean alredyTakenUsername(String username) throws RemoteException;

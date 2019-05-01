@@ -1,5 +1,6 @@
 package Domain;
 
+import Domain.AuctionMechanism.Proxy;
 import Domain.People.Credentials.CharAnalizer;
 
 import java.rmi.RemoteException;
@@ -58,6 +59,11 @@ public class ClientManager {
         }
     }
 
+    /**
+     * Effettua il login, solo se l'utente e' registrato e se non vi e' gia' qualcuno connesso con lo stesso account
+     * @return
+     * @throws RemoteException
+     */
     private boolean login() throws RemoteException {
         if (loggedUser == null) {
             Scanner scan = new Scanner(System.in);
@@ -95,6 +101,10 @@ public class ClientManager {
         return true;
     }
 
+    /**
+     * Crea l'asta, per facilitare il controllo sul funzionamento dei metodi se si lascia vuoto termina dopo 1 minuto
+     * @throws RemoteException
+     */
     private void createAuction() throws RemoteException {
         try {
             Scanner scn = new Scanner(System.in);
@@ -105,7 +115,7 @@ public class ClientManager {
             System.out.print("Inserisci il prezzo di partenza: ");
             int price = Integer.parseInt(scn.nextLine()); //usato in quanto nel buffer rimane uno \n
 
-            System.out.print("Inserisci la fine dell'asta (formato dd/mm/yy hs:min),Se lasci vuoto termina dopo 1 minuti:");
+            System.out.print("Inserisci ora e data di fine dell'asta (formato dd/mm/yyyy hs:min) --> se lasci vuoto termina dopo 1 minuto:");
             String line = scn.nextLine();
             LocalDateTime d = formatDate(line);
             if (!d.isBefore(LocalDateTime.now())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
@@ -170,10 +180,20 @@ public class ClientManager {
         return d;
     }
 
+    /**
+     * Metodo usato per mostrare tutte le aste aperte
+     * @return
+     * @throws RemoteException
+     */
     private String activeAuctions() throws RemoteException {
         return ad.showAllActiveAuctions();
     }
 
+    /**
+     * Metodo usato per mostrare tutte le aste chiuse
+     * @return
+     * @throws RemoteException
+     */
     private String closedAuctions() throws RemoteException {
         return ad.showClosedAuctions();
     }
@@ -183,7 +203,7 @@ public class ClientManager {
      *
      * @throws RemoteException
      */
-    private void menu() throws RemoteException {
+    public void menu() throws RemoteException {
         int decision = 0;
         try {
             while (decision != 99) {
@@ -223,7 +243,7 @@ public class ClientManager {
         int decision = 0;
         try {
             while (decision != 99) {
-                System.out.println("Sei nella tua area privata " + loggedUser + " scegli cosa fare: 1)CREATE AN AUCTION  2)VIEW ACTIVE AUCTIONS  3)BID FOR AN ITEM 4)VIEW CLOSED AUCTIONS  5 )LOGOUT  ");
+                System.out.println("Sei nella tua area privata " + loggedUser + " scegli cosa fare:   1)CREATE AN AUCTION   2)VIEW ACTIVE AUCTIONS   3)BID FOR AN ITEM 4)VIEW CLOSED AUCTIONS   5)LOGOUT");
                 Scanner tastiera = new Scanner(System.in);
                 decision = Integer.parseInt(tastiera.nextLine());
                 switch (decision) {
@@ -255,21 +275,8 @@ public class ClientManager {
         }
     }
 
-    private ClientManager(ConnectionLayer c, Proxy bind) {
+    public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
         ad = bind;
-    }
-
-
-    public static void main(String[] args) throws RemoteException {
-
-        ConnectionLayer connection = new ConnectionLayer("hii");
-
-        while (!connection.isConnected()) { //FINCHE NON E' CONNESSO ASPETTA A CREARE IL CLIENT
-        }
-
-        ClientManager c = new ClientManager(connection, connection.getServer());
-        System.out.println("Connesso al server!");
-        c.menu();
     }
 }

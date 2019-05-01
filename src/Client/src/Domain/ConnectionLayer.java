@@ -1,5 +1,7 @@
 package Domain;
 
+import Domain.AuctionMechanism.Proxy;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -36,12 +38,16 @@ public class ConnectionLayer {
         failureDetector = new FailureDetector(this, period);
     }
 
+    /**
+     * Metodo che apre la connessione al Server, cambiare indirizzo host per connettersi fuori dalla LAN
+     */
     private void connect() {
             try {
                 Registry reg = LocateRegistry.getRegistry("localhost",9999);
                 server = (Proxy) reg.lookup(connectionStr);
 
                 setConnected(true);
+
             } catch (NotBoundException e) {
                 System.err.println("Unable to bind the server - " + e);
             } catch (RemoteException e) {

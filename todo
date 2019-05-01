@@ -35,6 +35,8 @@ Funzionalita':
     [] Gestione improvvisa server off mentre client in esecuzione
     [] Usare Pattern Observer per notificare l'aggiunta di un'offerta
     [] ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura
-    [] Lettura da file per popolamento del sistema, con reset del timer in caso crash del sistema
+    [X] Lettura da file per popolamento del sistema, con reset del timer in caso crash del sistema
     [] GUI Client
+    [] Gestione concorrenze nella creazione dell'asta e nell'immissione delle offerte
+    [] Salvataggio id Aste
     [] Logger per Server

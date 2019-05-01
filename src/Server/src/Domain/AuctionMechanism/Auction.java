@@ -1,12 +1,9 @@
 package Domain.AuctionMechanism;
 
-import Domain.People.User;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Auction implements Serializable {
     private int id, higherOffer;
@@ -24,23 +21,39 @@ public class Auction implements Serializable {
             return false;
     }
 
+    /**
+     * Aggiunge offerta all'asta
+     * @param bid
+     */
     public void addBid(Bid bid) {
         bidsList.add(bid);
         higherOffer = bid.getAmount();
     }
 
+    /**
+     * Stampa informazioni su asta aperta
+     * @return
+     */
     public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String closeDate = closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
     }
 
+    /**
+     * Stampa informazioni su asta chiusa
+     * @return
+     */
     public String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String closeDate = closingDate.format(formatter);
+        closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
     }
 
+    /**
+     * Ottiene l'attuale Offerta piu' alta
+     * @return
+     */
     public Bid getLastBid() {
         if(bidsList.size() != 0) {
             return bidsList.get((bidsList.size()-1));
@@ -70,5 +83,4 @@ public class Auction implements Serializable {
         this.higherOffer=lot.getBasePrice();
         this.bidsList= new ArrayList<>();
     }
-
 }
