@@ -43,7 +43,7 @@ public class ConnectionLayer {
      */
     private void connect() {
             try {
-                Registry reg = LocateRegistry.getRegistry("localhost",9999);
+                Registry reg = LocateRegistry.getRegistry("localhost",1099);
                 server = (Proxy) reg.lookup(connectionStr);
 
                 setConnected(true);

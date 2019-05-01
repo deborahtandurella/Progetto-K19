@@ -40,3 +40,6 @@ Funzionalita':
     [] Gestione concorrenze nella creazione dell'asta e nell'immissione delle offerte
     [] Salvataggio id Aste
     [] Logger per Server
+
+
+N.B = Ogni volta che si desidera testare il programma e' necessario settare lato server l' IPLOCAL andando a cercare l'indirizzo IP Locale (IPV4) su cui e' esposto il registro (per farlo aprire cmd e nel prompt digitare ipconfig), fare la stessa cosa lato client affinche si accoppino correttamente. DISABILITARE IL FIREWALL O APRIRE LE CONNESSIONI SULLA PORTA 1099

@@ -147,7 +147,7 @@ public class ClientManager {
                 System.out.println("Offerta massima attuale:" + higherOffer);
                 System.out.println("Inserisci la tua offerta:");
                 int amount = Integer.parseInt(scn.nextLine());
-                if (amount > higherOffer) {
+                if (amount > ad.higherOffer(id)) { //Richiamo ad affinche nel caso di concorrenza non permetta l'inserimento se contemporanemte due fanno l'offerta
                     ad.makeBid(loggedUser, amount, id);
                     System.out.println("Offerta accettata! Sei il nuovo offerente migliore");
                 } else {
