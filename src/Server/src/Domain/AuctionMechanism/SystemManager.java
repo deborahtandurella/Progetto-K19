@@ -181,12 +181,12 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     }
 
     public SystemManager() throws RemoteException {
-        usersList = new ConcurrentHashMap<>();
+        usersList = new ConcurrentHashMap<String, User>();
         usersList.put("alessio",new User("alessio","alessio"));
-        auctionList = new ConcurrentHashMap<>();
-        closedAuction = new HashMap<>();
+        auctionList = new ConcurrentHashMap<Integer, Auction>();
+        closedAuction = new HashMap<Integer, Auction>();
         timer = new Timer();
-        timerTasks = new HashMap<>();
+        timerTasks = new HashMap<LifeCycleAuctionTask, Long>();
         files = new FileManager(this);
     }
 }

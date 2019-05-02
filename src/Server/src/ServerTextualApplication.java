@@ -10,7 +10,7 @@ public class ServerTextualApplication {
         SystemManager sys = new SystemManager();
 
         Registry reg = LocateRegistry.createRegistry(1099);
-        System.setProperty("java.rmi.server.hostname","IPLOCAL"); //digitare ipconfig nel prompt del cmd e inserire qui l'ip locale IPV4 su cui e' esposto il registro, disattivare il firewall o aprire la porta 1099 e usare questo ip sul client
+        //System.setProperty("java.rmi.server.hostname","LOCAL_IP");
         reg.rebind("hii", sys);
         System.out.println("Server Ready");
 
