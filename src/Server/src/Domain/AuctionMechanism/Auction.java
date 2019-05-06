@@ -1,16 +1,35 @@
 package Domain.AuctionMechanism;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+@Entity
+@Table(name = "auction")
 public class Auction implements Serializable {
-    private int id, higherOffer;
+    @Id
+    @Column(name = "id", updatable = false, nullable = false)
+    private int id;
+
+    @Transient
+    private int higherOffer;
+
+    @Transient
     private ArrayList<String> partecipantsList;
+
+    @Transient
     private Lot lot;
+
+    @Transient
     private ArrayList<Bid> bidsList;
+
+    @Column(name = "closingdate")
     private LocalDateTime closingDate;
+
+    @Column(name = "closed")
+    private boolean closed;
 
 
     @Override
@@ -75,6 +94,15 @@ public class Auction implements Serializable {
 
     public LocalDateTime getClosingDate() { return closingDate; }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public Auction() {}
     public Auction(int id, Lot lot, LocalDateTime closingDate) {
         this.id = id;
         this.partecipantsList=new ArrayList<>();

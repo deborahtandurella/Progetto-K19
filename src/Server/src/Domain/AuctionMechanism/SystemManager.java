@@ -19,11 +19,16 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     private int auctionIdCounter = 0; //Fare attenzione, ogni volta che spengo il server il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
+    private DBManager db;
 
 
     public void createUser(String username, String password){
             User user = new User(username,password);
             addUser(user);
+    }
+
+    public void createUserDB (String username, String password){
+        db.addUser(username,password);
     }
 
     public boolean logoutS(String username) {
@@ -74,7 +79,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return toPrint;
     }
 
-    public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
+    synchronized public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         Lot lot = new Lot(title,price,vendor);
         Auction au = new Auction(auctionIdCounter,lot,closingTime);
         auctionList.put(auctionIdCounter,au);
@@ -146,8 +151,8 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
             return null;
     }
 
-    public void makeBid(String user, int amount,int id){
-        Bid bid = new Bid(user,amount);
+    synchronized public void makeBid(String user, int amount,int id){
+        Bid bid = new Bid(id,user,amount);
         Auction request = auctionListed(id);
         request.addBid(bid);
     }
@@ -188,6 +193,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         timer = new Timer();
         timerTasks = new HashMap<LifeCycleAuctionTask, Long>();
         files = new FileManager(this);
+        db = new DBManager (this);
     }
 }
 

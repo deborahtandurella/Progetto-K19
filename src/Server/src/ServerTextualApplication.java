@@ -1,8 +1,10 @@
 import Domain.AuctionMechanism.SystemManager;
 
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
 
 public class ServerTextualApplication {
@@ -15,8 +17,9 @@ public class ServerTextualApplication {
         System.out.println("Server Ready");
 
         Scanner scn = new Scanner(System.in);
+
         while(true) {
-            System.out.println("1)Carica da File   2)Salva su file");
+            System.out.println("1)Carica da File   2)Salva su file   3)Spegni Server");
             int decision = scn.nextInt();
             switch (decision) {
                 case 1:
@@ -25,9 +28,20 @@ public class ServerTextualApplication {
                 case 2:
                     sys.saveState();
                     break;
+                case 3:
+                    try {
+                        reg.unbind("hii");
+                        UnicastRemoteObject.unexportObject(sys,true);
+                        System.out.println("Sto spegnendo il server...");
+                        System.exit(0);
+                    } catch (NotBoundException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
                     break;
             }
         }
+
     }
 }

@@ -37,8 +37,8 @@ Funzionalita':
     [] ThreadPool quando il numero delle aste cresce per gestirne apertura e chiusura
     [X] Lettura da file per popolamento del sistema, con reset del timer in caso crash del sistema
     [] GUI Client
-    [] Gestione concorrenze nella creazione dell'asta e nell'immissione delle offerte
-    [] Salvataggio id Aste
+    [X] Gestione concorrenze nella creazione dell'asta e nell'immissione delle offerte
+    [X] Salvataggio id Aste
     [] Logger per Server
 
 
