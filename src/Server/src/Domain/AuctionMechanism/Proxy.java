@@ -5,16 +5,21 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 
 public interface Proxy extends Remote {
-    public boolean alredyTakenUsername(String username) throws RemoteException;
-    public void createUser(String username, String password) throws RemoteException;
-    public boolean checkLogin(String username,String pass) throws RemoteException;
-    public boolean logoutS(String username) throws RemoteException;
-    public void addAuction(String title, int price, String vendor, LocalDateTime d) throws RemoteException;
-    public String showAllActiveAuctions() throws RemoteException;
-    public boolean checkExistingAuction(int id) throws RemoteException;
-    public int higherOffer(int id) throws RemoteException;
-    public void makeBid(String user, int amount,int id) throws RemoteException;
-    public boolean vendorOfAuction(int idAuction,String logged) throws RemoteException;
-    public String showClosedAuctions() throws RemoteException;
-    public void probe() throws RemoteException;
+    boolean alredyTakenUsername(String username) throws RemoteException;
+    boolean alredyTakenUsernameDB(String username) throws RemoteException;
+    void createUser(String username, String password) throws RemoteException;
+    void createUserDB (String username, String password) throws RemoteException;
+    boolean checkLogin(String username,String pass) throws RemoteException;
+    boolean checkLoginDB(String username,String pass) throws RemoteException;
+    boolean logoutS(String username) throws RemoteException;
+    boolean logoutSDB(String username) throws RemoteException;
+    void addAuction(String title, int price, String vendor, LocalDateTime d) throws RemoteException;
+    String showAllActiveAuctions() throws RemoteException;
+    boolean checkExistingAuction(int id) throws RemoteException;
+    int higherOffer(int id) throws RemoteException;
+    void makeBid(String user, int amount,int id) throws RemoteException;
+    boolean vendorOfAuction(int idAuction,String logged) throws RemoteException;
+    String showClosedAuctions() throws RemoteException;
+    void probe() throws RemoteException;
+
 }

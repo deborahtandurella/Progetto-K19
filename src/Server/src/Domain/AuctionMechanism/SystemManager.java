@@ -23,8 +23,8 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
 
     public void createUser(String username, String password){
-            User user = new User(username,password);
-            addUser(user);
+        User user = new User(username,password);
+        addUser(user);
     }
 
     public void createUserDB (String username, String password){
@@ -34,6 +34,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     public boolean logoutS(String username) {
         userListed(username).setLoggedIn(false);
         return true;
+    }
+
+    public boolean logoutSDB(String username) {
+        return db.logout(username);
     }
 
 
@@ -53,6 +57,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
             return true;
         else
             return false;
+    }
+
+    public boolean alredyTakenUsernameDB(String username) {
+        return db.alredyTakenUsername(username);
     }
 
     public String showAllActiveAuctions() {
@@ -114,6 +122,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }
 
         return false;
+    }
+
+    public boolean checkLoginDB(String username,String pass) {
+        return db.login(username,pass);
     }
 
     private User userListed(String username) {

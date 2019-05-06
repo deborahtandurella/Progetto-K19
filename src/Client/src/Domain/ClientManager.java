@@ -22,7 +22,7 @@ public class ClientManager {
     private boolean logout() throws RemoteException {
         if (!(loggedUser == null)) {
             System.out.println("Effettuo la disconnessione per l'account: " + loggedUser);
-            if (ad.logoutS(loggedUser)) {
+            if (ad.logoutSDB(loggedUser)) {
                 loggedUser = null;
                 System.out.println("Disconnessione avvenuta con successo!");
                 return true;
@@ -48,8 +48,8 @@ public class ClientManager {
             System.out.println("Enter your Password:");
             String pw = scan.nextLine();
             if (validatePassword(pw)) {
-                if (!ad.alredyTakenUsername(uid)) {
-                    ad.createUser(uid, pw);
+                if (!ad.alredyTakenUsernameDB(uid)) {
+                    ad.createUserDB(uid, pw);
                     System.out.println("Utente creato con successo: " + uid + "\t" + pw);
                 } else
                     System.out.println("Username gia' in uso, riprovare");
@@ -72,7 +72,7 @@ public class ClientManager {
             String uid = scan.nextLine();
             System.out.println("Enter your Password:");
             String pw = scan.nextLine();
-            if (ad.checkLogin(uid, pw)) {
+            if (ad.checkLoginDB(uid, pw)) {
                 loggedUser = uid;
                 System.out.println("Login successful. Welcome " + uid + " !");
                 return true;
