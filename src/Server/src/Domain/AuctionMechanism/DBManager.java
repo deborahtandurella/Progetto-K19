@@ -6,9 +6,11 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import resources.HibernateUtil;
 
 import javax.persistence.Query;
+import java.util.List;
 
 
 public class DBManager {
@@ -33,16 +35,16 @@ public class DBManager {
 
    public boolean logout(String userna) {
        s = sessionFactory.openSession();
-       int numb;
+       int numb = 0;
 
        try {
            String sql = "SELECT COUNT(*) FROM User where User.username= :userna";
-           Query query = s.createQuery(sql);
-           query.setParameter("userna",userna);
-           numb = (Integer)query.getSingleResult();
+           NativeQuery sqlQuery = s.createSQLQuery(sql);
+           sqlQuery.setParameter("userna",userna);
+           numb = ((Number)sqlQuery.getSingleResult()).intValue();
            if(numb == 1) {
-               s.beginTransaction();
-               User user = s.get(User.class, userna);
+               s.getTransaction().begin();
+               User user = (User)s.get(User.class, userna);
                user.setLoggedIn(false);
                s.saveOrUpdate(user);
                s.getTransaction().commit();
@@ -59,15 +61,16 @@ public class DBManager {
    public boolean login(String userna, String pass) {
        s = sessionFactory.openSession();
        try {
-           String sql = "SELECT COUNT(*) FROM User where User.username= :userna AND User.password= :pass AND User.isLoggedIn=false";
-           Query query = s.createQuery(sql);
-           query.setParameter("userna",userna);
-           query.setParameter("pass", pass);
-           int numb = (Integer)query.getSingleResult();
+           String sql = "SELECT COUNT(*) FROM User where username= :userna AND pass= :pass AND loggedstatus=false";
+           NativeQuery sqlQuery = s.createSQLQuery(sql);
+           sqlQuery.setParameter("userna",userna);
+           sqlQuery.setParameter("pass", pass);
+           int numb = ((Number)sqlQuery.getSingleResult()).intValue();
            if (numb == 1) {
-               User user = s.get(User.class, userna);
-               user.setLoggedIn(true);
-               s.saveOrUpdate(user);
+               s.getTransaction().begin();
+               User u = (User)s.get(User.class,userna);
+               u.setLoggedIn(true);
+               s.saveOrUpdate(u);
                s.getTransaction().commit();
                return true;
            }
@@ -81,13 +84,13 @@ public class DBManager {
 
    //TO FIX RITORNA 0 ANCHE IN PRESENZA DI COPIA, IL PROBLEMA SECONDO ME RISIEDE NEL SINGLERESULT CHE NON E' IL MODO GIUSTO DI TRATTARLO
    public  boolean alredyTakenUsername(String userna) {
-       int numb = 0;
+
        s = sessionFactory.openSession();
        try {
            String sql = "SELECT COUNT(*) FROM User where User.username= :usern";
-           Query query = s.createQuery(sql);
-           query.setParameter("usern",userna);
-           numb = ((Number)query.getSingleResult()).intValue();
+           NativeQuery sqlQuery = s.createSQLQuery(sql);
+           sqlQuery.setParameter("usern",userna);
+           int numb = ((Number)sqlQuery.getSingleResult()).intValue();
            if (numb == 1)
                return true;
            else
