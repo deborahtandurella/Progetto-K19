@@ -17,7 +17,7 @@ public class ClientManager {
      * PER UNA MAGGIORE SICUREZZA SI POTREBBE INSERIRE UN ID GENERATO CASUALMENTE ED ASSEGNATO AD OGNI UTENTE OLTRE ALL'username, IN QUESTO MODO E' PIU DIFFICILE SPACCIARSI PER QUALCUN ALTRO
      * UN ULTERIORE LIVELLO DI SICUREZZA SI PUO' OTTENERE ASSEGNANDO UN NUOVO ID CASUALE AD OGNI NUOVO LOGIN.
      *
-     * @throws RemoteException
+     *
      */
     private boolean logout() throws RemoteException {
         if (!(loggedUser == null)) {
@@ -61,8 +61,8 @@ public class ClientManager {
 
     /**
      * Effettua il login, solo se l'utente e' registrato e se non vi e' gia' qualcuno connesso con lo stesso account
-     * @return
-     * @throws RemoteException
+     *
+     *
      */
     private boolean login() throws RemoteException {
         if (loggedUser == null) {
@@ -90,8 +90,8 @@ public class ClientManager {
      * Il metodo effettua il controllo sulla correttezza della password.
      * Viene analizzata attraverso il Char Analizer che restituisce l'esito ed eventualmente il motivo per cui una pass non e' accettata.
      *
-     * @param password
-     * @return
+     *
+     *
      */
     private boolean validatePassword(String password) {
         CharAnalizer analizer = new CharAnalizer();
@@ -103,7 +103,7 @@ public class ClientManager {
 
     /**
      * Crea l'asta, per facilitare il controllo sul funzionamento dei metodi se si lascia vuoto termina dopo 1 minuto
-     * @throws RemoteException
+     *
      */
     private void createAuction() throws RemoteException {
         try {
@@ -120,7 +120,7 @@ public class ClientManager {
             LocalDateTime d = formatDate(line);
             if (!d.isBefore(LocalDateTime.now())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
                 String vendor = loggedUser;
-                ad.addAuction(name, price, vendor, d);
+                ad.addAuctionDB(name, price, vendor, d);
                 System.out.println("Aggiunta con successo!");
             } else
                 System.out.println("La data inserita e' precedente all'orario attuale, non e' stato possibile creare l'asta!");
@@ -134,21 +134,21 @@ public class ClientManager {
      * Fa si che il creatore non possa offrire sulla sua stessa asta
      * Permette l'offerta solo se l'importo e' superiore all'offerta piu' alta precedente
      *
-     * @throws RemoteException
+     *
      */
     private void makeOffer() throws RemoteException {
         Scanner scn = new Scanner(System.in);
         System.out.println("Inserisci l'id dell'asta su cui vuoi offrire:");
         int id = Integer.parseInt(scn.nextLine());
 
-        if (ad.checkExistingAuction(id)) {
-            if (!(ad.vendorOfAuction(id, loggedUser))) {
-                int higherOffer = ad.higherOffer(id);
-                System.out.println("Offerta massima attuale:" + higherOffer);
+        if (ad.checkExistingAuctionDB(id)) {
+            if (!(ad.vendorOfAuctionDB(id, loggedUser))) {
+                int higher = ad.higherOfferDB(id);
+                System.out.println("Offerta massima attuale:" + higher);
                 System.out.println("Inserisci la tua offerta:");
                 int amount = Integer.parseInt(scn.nextLine());
-                if (amount > ad.higherOffer(id)) { //Richiamo ad affinche nel caso di concorrenza non permetta l'inserimento se contemporanemte due fanno l'offerta
-                    ad.makeBid(loggedUser, amount, id);
+                if (amount > ad.higherOfferDB(id)) { //Richiamo ad affinche nel caso di concorrenza non permetta l'inserimento se contemporanemte due fanno l'offerta
+                    ad.makeBidDB(loggedUser, amount, id);
                     System.out.println("Offerta accettata! Sei il nuovo offerente migliore");
                 } else {
                     System.out.println("Offerta Rifiutata, importo troppo basso");
@@ -162,8 +162,8 @@ public class ClientManager {
     /**
      * Metodo usato per la formattazione della data inserita.
      *
-     * @param line
-     * @return
+     * @param line (linea da formattare)
+     * @return line in LocalDateTime
      */
     private LocalDateTime formatDate(String line) {
         LocalDateTime d;
@@ -182,26 +182,26 @@ public class ClientManager {
 
     /**
      * Metodo usato per mostrare tutte le aste aperte
-     * @return
-     * @throws RemoteException
+     * @return stringa contenete le info
+     *
      */
     private String activeAuctions() throws RemoteException {
-        return ad.showAllActiveAuctions();
+        return ad.showAllActiveAuctionsDB();
     }
 
     /**
      * Metodo usato per mostrare tutte le aste chiuse
-     * @return
-     * @throws RemoteException
+     * @return stringa contenente le info
+     *
      */
     private String closedAuctions() throws RemoteException {
-        return ad.showClosedAuctions();
+        return ad.showClosedAuctionsDB();
     }
 
     /**
      * Menu base
      *
-     * @throws RemoteException
+     *
      */
     public void menu() throws RemoteException {
         int decision = 0;
@@ -237,7 +237,7 @@ public class ClientManager {
     /**
      * Menu avanzato attivo solo una volta che nel client e' loggato un utente
      *
-     * @throws RemoteException
+     *
      */
     private void loggedMenu() throws RemoteException {
         int decision = 0;

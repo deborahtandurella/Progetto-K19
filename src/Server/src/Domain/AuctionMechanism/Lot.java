@@ -26,6 +26,18 @@ public class Lot implements Serializable {
     @Column(name = "winner", updatable = false)
     private String winner;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auctionid")
+    private Auction auL;
+
+
+
+    @Override
+    public int hashCode() {
+        return 100;
+    }
+
+
 
     public int getBasePrice() {
         return basePrice;
@@ -50,6 +62,34 @@ public class Lot implements Serializable {
     }
 
     public void setWinner(String winner) { this.winner = winner; }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBasePrice(int basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public String getPathImage() {
+        return pathImage;
+    }
+
+    public void setPathImage(String pathImage) {
+        this.pathImage = pathImage;
+    }
+
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
+
+    public Auction getAuL() {
+        return auL;
+    }
+
+    public void setAuL(Auction auL) {
+        this.auL = auL;
+    }
 
     public Lot() {}
 

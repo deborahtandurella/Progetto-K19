@@ -75,6 +75,11 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return toPrint;
     }
 
+    public String showAllActiveAuctionsDB() {
+        return db.showAllActive();
+    }
+
+
     public String showClosedAuctions() {
         String toPrint = "";
         for (Map.Entry<Integer,Auction> entry : closedAuction.entrySet()) {
@@ -87,20 +92,34 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return toPrint;
     }
 
-    synchronized public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
+    public String showClosedAuctionsDB() {
+        return db.showAllClosed();
+    }
+
+    public synchronized void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         Lot lot = new Lot(title,price,vendor);
         Auction au = new Auction(auctionIdCounter,lot,closingTime);
         auctionList.put(auctionIdCounter,au);
         // Timer for ending the auction
+        createTimer(closingTime);
+
+        auctionIdCounter++;
+    }
+
+    private void createTimer(LocalDateTime closingTime) {
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
         LifeCycleAuctionTask t = new LifeCycleAuctionTask(auctionIdCounter,millis);
         t.passArgument(auctionList,closedAuction,timerTasks);
         timer.schedule(t, (millis - System.currentTimeMillis()));
         timerTasks.put(t, millis );
-
-        auctionIdCounter++;
     }
+
+    public synchronized void addAuctionDB(String title, int price, String vendor, LocalDateTime closingTime) {
+        db.addAuction(title,price,vendor,closingTime);
+    }
+
+
 
     /**
      * Il metodo controlla se e' gia' loggato un utente nel servizio, in tal caso consiglia il logout
@@ -142,11 +161,19 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
             return false;
     }
 
+    public boolean checkExistingAuctionDB(int idAuction) {
+        return db.checkExistingAuction(idAuction);
+    }
+
     public int higherOffer(int id) {
         if (auctionList.containsKey(id))
             return auctionList.get(id).getHigherOffer();
         else
             return -1;
+    }
+
+    public int higherOfferDB(int id) {
+        return db.higherOffer(id);
     }
 
     public boolean vendorOfAuction(int idAuction,String logged) {
@@ -156,6 +183,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return false;
     }
 
+    public boolean vendorOfAuctionDB(int idAuction,String logged) {
+        return db.vendorOfAuction(idAuction,logged);
+    }
+
     private Auction auctionListed(int idAuction) {
         if(auctionList.containsKey(idAuction))
             return auctionList.get(idAuction);
@@ -163,10 +194,14 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
             return null;
     }
 
-    synchronized public void makeBid(String user, int amount,int id){
+    public synchronized void makeBid(String user, int amount,int id){
         Bid bid = new Bid(id,user,amount);
         Auction request = auctionListed(id);
         request.addBid(bid);
+    }
+
+    public synchronized void makeBidDB(String user, int amount,int id) {
+        db.makeBid(user,amount,id);
     }
 
     public void probe()  {}
@@ -198,12 +233,12 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     }
 
     public SystemManager() throws RemoteException {
-        usersList = new ConcurrentHashMap<String, User>();
+        usersList = new ConcurrentHashMap<>();
         usersList.put("alessio",new User("alessio","alessio"));
-        auctionList = new ConcurrentHashMap<Integer, Auction>();
-        closedAuction = new HashMap<Integer, Auction>();
+        auctionList = new ConcurrentHashMap<>();
+        closedAuction = new HashMap<>();
         timer = new Timer();
-        timerTasks = new HashMap<LifeCycleAuctionTask, Long>();
+        timerTasks = new HashMap<>();
         files = new FileManager(this);
         db = new DBManager (this);
     }

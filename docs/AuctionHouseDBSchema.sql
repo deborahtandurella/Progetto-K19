@@ -13,8 +13,9 @@ CREATE TABLE USER
 				   PRIMARY KEY(username));
 
 CREATE TABLE AUCTION
-				( id INTEGER,
+				( id INTEGER AUTO_INCREMENT,
 				  closingdate DATETIME,
+				  higheroffer INTEGER,
                   closed BOOLEAN,
 				  PRIMARY KEY(id));
 
@@ -23,22 +24,28 @@ CREATE TABLE LOT
 				   vendor CHAR(20),
 				   winner CHAR(20),
 				   baseprice INTEGER,
-				   auctionid INTEGER,
-				   PRIMARY KEY(description,vendor,winner,baseprice,auctionid),
+				   auctionid INTEGER AUTO_INCREMENT,
+				   PRIMARY KEY(auctionid),
 				   FOREIGN KEY (vendor) REFERENCES USER(username),
 				   FOREIGN KEY (winner) REFERENCES USER(username),
 				   FOREIGN KEY (auctionid) REFERENCES AUCTION(id));
 
 CREATE TABLE BID
-				( auctionid INTEGER,
+				(
+				   id INTEGER AUTO_INCREMENT,
 				   offerer CHAR(20),
 				   amount INTEGER,
-				   PRIMARY KEY (auctionid,offerer,amount),
-				   FOREIGN KEY (auctionid) REFERENCES AUCTION(id),
-				   FOREIGN KEY (offerer) REFERENCES USER(username));
+				   idAu INTEGER,
+				   PRIMARY KEY (id),
+				   FOREIGN KEY (offerer) REFERENCES USER(username),
+				   FOREIGN KEY(idAu) REFERENCES AUCTION(id));
 
 CREATE TABLE TIMER
 			   ( id INTEGER,
                  millis LONG,
                  PRIMARY KEY (id),
                  FOREIGN KEY(id) REFERENCES AUCTION(id));
+
+
+SET @@global.time_zone = '+02:00';
+SET @@session.time_zone = '+02:00';

@@ -32,6 +32,7 @@ public class ServerTextualApplication {
                     try {
                         reg.unbind("hii");
                         UnicastRemoteObject.unexportObject(sys,true);
+
                         System.out.println("Sto spegnendo il server...");
                         System.exit(0);
                     } catch (NotBoundException e) {
