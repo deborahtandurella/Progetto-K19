@@ -19,6 +19,8 @@ public class User implements Serializable {
     @Column(name = "loggedstatus")
     private boolean isLoggedIn;
 
+
+
     public boolean equals(Object obj) {
         if (obj instanceof User)
             return username.equals(((User)obj).getUsername());

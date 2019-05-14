@@ -1,6 +1,8 @@
 package Domain.AuctionMechanism;
 
 
+import Domain.People.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -8,7 +10,7 @@ import java.io.Serializable;
 @Table(name = "LOT")
 public class Lot implements Serializable {
     @Id
-    @Column(name = "description", nullable = false)
+    @Column(name = "title", nullable = false)
     private String description;
 
     @Id
@@ -18,18 +20,25 @@ public class Lot implements Serializable {
     @Transient
     private String pathImage;
 
-    @Id
-    @Column(name = "vendor", updatable = false, nullable = false)
-    private String vendor;
-
-    @Id
-    @Column(name = "winner", updatable = false)
+    @Transient
     private String winner;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "auctionid")
-    private Auction auL;
+    @Transient
+    private String vendor;
 
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor", referencedColumnName = "username")
+    private User vendorDB;
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "winner", referencedColumnName = "username")
+    private User winnerDB;
+
+    @OneToOne
+    @JoinColumn(name = "auctionid", referencedColumnName = "id")
+    private Auction auL;
 
 
     @Override
@@ -43,25 +52,64 @@ public class Lot implements Serializable {
         return basePrice;
     }
 
-    public String getVendor() {
-        return vendor;
-    }
+
 
     public String getDescription() { return description; }
 
     public String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
+    public String informationDB() {
+        return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\n";
+    }
+
 
     public String closedInformation() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + winner + "\n";
+    }
+
+    public String closedInformationDB() {
+        return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + valuateWinner() + "\n";
     }
 
     public String getWinner() {
         return winner;
     }
 
-    public void setWinner(String winner) { this.winner = winner; }
+    private String valuateWinner() {
+        if(winnerDB == null)
+            return "No Winner!";
+        else
+            return winnerDB.getUsername();
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public String getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
+
+    public User getVendorDB() {
+        return vendorDB;
+    }
+
+    public void setVendorDB(User vendorDB) {
+        this.vendorDB = vendorDB;
+    }
+
+    public User getWinnerDB() {
+        return winnerDB;
+    }
+
+    public void setWinnerDB(User winnerDB) {
+        this.winnerDB = winnerDB;
+    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -79,9 +127,6 @@ public class Lot implements Serializable {
         this.pathImage = pathImage;
     }
 
-    public void setVendor(String vendor) {
-        this.vendor = vendor;
-    }
 
     public Auction getAuL() {
         return auL;
@@ -91,11 +136,18 @@ public class Lot implements Serializable {
         this.auL = auL;
     }
 
+
+
     public Lot() {}
 
-    public Lot(String description, int basePrice, String owner) {
+    public Lot(String description, int basePrice) {
         this.description = description;
         this.basePrice = basePrice;
-        this.vendor = owner;
+    }
+
+    public Lot(String description, int basePrice, String vendor) {
+        this.description = description;
+        this.basePrice = basePrice;
+        this.vendor = vendor;
     }
 }

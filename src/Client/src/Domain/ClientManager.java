@@ -148,8 +148,8 @@ public class ClientManager {
                 System.out.println("Inserisci la tua offerta:");
                 int amount = Integer.parseInt(scn.nextLine());
                 if (amount > ad.higherOfferDB(id)) { //Richiamo ad affinche nel caso di concorrenza non permetta l'inserimento se contemporanemte due fanno l'offerta
-                    ad.makeBidDB(loggedUser, amount, id);
-                    System.out.println("Offerta accettata! Sei il nuovo offerente migliore");
+                    if(ad.makeBidDB(loggedUser, amount, id))
+                        System.out.println("Offerta accettata! Sei il nuovo offerente migliore");
                 } else {
                     System.out.println("Offerta Rifiutata, importo troppo basso");
                 }

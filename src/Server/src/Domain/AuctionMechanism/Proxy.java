@@ -29,9 +29,8 @@ public interface Proxy extends Remote {
     int higherOffer(int id) throws RemoteException;
     int higherOfferDB(int id) throws RemoteException;
 
-
     void makeBid(String user, int amount,int id) throws RemoteException;
-    void makeBidDB(String user, int amount,int id) throws RemoteException;
+    boolean makeBidDB(String user, int amount,int id) throws RemoteException;
 
     boolean vendorOfAuction(int idAuction,String logged) throws RemoteException;
     boolean vendorOfAuctionDB(int idAuction,String logged) throws RemoteException;
@@ -40,5 +39,4 @@ public interface Proxy extends Remote {
     String showClosedAuctionsDB() throws RemoteException;
 
     void probe() throws RemoteException;
-
 }

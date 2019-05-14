@@ -1,5 +1,7 @@
 package Domain.AuctionMechanism;
 
+import Domain.People.User;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -15,12 +17,16 @@ public class Bid implements Serializable {
     private int idAu;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idAu")
+    @JoinColumn(name = "auctionid")
     private Auction au;
 
 
-    @Column(name = "offerer", updatable = false)
+    @Transient
     private String actor;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "offerer", referencedColumnName = "username")
+    private User actorDB;
 
 
     @Column(name = "amount", updatable = false)
@@ -33,8 +39,6 @@ public class Bid implements Serializable {
     public int getAmount() {
         return amount;
     }
-
-    public Bid() {}
 
     public int getId() {
         return id;
@@ -60,18 +64,34 @@ public class Bid implements Serializable {
         this.amount = amount;
     }
 
-    public Bid(int idAu, String actor, int amount) {
-        this.idAu = idAu;
-        this.actor = actor;
-        this.amount = amount;
-    }
-
     public int getIdAu() {
         return idAu;
     }
 
     public void setIdAu(int idAu) {
         this.idAu = idAu;
+    }
+
+    public User getActorDB() {
+        return actorDB;
+    }
+
+    public void setActorDB(User actorDB) {
+        this.actorDB = actorDB;
+    }
+
+    public Bid() {}
+
+    public Bid(int idAu, String actor, int amount) {
+        this.idAu = idAu;
+        this.actor = actor;
+        this.amount = amount;
+    }
+
+    public Bid(int idAu, User actorDB, int amount) {
+        this.idAu = idAu;
+        this.actorDB = actorDB;
+        this.amount = amount;
     }
 
     public Bid(String actor, int amount) {

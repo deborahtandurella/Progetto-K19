@@ -22,7 +22,7 @@ public class LifeCycleAuctionTask extends TimerTask implements Serializable {
 
     /**
      * Il metodo ritorna il numero di millisecondi che mancano alla fine dell'asta, e' usato nello schedulare i timer
-     * @return
+     *
     */
     public long getTimeLeft() {
         return closeMillis - System.currentTimeMillis();

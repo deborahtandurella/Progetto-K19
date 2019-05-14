@@ -21,11 +21,11 @@ public class Auction implements Serializable {
     @Transient
     private List<String> partecipantsList;
 
-    @OneToOne(mappedBy = "auL",cascade = {CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(mappedBy = "auL",cascade = CascadeType.ALL)
     private Lot lot;
 
-    @OneToMany(mappedBy = "au",cascade = {CascadeType.ALL, CascadeType.MERGE, CascadeType.PERSIST})
-    private List<Bid> bidsList = new ArrayList<>();
+    @OneToMany(mappedBy = "au",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Bid> bidsList;
 
     @Column(name = "closingdate")
     private LocalDateTime closingDate;
@@ -35,14 +35,6 @@ public class Auction implements Serializable {
 
 
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Auction)
-            return ((Auction)obj).getId()==this.id;
-        else
-            return false;
-    }
-
     /**
      * Aggiunge offerta all'asta
      * @param bid
@@ -50,6 +42,16 @@ public class Auction implements Serializable {
     public void addBid(Bid bid) {
         bidsList.add(bid);
         higherOffer = bid.getAmount();
+    }
+
+    public void addBidDB(Bid bid) {
+        if(bid != null) {
+            if(bidsList == null) {
+                bidsList = new ArrayList<Bid>();
+            }
+            bidsList.add(bid);
+            bid.setAu(this);
+        }
     }
 
     /**
@@ -62,6 +64,12 @@ public class Auction implements Serializable {
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
     }
 
+    public String openAuctionInfoDB() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        String closeDate = closingDate.format(formatter);
+        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.informationDB() + "\t"  + "Data Fine:" + closeDate + "\n";
+    }
+
     /**
      * Stampa informazioni su asta chiusa
      * @return
@@ -70,6 +78,16 @@ public class Auction implements Serializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
+    }
+
+    /**
+     * Stampa informazioni su asta chiusa
+     * @return
+     */
+    public String closedAuctionInfoDB() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        closingDate.format(formatter);
+        return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformationDB() + "\n";
     }
 
     /**
@@ -84,69 +102,46 @@ public class Auction implements Serializable {
             return null;
     }
 
-    public void valuateHigher() {
-        int higher = lot.getBasePrice();
-        for(Bid b : bidsList) {
-            if( b.getAmount() > higher) {
-                higher = b.getAmount();
-            }
-        }
-        higherOffer = higher;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Auction)
+            return ((Auction)obj).getId()==this.id;
+        else
+            return false;
     }
-
 
     public int getId() { return id; }
 
+    public void setId(int id) { this.id = id; }
+
     public int getHigherOffer() { return higherOffer; }
 
-
+    public void setHigherOffer(int higherOffer) { this.higherOffer = higherOffer; }
 
     public Lot getLot() { return lot; }
 
+    public void setLot(Lot lot) { this.lot = lot; }
 
+    public List<Bid> getBidsList() { return bidsList; }
+
+    public void setBidsList(List<Bid> bidsList) { this.bidsList = bidsList; }
 
     public LocalDateTime getClosingDate() { return closingDate; }
 
-    public boolean isClosed() {
-        return closed;
+    public void setClosingDate(LocalDateTime closingDate) { this.closingDate = closingDate; }
+
+    public boolean isClosed() { return closed; }
+
+    public void setClosed(boolean closed) { this.closed = closed; }
+    public List<String> getPartecipantsList() {
+        return partecipantsList;
     }
 
-    public void setClosed(boolean closed) {
-        this.closed = closed;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setHigherOffer(int higherOffer) {
-        this.higherOffer = higherOffer;
-    }
-
-    public void setPartecipantsList(ArrayList<String> partecipantsList) {
+    public void setPartecipantsList(List<String> partecipantsList) {
         this.partecipantsList = partecipantsList;
     }
 
-    public void setLot(Lot lot) {
-        this.lot = lot;
-    }
 
-    public void setBidsList(ArrayList<Bid> bidsList) {
-        this.bidsList = bidsList;
-    }
-
-    public void setClosingDate(LocalDateTime closingDate) {
-        this.closingDate = closingDate;
-    }
-
-
-    public List<Bid> getBidsList() {
-        return bidsList;
-    }
-
-    public void setBidsList(List<Bid> bidsList) {
-        this.bidsList = bidsList;
-    }
 
     public Auction() {}
 
@@ -154,14 +149,6 @@ public class Auction implements Serializable {
         this.lot = lot;
         this.closingDate = closingDate;
         this.higherOffer=lot.getBasePrice();
-    }
-
-    public List<String> getPartecipantsList() {
-        return partecipantsList;
-    }
-
-    public void setPartecipantsList(List<String> partecipantsList) {
-        this.partecipantsList = partecipantsList;
     }
 
     public Auction(int id, Lot lot, LocalDateTime closingDate) {

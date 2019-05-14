@@ -17,7 +17,7 @@ public class FileManager {
 
     /**
      * Metodo usato per salvare lo stato del Server prima della chiusura di quest'ultimo
-     * @return
+     *
      */
     public String saveState()  {
         String result = "";
