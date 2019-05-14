@@ -49,3 +49,5 @@ CREATE TABLE TIMER
 
 SET @@global.time_zone = '+02:00';
 SET @@session.time_zone = '+02:00';
+
+ALTER DATABASE `progettok19` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin;
