@@ -43,7 +43,7 @@
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
-            <version>9.0.1</version>
+            <version>8.0.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
@@ -58,12 +58,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.15</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.cloud.sql</groupId>
-            <artifactId>mysql-socket-factory-connector-j-8</artifactId>
-            <version>1.0.13</version>
         </dependency>
 
 
