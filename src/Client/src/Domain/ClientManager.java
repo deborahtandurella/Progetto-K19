@@ -86,6 +86,20 @@ public class ClientManager {
         }
     }
 
+    public int loginGUI(String username, String password) throws RemoteException {
+        if (loggedUser == null) {
+            if (ad.checkLoginDB(username, password)) {
+                loggedUser = username;
+                return 1; //Login effettuato con successo
+            } else {
+                return 0; //Dati inseriti errati
+            }
+        } else {
+            return -1; //Qualcuno e' gia' loggato
+        }
+    }
+
+
     /**
      * Il metodo effettua il controllo sulla correttezza della password.
      * Viene analizzata attraverso il Char Analizer che restituisce l'esito ed eventualmente il motivo per cui una pass non e' accettata.

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane layoutX="167.0" layoutY="53.0" prefHeight="294.0" prefWidth="266.0" style="-fx-background-radius: 100;">
+         <children>
+            <Text layoutX="96.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Text>
+            <JFXTextField fx:id="username" layoutX="35.0" layoutY="73.0" prefHeight="31.0" prefWidth="196.0" promptText="Username" />
+            <JFXPasswordField fx:id="password" layoutX="35.0" layoutY="132.0" prefHeight="31.0" prefWidth="196.0" promptText="Password" />
+            <JFXButton fx:id="signIn" layoutX="72.0" layoutY="198.0" prefHeight="31.0" prefWidth="123.0" style="-fx-background-radius: 100; -fx-background-color: red;" text="Sign in" />
+         </children>
+      </AnchorPane>
+   </children>
+   <effect>
+      <DropShadow />
+   </effect>
+</AnchorPane>
