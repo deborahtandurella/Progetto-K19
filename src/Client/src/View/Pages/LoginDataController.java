@@ -9,7 +9,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -17,6 +20,7 @@ import java.rmi.RemoteException;
 
 public class LoginDataController {
     private ClientManager client;
+    private Stage primaryStage;
 
     @FXML
     private JFXTextField username;
@@ -66,15 +70,20 @@ public class LoginDataController {
     private void changeSceneSignUp() throws RemoteException, IOException {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
-
         Parent root = (Parent) loader.load();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.showAndWait();
+
+        Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
+        popUpStage.initOwner(primaryStage);
+        popUpStage.initModality(Modality.APPLICATION_MODAL);
+        popUpStage.setScene(new Scene(root));
+        popUpStage.show();
 
         ((SignUpController)loader.getController()).setClient(client);
+        ((SignUpController)loader.getController()).setPopUpStage(popUpStage);
 
     }
+
+    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
 
     public ClientManager getClient() { return client; }
 

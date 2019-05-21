@@ -4,10 +4,13 @@ import Domain.ClientManager;
 import Domain.ConnectionLayer;
 import View.Pages.LoginDataController;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
@@ -24,6 +27,15 @@ public class Main extends Application {
         this.primaryStage.setTitle("AuctionHouse");
 
         initRootLayout();
+
+        //Event Handler per la chiusura del client dopo aver premuto sulla classica X
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                connection.setUserWantDisconnect(true);
+            }
+        });
+
     }
 
 
@@ -40,19 +52,27 @@ public class Main extends Application {
             loader.setLocation(getClass().getResource("./Pages/Login.fxml"));
             rootLayout = loader.load();
 
-            ((LoginDataController)loader.getController()).setClient(c);
-
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
+
+            //Passo riferimento a stage e connessione
+            ((LoginDataController)loader.getController()).setClient(c);
+            ((LoginDataController)loader.getController()).setPrimaryStage(primaryStage);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
+
+
+
     public static void main(String[] args) {
         launch(args);
+
+
     }
 }
