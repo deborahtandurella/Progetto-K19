@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #81c784;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Pages.LoginDataController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #81c784;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Pages.LoginDataController">
 <children>
     <ImageView fitHeight="313.0" fitWidth="500.0" layoutX="-42.0" layoutY="83.0" opacity="0.3" pickOnBounds="true" preserveRatio="true">
         <image>
@@ -22,7 +22,7 @@
             <Font size="18.0" />
         </font>
     </Label>
-    <JFXButton layoutX="95.0" layoutY="191.0" prefHeight="31.0" prefWidth="196.0" style="-fx-background-color: #c8e6c9;" text="Sign Up" />
+    <JFXButton fx:id="signUp" layoutX="95.0" layoutY="191.0" onAction="#changeSceneSignUp" prefHeight="31.0" prefWidth="196.0" style="-fx-background-color: #c8e6c9;" text="Sign Up" />
     <Label layoutX="40.0" layoutY="89.0" text="Welcome to ???????" textFill="WHITE">
         <font>
             <Font size="35.0" />

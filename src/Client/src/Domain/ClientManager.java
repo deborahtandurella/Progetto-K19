@@ -59,6 +59,19 @@ public class ClientManager {
         }
     }
 
+    public int signUpGUI(String username, String password) throws RemoteException {
+        if (validatePassword(password)) {
+            if (!ad.alredyTakenUsernameDB(username)) {
+                ad.createUserDB(username, password);
+                return 1; //Utente inserito con successo
+            } else
+                return 0; //Username gia' in uso
+        }
+        else
+            return -1; //Password non valida
+
+    }
+
     /**
      * Effettua il login, solo se l'utente e' registrato e se non vi e' gia' qualcuno connesso con lo stesso account
      *
