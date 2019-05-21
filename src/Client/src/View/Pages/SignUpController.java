@@ -34,15 +34,15 @@ public class SignUpController {
         }
         if(esito == 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Login");
+            alert.setTitle("Error SignUp");
             alert.setHeaderText("Username alredy exists");
 
             alert.showAndWait();
         }
         if(esito == -1) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error Login");
-            alert.setHeaderText("Alredy Logged!");
+            alert.setTitle("Error SignUp");
+            alert.setHeaderText("Error ");
             alert.setContentText("Use at least 1.....ELENCO PARAMETRI PASS");
 
             alert.showAndWait();

@@ -38,7 +38,11 @@ public class LoginDataController {
         int esito = client.loginGUI(us,pass);
 
         if(esito == 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ottimo");
+            alert.setHeaderText("Login Eseguito");
 
+            alert.showAndWait();
         }
         if(esito == 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -66,26 +70,10 @@ public class LoginDataController {
         Parent root = (Parent) loader.load();
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
-        stage.show();
+        stage.showAndWait();
 
         ((SignUpController)loader.getController()).setClient(client);
 
-        //Scene scene = new Scene(loader.load());
-        //stage.setScene(scene);
-
-
-        //FXMLLoader loader = new FXMLLoader(getClass().getResource("./Pages/Login.fxml"));
-        //Stage stage = new Stage();
-        //stage.initOwner(signUp.getScene().getWindow());
-        //stage.setScene(new Scene((Parent) loader.load()));
-
-        //((SignUpController)loader.getController()).setClient(client);
-
-        // showAndWait will block execution until the window closes...
-        //stage.showAndWait();
-
-        //SignUpController controller = loader.getController();
-        //text1.setText(controller.getText());
     }
 
     public ClientManager getClient() { return client; }
