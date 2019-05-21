@@ -60,19 +60,16 @@ public class LoginDataController {
 
     @FXML
     private void changeSceneSignUp() throws RemoteException, IOException {
-        Stage stage = null;
-        Parent myNewScene = null;
 
-        stage = (Stage) signUp.getScene().getWindow();
-        myNewScene = FXMLLoader.load(getClass().getResource("./Pages/SignUp.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
 
-        Scene scene = new Scene(myNewScene);
-        stage.setScene(scene);
-        stage.setTitle("SignUp");
+        Parent root = (Parent) loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
 
-        //FXMLLoader loader = new FXMLLoader();
-        //loader.setLocation(getClass().getResource("./Pages/SignUp.fxml"));
-        //Stage stage = (Stage) signUp.getScene().getWindow();
+        ((SignUpController)loader.getController()).setClient(client);
+
         //Scene scene = new Scene(loader.load());
         //stage.setScene(scene);
 
@@ -85,7 +82,7 @@ public class LoginDataController {
         //((SignUpController)loader.getController()).setClient(client);
 
         // showAndWait will block execution until the window closes...
-        stage.showAndWait();
+        //stage.showAndWait();
 
         //SignUpController controller = loader.getController();
         //text1.setText(controller.getText());

@@ -38,7 +38,7 @@ public class Main extends Application {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("./Pages/Login.fxml"));
-            rootLayout = (AnchorPane) loader.load();
+            rootLayout = loader.load();
 
             ((LoginDataController)loader.getController()).setClient(c);
 
