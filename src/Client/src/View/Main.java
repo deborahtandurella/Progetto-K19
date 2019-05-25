@@ -2,6 +2,7 @@ package View;
 
 import Domain.ClientManager;
 import Domain.ConnectionLayer;
+import View.Pages.HomeController;
 import View.Pages.LoginDataController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -57,8 +58,8 @@ public class Main extends Application {
             primaryStage.show();
 
             //Passo riferimento a stage e connessione
-            ((LoginDataController)loader.getController()).setClient(c);
-            ((LoginDataController)loader.getController()).setPrimaryStage(primaryStage);
+            ((HomeController)loader.getController()).setClient(c);
+            ((HomeController)loader.getController()).setPrimaryStage(primaryStage);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,11 +68,7 @@ public class Main extends Application {
 
 
 
-
-
     public static void main(String[] args) {
         launch(args);
-
-
     }
 }

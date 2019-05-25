@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class HomeController {
-
-    //private ClientManager client;
+    private ClientManager client;
     private Stage primaryStage;
 
     @FXML
@@ -33,7 +32,7 @@ public class HomeController {
         popUpStage.setScene(new Scene(root));
         popUpStage.show();
 
-        //((SignUpController)loader.getController()).setClient(client);
+        ((SignUpController)loader.getController()).setClient(client);
         ((SignUpController)loader.getController()).setPopUpStage(popUpStage);
 
     }
@@ -41,19 +40,25 @@ public class HomeController {
     @FXML
     private void changeSceneLogIn() throws RemoteException, IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
-        Parent root = (Parent) loader.load();
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+        //Parent root = (Parent) loader.load();
 
-        Stage popUpStage = new Stage(StageStyle.UNDECORATED);
-        popUpStage.initOwner(primaryStage);
-        popUpStage.initModality(Modality.APPLICATION_MODAL);
-        popUpStage.setScene(new Scene(root));
-        popUpStage.show();
+        //Stage popUpStage = new Stage(StageStyle.UNDECORATED);
+        //popUpStage.initOwner(primaryStage);
+        //popUpStage.initModality(Modality.APPLICATION_MODAL);
+        //popUpStage.setScene(new Scene(root));
+        //popUpStage.show();
 
-        //((SignUpController)loader.getController()).setClient(client);
-        //((LoginDataController)loader.getController()).setPopUpStage(popUpStage);
+        //((LoginDataController)loader.getController()).setClient(client);
+        //((LoginDataController)loader.getController()).setPrimaryStage(popUpStage);  QUESTO NON E' SETTATO PERCHE BISOGNA DISCUTERE SE PARTIRE DALLA SCHERMATA DI LOGIN O DALLA HOME
 
     }
 
     public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
+
+    public ClientManager getClient() { return client; }
+
+    public void setClient(ClientManager client) { this.client = client; }
+
+    public Stage getPrimaryStage() { return primaryStage; }
 }
