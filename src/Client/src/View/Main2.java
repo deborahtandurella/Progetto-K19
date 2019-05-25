@@ -29,8 +29,9 @@ public class Main2 extends Application {
 
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("./Pages/MainPanel.fxml"));
+            loader.setLocation(getClass().getResource("./Pages/Home.fxml"));
             rootLayout = loader.load();
+            rootLayout.setMinSize(700, 600);
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
