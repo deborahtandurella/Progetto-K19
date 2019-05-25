@@ -1,6 +1,13 @@
 package View.Pages;
 
 import Domain.ClientManager;
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.jmx.MXNodeAlgorithm;
+import com.sun.javafx.jmx.MXNodeAlgorithmContext;
+import com.sun.javafx.sg.prism.NGNode;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +16,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import javafx.scene.Node;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
@@ -38,19 +48,24 @@ public class HomeController {
     }
 
     @FXML
+    private void exitFromAH () throws RemoteException, IOException {
+        System.exit(0);
+    }
+
+    @FXML
     private void changeSceneLogIn() throws RemoteException, IOException {
 
-        //FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
-        //Parent root = (Parent) loader.load();
+        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+        Parent root = (Parent) loader.load();
 
-        //Stage popUpStage = new Stage(StageStyle.UNDECORATED);
-        //popUpStage.initOwner(primaryStage);
-        //popUpStage.initModality(Modality.APPLICATION_MODAL);
-        //popUpStage.setScene(new Scene(root));
-        //popUpStage.show();
+        Scene loginScene = new Scene(root);
+
+        Stage changeStage = (Stage)((Node ).getSource()).getScene().getWindow();
+        changeStage.setScene(loginScene);
+        changeStage.show();*/
 
         //((LoginDataController)loader.getController()).setClient(client);
-        //((LoginDataController)loader.getController()).setPrimaryStage(popUpStage);  QUESTO NON E' SETTATO PERCHE BISOGNA DISCUTERE SE PARTIRE DALLA SCHERMATA DI LOGIN O DALLA HOME
+        //((LoginDataController)loader.getController()).setPrimaryStage(changeStage);  QUESTO NON E' SETTATO PERCHE BISOGNA DISCUTERE SE PARTIRE DALLA SCHERMATA DI LOGIN O DALLA HOME
 
     }
 
