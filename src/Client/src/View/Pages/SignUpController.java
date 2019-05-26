@@ -53,7 +53,7 @@ public class SignUpController {
 
     @FXML
     private void backToLoginScreen() {
-        popUpStage.hide();
+        popUpStage.close();
     }
 
 

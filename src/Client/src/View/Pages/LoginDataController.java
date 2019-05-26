@@ -34,8 +34,9 @@ public class LoginDataController {
     @FXML
     private JFXButton signUp;
 
+
     @FXML
-    private void handleSignIn() throws RemoteException {
+    private void handleSignIn() throws RemoteException, IOException {
         String us = username.getText();
         String pass = password.getText();
 
@@ -47,6 +48,15 @@ public class LoginDataController {
             alert.setHeaderText("Login Eseguito");
 
             alert.showAndWait();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
+            Parent root = (Parent) loader.load();
+
+            primaryStage.setScene(new Scene(root));
+            primaryStage.show();
+
+            ((HomeController)loader.getController()).setClient(client);
+            ((HomeController)loader.getController()).setPrimaryStage(primaryStage);
         }
         if(esito == 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -39,4 +39,7 @@ public interface Proxy extends Remote {
     String showClosedAuctionsDB() throws RemoteException;
 
     void probe() throws RemoteException;
+
+    LocalDateTime currentiTime()  throws RemoteException;
+
 }

@@ -29,7 +29,7 @@ public class Main2 extends Application {
 
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("./Pages/Home.fxml")); //Usato per testare il form
+            loader.setLocation(getClass().getResource("./Pages/FormCreaAsta.fxml")); //Usato per testare il form
             rootLayout = loader.load();
             //rootLayout.setMinSize(700, 600);
 

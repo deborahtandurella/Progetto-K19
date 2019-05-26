@@ -183,6 +183,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     }
     public synchronized boolean makeBidDB(String user, int amount,int id) { return db.makeBid(user,amount,id); }
 
+    public LocalDateTime currentiTime() {
+        return LocalDateTime.now();
+    }
+
 
     public void probe()  {}
 

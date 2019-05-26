@@ -2,10 +2,8 @@ package View;
 
 import Domain.ClientManager;
 import Domain.ConnectionLayer;
-import View.Pages.HomeController;
 import View.Pages.LoginDataController;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -49,7 +47,7 @@ public class Main extends Application {
 
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("./Pages/Home.fxml"));
+            loader.setLocation(getClass().getResource("./Pages/Login.fxml"));
             rootLayout = loader.load();
 
             // Show the scene containing the root layout.
@@ -58,8 +56,8 @@ public class Main extends Application {
             primaryStage.show();
 
             //Passo riferimento a stage e connessione
-            ((HomeController)loader.getController()).setClient(c);
-            ((HomeController)loader.getController()).setPrimaryStage(primaryStage);
+            ((LoginDataController)loader.getController()).setClient(c);
+            ((LoginDataController)loader.getController()).setPrimaryStage(primaryStage);
 
         } catch (IOException e) {
             e.printStackTrace();

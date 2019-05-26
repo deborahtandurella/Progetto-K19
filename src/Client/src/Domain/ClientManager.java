@@ -145,7 +145,7 @@ public class ClientManager {
             System.out.print("Inserisci ora e data di fine dell'asta (formato dd/mm/yyyy hs:min) --> se lasci vuoto termina dopo 1 minuto:");
             String line = scn.nextLine();
             LocalDateTime d = formatDate(line);
-            if (!d.isBefore(LocalDateTime.now())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
+            if (!d.isBefore(ad.currentiTime())) { //Faccio il controllo che la data attuale non sia inferiore a quella attuale
                 String vendor = loggedUser;
                 ad.addAuctionDB(name, price, vendor, d);
                 System.out.println("Aggiunta con successo!");
@@ -154,6 +154,15 @@ public class ClientManager {
         } catch (NumberFormatException e) {
             System.out.println("E' stato inserito un carattere inatteso, l'operazione va ripetuta");
         }
+    }
+
+    public int createAuctionGUI(String name,String description,int basePrice,LocalDateTime close) throws RemoteException {
+        if(!close.isBefore(ad.currentiTime())) {
+            ad.addAuctionDB(name,basePrice,loggedUser,close);
+            return 1;
+        }
+        else
+            return 0;
     }
 
     /**
@@ -301,6 +310,7 @@ public class ClientManager {
             loggedMenu();
         }
     }
+
 
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
