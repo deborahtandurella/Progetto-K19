@@ -37,6 +37,7 @@ public class LoginDataController {
 
     @FXML
     private void handleSignIn() throws RemoteException, IOException {
+
         String us = username.getText();
         String pass = password.getText();
 
@@ -52,11 +53,13 @@ public class LoginDataController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Home.fxml"));
             Parent root = (Parent) loader.load();
 
-            primaryStage.setScene(new Scene(root));
-            primaryStage.show();
-
-            ((HomeController)loader.getController()).setClient(client);
             ((HomeController)loader.getController()).setPrimaryStage(primaryStage);
+            ((HomeController)loader.getController()).setClient(client);
+
+            primaryStage.setScene(new Scene(root));
+
+
+
         }
         if(esito == 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

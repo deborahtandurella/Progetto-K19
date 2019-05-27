@@ -11,8 +11,8 @@
             <Font name="FontAwesome Regular" size="35.0" />
          </font>
       </Label>
-   <JFXButton fx:id="logout" layoutX="575.0" layoutY="24.0"  prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Logout" />
-   <JFXButton fx:id="userSection" layoutX="477.0" layoutY="24.0"  prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="User" />
-   <JFXButton fx:id="myAuction" layoutX="371.0" layoutY="24.0"  prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="My Auctions" />
-   <JFXButton fx:id="inventory" layoutX="271.0" layoutY="24.0"  prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Inventory" />
+   <JFXButton fx:id="logout" layoutX="575.0" layoutY="24.0" onAction="#handleLogout" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Logout" />
+   <JFXButton fx:id="userSection" layoutX="477.0" layoutY="24.0" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="User" />
+   <JFXButton fx:id="myAuction" layoutX="371.0" layoutY="24.0" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="My Auctions" />
+   <JFXButton fx:id="inventory" layoutX="271.0" layoutY="24.0" prefHeight="31.0" prefWidth="86.0" style="-fx-background-radius: 100; -fx-background-color: #c8e6c9;" text="Inventory" />
 </AnchorPane>

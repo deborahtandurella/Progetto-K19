@@ -36,6 +36,16 @@ public class ClientManager {
         return false;
     }
 
+    public boolean logoutGUI() throws RemoteException {
+        if (!(loggedUser == null)) {
+            if (ad.logoutSDB(loggedUser)) {
+                loggedUser = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Crea un account solo se la password rispetta le specifiche del Char Analizer e se l'username non e' in uso.
      */
@@ -311,6 +321,9 @@ public class ClientManager {
         }
     }
 
+    public String getLoggedUser() {
+        return loggedUser;
+    }
 
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
