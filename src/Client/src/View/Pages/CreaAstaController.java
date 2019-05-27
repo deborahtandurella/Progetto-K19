@@ -1,11 +1,16 @@
 package View.Pages;
 
 import Domain.ClientManager;
+import animatefx.animation.SlideInRight;
+import animatefx.animation.SlideOutRight;
 import com.jfoenix.controls.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -15,6 +20,9 @@ import java.time.LocalTime;
 
 public class CreaAstaController {
     private ClientManager client;
+    private Stage popUpStage;
+    private Stage primaryStage;
+    private  File selectedFile;
 
     @FXML
     private JFXTextField itemName;
@@ -39,15 +47,18 @@ public class CreaAstaController {
     @FXML
     private JFXButton loadImage;
 
+
     @FXML
     private JFXListView listview;
 
     @FXML
     private JFXButton createAuction;
 
+    @FXML
     public void loadImageAction(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        File selectedFile = fc.showOpenDialog(null);
+        selectedFile = fc.showOpenDialog(null);
+
 
         if (selectedFile != null) {
             String extension = selectedFile.getAbsolutePath().replaceAll("^[^.]*.", "");  //Regex per ricavare l'estensione
@@ -63,9 +74,13 @@ public class CreaAstaController {
         }
     }
 
+    @FXML
     public void createAuctionAction(ActionEvent event) throws RemoteException {
         if(validateInput()) {
             if(client.createAuctionGUI(name,desc,price,close) == 1) {
+                if(selectedFile != null) {
+                    client.sendFile(selectedFile);
+                }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Ottimo");
                 alert.setHeaderText("Asta Creata con successo");
@@ -108,7 +123,22 @@ public class CreaAstaController {
         return true;
     }
 
+    @FXML
+    private void backToHome() {
+        AnchorPane pane = (AnchorPane) primaryStage.getScene().lookup("#windowsPane");
+        pane.setEffect(null);
+        popUpStage.close();
+    }
+
     public void setClient(ClientManager client) {
         this.client = client;
+    }
+
+    public void setPopUpStage(Stage popUpStage) {
+        this.popUpStage = popUpStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }

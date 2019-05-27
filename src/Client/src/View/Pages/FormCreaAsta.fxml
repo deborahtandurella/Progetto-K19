@@ -5,6 +5,7 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXTimePicker?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -32,5 +33,6 @@
          </font>
       </JFXButton>
       <JFXListView fx:id="listview" layoutX="297.0" layoutY="275.0" prefHeight="39.0" prefWidth="238.0" />
+      <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="6.0" layoutY="24.0" onMouseClicked="#backToHome" size="30" wrappingWidth="40.0" />
    </children>
 </AnchorPane>

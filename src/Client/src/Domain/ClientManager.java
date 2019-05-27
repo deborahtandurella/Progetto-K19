@@ -3,6 +3,7 @@ package Domain;
 import Domain.AuctionMechanism.Proxy;
 import Domain.People.Credentials.CharAnalizer;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -242,6 +243,14 @@ public class ClientManager {
      */
     private String closedAuctions() throws RemoteException {
         return ad.showClosedAuctionsDB();
+    }
+
+    public void sendFile(File image) {
+        try {
+            ad.saveAuctionImage(image);
+        }catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

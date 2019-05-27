@@ -61,6 +61,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.codehaus.plexus:plexus-compiler-javac:2.8.4" level="project" />
     <orderEntry type="library" name="Maven: com.jfoenix:jfoenix:8.0.8" level="project" />
     <orderEntry type="library" name="Maven: de.jensd:fontawesomefx:8.9" level="project" />
+    <orderEntry type="library" name="Maven: io.github.typhon0:AnimateFX:1.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.hibernate:hibernate-core:5.4.2.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />

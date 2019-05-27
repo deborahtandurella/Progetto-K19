@@ -1,5 +1,6 @@
 package Domain.AuctionMechanism;
 
+import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -41,5 +42,7 @@ public interface Proxy extends Remote {
     void probe() throws RemoteException;
 
     LocalDateTime currentiTime()  throws RemoteException;
+
+    void saveAuctionImage(File image) throws RemoteException;
 
 }

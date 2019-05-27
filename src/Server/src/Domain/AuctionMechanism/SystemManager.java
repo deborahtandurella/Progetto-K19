@@ -2,6 +2,12 @@ package Domain.AuctionMechanism;
 
 import Domain.People.User;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -185,6 +191,19 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public LocalDateTime currentiTime() {
         return LocalDateTime.now();
+    }
+
+    public void saveAuctionImage(File image) throws RemoteException {
+
+        String pathSave = "C:\\Users\\Fabio\\IdeaProjects\\Progetto-K19\\src\\Server\\src\\resources\\AuctionImages\\" + auctionIdCounter + ".png"; //VA CERCATO UN MODO SMART PER SALVARE L'IMMAGINE
+
+        try {
+            BufferedImage bi = ImageIO.read(image);
+            File outputfile = new File(pathSave);
+            ImageIO.write(bi, "png", outputfile);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
