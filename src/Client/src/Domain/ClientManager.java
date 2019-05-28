@@ -1,11 +1,13 @@
 package Domain;
 
 import Domain.AuctionMechanism.Proxy;
+import Domain.AuctionMechanism.SimpleAuction;
 import Domain.People.Credentials.CharAnalizer;
 
 import java.io.File;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ClientManager {
@@ -251,6 +253,10 @@ public class ClientManager {
         }catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<SimpleAuction> requestListAuction() throws RemoteException {
+        return ad.takeAuctionList();
     }
 
     /**

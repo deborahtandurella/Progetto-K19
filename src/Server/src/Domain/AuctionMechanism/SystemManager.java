@@ -206,6 +206,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }
     }
 
+    public ArrayList<SimpleAuction> takeAuctionList() {
+        return db.AuctionList();
+    }
+
 
     public void probe()  {}
 

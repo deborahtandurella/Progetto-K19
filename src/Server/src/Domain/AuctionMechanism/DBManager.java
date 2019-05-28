@@ -11,6 +11,7 @@ import resources.DBConnection.HibernateUtil;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -325,6 +326,35 @@ public class DBManager {
             s.close();
         }
         return "NAN";
+    }
+
+    public ArrayList<SimpleAuction> AuctionList() {
+        s = sessionFactory.openSession();
+        ArrayList<SimpleAuction> Alist = new ArrayList<>();
+
+        String sql = " FROM  Auction where closed= false";
+        try {
+            Query query = s.createQuery(sql);
+            List<Auction> list = (List<Auction>)query.list();
+
+            for (int i = 0; i < list.size(); i++) {
+                Auction a = list.get(i);
+                int auctionId = a.getId();
+                String name = a.getLot().getDescription();
+                int highOffer = a.getHigherOffer();
+                LocalDateTime close = a.getClosingDate();
+
+                SimpleAuction s = new SimpleAuction(auctionId, name, highOffer, close);
+                Alist.add(s);
+            }
+
+            return Alist;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
     }
 
 

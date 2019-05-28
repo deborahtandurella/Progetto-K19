@@ -4,6 +4,7 @@ import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public interface Proxy extends Remote {
     boolean alredyTakenUsername(String username) throws RemoteException;
@@ -44,5 +45,7 @@ public interface Proxy extends Remote {
     LocalDateTime currentiTime()  throws RemoteException;
 
     void saveAuctionImage(File image) throws RemoteException;
+
+    ArrayList<SimpleAuction> takeAuctionList() throws RemoteException;
 
 }
