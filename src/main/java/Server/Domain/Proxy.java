@@ -46,6 +46,8 @@ public interface Proxy extends Remote {
 
     void saveAuctionImage(File image) throws RemoteException;
 
-    ArrayList<SimpleAuction> takeAuctionList() throws RemoteException;
+    ArrayList<Auction> takeAuctionList() throws RemoteException;
+
+    Auction getAuction(int id) throws RemoteException;
 
 }

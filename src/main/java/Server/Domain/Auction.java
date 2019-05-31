@@ -1,6 +1,7 @@
 package Server.Domain;
 
 import javax.persistence.*;
+import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +22,10 @@ public class Auction implements Serializable {
     @Transient
     private List<String> partecipantsList;
 
-    @OneToOne(mappedBy = "auL",cascade = CascadeType.ALL)
+    @Transient
+    private File image;
+
+    @OneToOne(mappedBy = "auL",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Lot lot;
 
     @OneToMany(mappedBy = "au",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
@@ -141,7 +145,13 @@ public class Auction implements Serializable {
         this.partecipantsList = partecipantsList;
     }
 
+    public File getImage() {
+        return image;
+    }
 
+    public void setImage(File image) {
+        this.image = image;
+    }
 
     public Auction() {}
 

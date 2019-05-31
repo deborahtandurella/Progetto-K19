@@ -1,7 +1,7 @@
 package Client.Domain;
 
+import Server.Domain.Auction;
 import Server.Domain.Proxy;
-import Server.Domain.SimpleAuction;
 import Server.People.Credentials.CharAnalizer;
 
 import java.io.File;
@@ -210,6 +210,10 @@ public class ClientManager {
             System.out.println("L'id inserito non e' abbinato a nessun'asta esistente");
     }
 
+    public boolean makeBid(String user,int amout, int id) throws RemoteException{
+        return ad.makeBidDB(user,amout,id);
+    }
+
     /**
      * Metodo usato per la formattazione della data inserita.
      *
@@ -257,9 +261,11 @@ public class ClientManager {
         }
     }
 
-    public ArrayList<SimpleAuction> requestListAuction() throws RemoteException {
+    public ArrayList<Auction> requestListAuction() throws RemoteException {
         return ad.takeAuctionList();
     }
+
+    public Auction getAuction(int id) throws RemoteException { return ad.getAuction(id);}
 
     /**
      * Menu base

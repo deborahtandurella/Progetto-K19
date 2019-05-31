@@ -17,12 +17,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 
 public class HomeController {
     private ClientManager client;
     private Stage primaryStage;
+    private FXMLLoader fxml = null;
 
     @FXML
     private AnchorPane header;
@@ -62,6 +64,11 @@ public class HomeController {
         ((FormCreaAstaController)loader.getController()).setPrimaryStage(primaryStage);
     }
 
+    @FXML
+    public void reloadLatestAuction() {
+        ((AuctionListController)fxml.getController()).refreshList();
+    }
+
 
 
 
@@ -97,7 +104,7 @@ public class HomeController {
     }
 
     private void initializeAuctionList() {
-        FXMLLoader fxml = null;
+        fxml = null;
         Parent root = null;
 
         try {

@@ -4,6 +4,7 @@
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
+          <unit-entry name="Hibernate:hibernate.cfg.xml" value="6d33e344-953a-4962-b6c1-704ffc4b74ea" />
           <unit-entry name="hibernate.cfg.xml" value="51d2b9b7-c466-4fd7-a6a7-d128e0187e14" />
           <unit-entry name="resources:DBConnection:hibernate.cfg.xml" value="6d33e344-953a-4962-b6c1-704ffc4b74ea" />
         </datasource-map>

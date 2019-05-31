@@ -169,18 +169,20 @@ public class DBManager {
         try {
             s.beginTransaction();
             NativeQuery sqlQuery = s.createSQLQuery(sql);
-            int id = ((Number)sqlQuery.getSingleResult()).intValue();
-            s.getTransaction().commit();
-            return id;
+            if(sqlQuery.getSingleResult() != null) {
+                int id = ((Number) sqlQuery.getSingleResult()).intValue();
+                s.getTransaction().commit();
+                return id;
+            }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
             s.close();
         }
-        return  -1;
+        return  1;
     }
 
-    public boolean makeBid(String user, int amount,int id) {
+    public synchronized boolean makeBid(String user, int amount,int id) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -326,25 +328,21 @@ public class DBManager {
         return "NAN";
     }
 
-    public ArrayList<SimpleAuction> AuctionList() {
+    public ArrayList<Auction> AuctionList() {
         s = sessionFactory.openSession();
-        ArrayList<SimpleAuction> Alist = new ArrayList<>();
+        ArrayList<Auction> Alist = new ArrayList<>();
 
-        String sql = " FROM  Auction where closed= false";
+        String sql = "FROM  Auction where closed= false";
         try {
             Query query = s.createQuery(sql);
             List<Auction> list = (List<Auction>)query.list();
 
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                int auctionId = a.getId();
-                String name = a.getLot().getDescription();
-                int highOffer = a.getHigherOffer();
-                LocalDateTime close = a.getClosingDate();
                 File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                a.setImage(image);
 
-                SimpleAuction s = new SimpleAuction(auctionId, name, highOffer, close,image);
-                Alist.add(s);
+                Alist.add(a);
             }
 
             return Alist;
@@ -354,6 +352,28 @@ public class DBManager {
             s.close();
         }
         return null;
+    }
+
+    public Auction getAuction(int id) {
+        s = sessionFactory.openSession();
+        String sql = "FROM Auction where closed=false AND id=:id";
+        try {
+            Query query = s.createQuery(sql);
+            query.setParameter("id",id);
+            Auction a = (Auction)query.getSingleResult();
+            File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+            a.setImage(image);
+            return a;
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
+    public synchronized void updateHigherOffer(int id) {
+
     }
 
 

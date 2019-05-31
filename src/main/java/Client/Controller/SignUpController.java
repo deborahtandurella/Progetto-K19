@@ -1,10 +1,10 @@
 package Client.Controller;
 
 import Client.Domain.ClientManager;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -12,6 +12,7 @@ import java.rmi.RemoteException;
 public class SignUpController {
     private ClientManager client;
     private Stage popUpStage;
+
 
     @FXML
     private JFXTextField username;
@@ -37,9 +38,11 @@ public class SignUpController {
         if(esito == 0) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error SignUp");
-            alert.setHeaderText("Username alredy exists");
+            alert.setHeaderText("Error ");
+            alert.setContentText("Username alredy exist");
 
             alert.showAndWait();
+
         }
         if(esito == -1) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
