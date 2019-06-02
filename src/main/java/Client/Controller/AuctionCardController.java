@@ -2,8 +2,11 @@ package Client.Controller;
 
 import Client.Domain.ClientManager;
 import Server.Domain.Auction;
+import Server.People.User;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -55,6 +58,9 @@ public class AuctionCardController {
     @FXML
     private JFXButton offerButton;
 
+    @FXML
+    private FontAwesomeIconView star;
+
 
 
     @FXML
@@ -62,6 +68,17 @@ public class AuctionCardController {
 
 
     public void initializeNow() {
+        try {
+            if(!client.userLikeAuction(auction.getId())) { //Se l'asta non e' tra le preferite
+                star.setIcon(FontAwesomeIcon.STAR_ALT);
+
+            }
+            else {
+                star.setIcon(FontAwesomeIcon.STAR);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         auctionName.setText(auction.getLot().getDescription());
         if(auction.getLastBid() != null) {
             higherOffer.setText("$" + auction.getLastBid().getAmount());
@@ -132,6 +149,25 @@ public class AuctionCardController {
     @FXML
     private void backToLoginScreen() {
         popUpStage.close();
+    }
+
+    @FXML
+    private void addRemoveToFavourite() throws RemoteException {
+        User user = client.getUser();
+        Auction au = client.getAuction(auction.getId());
+        try {
+            if(client.userLikeAuction(au.getId())) { //Se contiene l'asta
+                client.saveUserStateFavorites(user,au,0); //Togli l'asta
+                star.setIcon(FontAwesomeIcon.STAR_ALT);
+            }
+            else {
+                client.saveUserStateFavorites(user,au,1);
+                star.setIcon(FontAwesomeIcon.STAR);
+            }
+
+        }catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

@@ -1,5 +1,7 @@
 package Server.Domain;
 
+import Server.People.User;
+
 import java.io.File;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -49,5 +51,15 @@ public interface Proxy extends Remote {
     ArrayList<Auction> takeAuctionList() throws RemoteException;
 
     Auction getAuction(int id) throws RemoteException;
+
+    User getUser(String username) throws RemoteException;
+
+    void saveUserStateDB(User user,Auction au,int choose) throws RemoteException;
+
+    void saveAuctionStateDB(Auction auction) throws RemoteException;
+
+    boolean userLikeAuction(String username,int id) throws RemoteException;
+
+    ArrayList<Auction> favoriteAuction(String  user) throws RemoteException;
 
 }

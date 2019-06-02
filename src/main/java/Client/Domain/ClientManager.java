@@ -3,6 +3,7 @@ package Client.Domain;
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
 import Server.People.Credentials.CharAnalizer;
+import Server.People.User;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -265,6 +266,18 @@ public class ClientManager {
         return ad.takeAuctionList();
     }
 
+    public ArrayList<Auction> requestFavoriteAuction() throws RemoteException {
+        return ad.favoriteAuction(loggedUser);
+    }
+
+    public void saveUserStateFavorites(User user,Auction au, int choose) throws RemoteException {
+        ad.saveUserStateDB(user,au,choose);
+    }
+
+    public void saveAuctionState(Auction auction) throws RemoteException {
+        ad.saveAuctionStateDB(auction);
+    }
+
     public Auction getAuction(int id) throws RemoteException { return ad.getAuction(id);}
 
     /**
@@ -346,6 +359,14 @@ public class ClientManager {
 
     public String getLoggedUser() {
         return loggedUser;
+    }
+
+    public User getUser() throws RemoteException {
+        return ad.getUser(loggedUser);
+    }
+
+    public boolean userLikeAuction(int id) throws RemoteException {
+        return ad.userLikeAuction(loggedUser,id);
     }
 
     public ClientManager(ConnectionLayer c, Proxy bind) {

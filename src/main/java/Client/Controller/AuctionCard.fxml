@@ -30,5 +30,6 @@
       <Label fx:id="closeDate" layoutX="128.0" layoutY="348.0" text="Label" />
       <JFXButton fx:id="offerButton" layoutX="261.0" layoutY="365.0" onAction="#makeAnOffer" text="MAKE BID" />
       <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="19.0" layoutY="36.0" onMouseClicked="#backToLoginScreen" size="26" />
+      <FontAwesomeIconView fx:id="star" layoutX="305.0" layoutY="33.0" onMouseClicked="#addRemoveToFavourite" size="17" />
    </children>
 </AnchorPane>

@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class TitleController {
     private ClientManager client;
@@ -49,8 +50,18 @@ public class TitleController {
                 alert.showAndWait();
             }
         } catch (IOException e) {
-        e.printStackTrace();
+            e.printStackTrace();
+        }
     }
+
+    @FXML
+    private void viewFavorites() {
+        try {
+            System.out.println(client.requestFavoriteAuction().get(0).getId()); //OK FINO A QUI FUNZIONA, RITORNA LA GIUSTA LISTA D'OGGETTI, ORA BISOGNA VISUALIZZARLA
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+            //DA FARE
 
     }
 

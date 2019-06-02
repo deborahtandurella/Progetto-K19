@@ -204,12 +204,31 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }
     }
 
+    public ArrayList<Auction> favoriteAuction(String user) {
+        return db.favoriteAuction(user);
+    }
+
+    public boolean userLikeAuction(String username,int id) {
+        return db.userLikeAuction(username,id);
+    }
+
     public ArrayList<Auction> takeAuctionList() {
         return db.AuctionList();
     }
 
     public Auction getAuction(int id) { return db.getAuction(id);}
 
+    public User getUser(String username) {
+        return db.getUser(username);
+    }
+
+    public void saveUserStateDB(User user,Auction au,int choose) {
+        db.saveUserStateFavorites(user,au,choose);
+    }
+
+    public void saveAuctionStateDB(Auction auction) {
+        db.saveAuctionState(auction);
+    }
 
     public void probe()  {}
 

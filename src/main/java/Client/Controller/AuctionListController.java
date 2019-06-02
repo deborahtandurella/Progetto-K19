@@ -114,6 +114,7 @@ public class AuctionListController {
         }
     }
 
+
     public void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
         initializeList();

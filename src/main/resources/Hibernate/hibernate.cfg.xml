@@ -9,12 +9,14 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
         <property name="hibernate.show_sql">true</property>
 
         <mapping class="Server.People.User"/>
         <mapping class="Server.Domain.Auction"/>
         <mapping class="Server.Domain.Lot"/>
         <mapping class="Server.Domain.Bid"/>
+        <mapping class="Server.Domain.Favorites"/>
 
     </session-factory>
 </hibernate-configuration>

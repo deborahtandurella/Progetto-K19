@@ -2,6 +2,7 @@ package Server.Domain;
 
 import Server.People.User;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,6 +11,7 @@ import org.hibernate.query.Query;
 import Server.services.DBConnection.HibernateUtil;
 
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -354,6 +356,38 @@ public class DBManager {
         return null;
     }
 
+    public ArrayList<Auction> favoriteAuction(String user) {
+        s = sessionFactory.openSession();
+        ArrayList<Auction> Alist = new ArrayList<>();
+        User u = s.get(User.class,user);
+        String sql = " SELECT a FROM Auction a INNER JOIN Favorites f on a=f.auctionLiked where :u=f.liker ";
+        try {
+            Hibernate.initialize(u.getFavoriteList());
+
+            Query query = s.createQuery(sql);
+            query.setParameter("u", u);
+            List<Auction> list = (List<Auction>)query.list();
+
+
+            for (int i = 0; i < list.size(); i++) {
+                Auction a = list.get(i);
+                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                a.setImage(image);
+                Alist.add(a);
+                System.out.println(a.getId());
+            }
+
+
+            return Alist;
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
     public Auction getAuction(int id) {
         s = sessionFactory.openSession();
         String sql = "FROM Auction where closed=false AND id=:id";
@@ -370,6 +404,75 @@ public class DBManager {
             s.close();
         }
         return null;
+    }
+
+    public User getUser(String username) {
+        s = sessionFactory.openSession();
+        String sql = "FROM User where username=:user";
+        try {
+            Query query = s.createQuery(sql);
+            query.setParameter("user",username);
+            User u = (User)query.getSingleResult();
+
+            return u;
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
+    public synchronized void saveUserStateFavorites(User user,Auction au,int choose) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            User u = s.get(User.class,user.getUsername());
+            Auction a = s.get(Auction.class,au.getId());
+            Hibernate.initialize(u.getFavoriteList());
+            if(choose == 1)
+                u.getFavoriteList().add(a);
+            else
+                u.getFavoriteList().remove(a);
+            s.saveOrUpdate(u);
+
+            s.getTransaction().commit();
+        }catch (HibernateException e) {
+        e.printStackTrace();
+        } finally {
+        s.close();
+        }
+    }
+
+    public synchronized void saveAuctionState(Auction auction) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            s.saveOrUpdate(auction);
+            s.getTransaction().commit();
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    }
+
+    public synchronized boolean userLikeAuction(String username, int id) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            User u = s.get(User.class,username);
+            Auction a = s.get(Auction.class,id);
+            if(u.getFavoriteList().contains(a))
+                return true;
+            return false;
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.getTransaction().commit();
+            s.close();
+        }
+        return false;
     }
 
     public synchronized void updateHigherOffer(int id) {

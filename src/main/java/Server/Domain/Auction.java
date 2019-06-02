@@ -1,6 +1,9 @@
 package Server.Domain;
 
+import Server.People.User;
+
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -36,6 +39,9 @@ public class Auction implements Serializable {
 
     @Column(name = "closed")
     private boolean closed;
+
+    @ManyToMany(mappedBy = "favoriteList")
+    private List<User> userLike = new ArrayList<>();
 
 
 
@@ -106,6 +112,14 @@ public class Auction implements Serializable {
             return null;
     }
 
+    public void addFavourite(User a) {
+        userLike.add(a);
+    }
+
+    public void removeFavourite(User a) {
+        userLike.remove(a);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
@@ -152,6 +166,10 @@ public class Auction implements Serializable {
     public void setImage(File image) {
         this.image = image;
     }
+
+    public List<User> getUserLike() { return userLike; }
+
+    public void setUserLike(List<User> userLike) { this.userLike = userLike; }
 
     public Auction() {}
 

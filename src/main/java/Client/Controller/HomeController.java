@@ -72,7 +72,6 @@ public class HomeController {
 
 
 
-
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage; }
 
