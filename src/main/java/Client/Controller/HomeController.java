@@ -65,30 +65,6 @@ public class HomeController {
     }
 
     @FXML
-    private void searchAuction () throws IOException {
-        BoxBlur blur = new BoxBlur(3,3,3);
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/SearchAuction.fxml"));
-        Parent root = (Parent) loader.load();
-
-        Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
-        popUpStage.initOwner(primaryStage);
-        popUpStage.initModality(Modality.APPLICATION_MODAL);
-        popUpStage.setScene(new Scene(root));
-        popUpStage.show();
-
-        windowsPane.setEffect(blur);
-
-
-
-        //Animation
-        new FadeIn(root).play();
-
-
-        ((SearchController)loader.getController()).setClient(client);
-    }
-
-    @FXML
     public void reloadLatestAuction() {
         ((AuctionListController)fxml.getController()).refreshList();
     }

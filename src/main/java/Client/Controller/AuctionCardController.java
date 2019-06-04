@@ -4,7 +4,6 @@ import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import Server.People.User;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXPasswordField;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.KeyFrame;
@@ -24,11 +23,12 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 
@@ -36,6 +36,11 @@ public class AuctionCardController {
     private ClientManager client;
     private Stage popUpStage;
     private Auction auction;
+
+    private long day;
+    private long hour;
+    private long minute;
+    private long second;
 
     @FXML
     private Label auctionName;
@@ -65,6 +70,7 @@ public class AuctionCardController {
 
     @FXML
     private Label timer;
+    private Timeline timeline;
 
 
     public void initializeNow() {
@@ -91,6 +97,7 @@ public class AuctionCardController {
 
         vendor.setText(auction.getLot().getVendorDB().getUsername());
         closeDate.setText(auction.getClosingDate().toString());
+
 
         Image img;
         auctionImage = new ImageView();
@@ -138,11 +145,47 @@ public class AuctionCardController {
                 e.printStackTrace();
             }
         }
-        Timeline timeline = new Timeline(new KeyFrame(
-                Duration.millis(1000000),
-                ae ->{} ));
+
+        ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
+        long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
+        countMilliToDay(millis);
+
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(second > 0) {
+                    second--;
+                }
+                else if(second < 0 ) {
+                    second = 59;
+                    if(minute > 0) {
+                        minute--;
+                    }
+                    else if (minute < 0) {
+                        minute = 59;
+                        if(hour > 0) {
+                            hour--;
+                        }
+                        else if(hour < 0) {
+                            hour = 23;
+                            if(day > 0) {
+                                day--;
+                            }
+                        }
+                    }
+                }
+
+                timer.setText(day + "D " + " H" + hour + " M" + minute + " S" + second);
+
+                if(second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
+                    timeline.stop();
+                }
+
+            }
+        }));
         timeline.play();
-        timer.setText(timeline.getCurrentTime()+"");
 
     }
 
@@ -208,6 +251,32 @@ public class AuctionCardController {
                     e.printStackTrace();
                 }
             });
+        }
+    }
+
+    public void countMilliToDay(Long ms) {
+        final int SECOND = 1000;
+        final int MINUTE = 60 * SECOND;
+        final int HOUR = 60 * MINUTE;
+        final int DAY = 24 * HOUR;
+
+
+
+        if (ms > DAY) {
+            day = ms / DAY;
+            ms %= DAY;
+        }
+        if (ms > HOUR) {
+            hour = ms / HOUR;
+            ms %= HOUR;
+        }
+        if (ms > MINUTE) {
+            minute = ms / MINUTE;
+            ms %= MINUTE;
+        }
+        if (ms > SECOND) {
+           second = ms / SECOND;
+            ms %= SECOND;
         }
     }
 
