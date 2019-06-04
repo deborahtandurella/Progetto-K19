@@ -30,6 +30,8 @@ import java.util.ArrayList;
 public class SearchController {
     private FXMLLoader fxml = null;
     private ClientManager client;
+    private Stage popUpStage;
+    private Stage primaryStage;
 
 
 
@@ -121,6 +123,7 @@ public class SearchController {
             auctionList.setItems(auction);
             listView.getChildren().setAll(auctionList);
         }
+
     }
 
     public void setClient(ClientManager client) {
@@ -137,7 +140,21 @@ public class SearchController {
         return succ;
     }
 
+    @FXML
+    private void backHome() {
+        AnchorPane pane = (AnchorPane) primaryStage.getScene().lookup("#windowsPane");
+        pane.setEffect(null);
+        popUpStage.close();
     }
+
+    public void setPopUpStage(Stage popUpStage) {
+        this.popUpStage = popUpStage;
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+}
 
 
 

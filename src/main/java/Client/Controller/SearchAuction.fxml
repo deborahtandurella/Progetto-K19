@@ -8,13 +8,16 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #81c784;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controller.SearchController">
    <children>
-      <Button fx:id="Searchbutton" layoutX="471.0" layoutY="72.0" mnemonicParsing="false" onAction="#searchMethod" prefHeight="31.0" prefWidth="109.0" style="-fx-background-radius: 100; -fx-background-color: #ffffff;" text="Search" textFill="#81c784">
+      <Button fx:id="Searchbutton" layoutX="471.0" layoutY="66.0" mnemonicParsing="false" onAction="#searchMethod" prefHeight="31.0" prefWidth="109.0" style="-fx-background-radius: 100; -fx-background-color: #ffffff;" text="Search" textFill="#81c784">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
       <AnchorPane fx:id="listView" layoutY="100.0" prefHeight="400.0" prefWidth="525.0" />
-      <JFXTextField fx:id="searchBar" layoutX="31.0" layoutY="72.0" prefHeight="31.0" prefWidth="424.0" />
-      <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="24.0" layoutY="45.0" size="25" wrappingWidth="23.0" />
+      <JFXTextField fx:id="searchBar" layoutX="31.0" layoutY="66.0" prefHeight="31.0" prefWidth="424.0" text="Search..." />
+      <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="24.0" layoutY="45.0" onMousePressed="#backHome" size="25" textAlignment="CENTER" wrappingWidth="23.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></FontAwesomeIconView>
    </children>
 </AnchorPane>

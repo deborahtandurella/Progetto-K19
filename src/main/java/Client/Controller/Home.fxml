@@ -15,7 +15,13 @@
       </Button>
       <AnchorPane fx:id="header" prefHeight="87.0" prefWidth="700.0" />
       <AnchorPane fx:id="auctionList" layoutY="102.0" prefHeight="400.0" prefWidth="525.0" />
-      <JFXButton fx:id="userSection" layoutX="550.0" layoutY="344.0" onAction="#createAuctionAction" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Create Auction" textFill="#63ac64" />
-      <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" layoutX="550.0" layoutY="112.0" onMouseClicked="#reloadLatestAuction" size="30.0" text="" />
+      <JFXButton fx:id="userSection" layoutX="550.0" layoutY="344.0" onAction="#createAuctionAction" prefHeight="30.0" prefWidth="136.0" style="-fx-background-radius: 100; -fx-background-color: #FFFFFF;" text="Create Auction" textFill="#63ac64">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXButton>
+      <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" layoutX="550.0" layoutY="112.0" onMouseClicked="#reloadLatestAuction" size="30.0" text="">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></FontAwesomeIconView>
    </children>
 </AnchorPane>

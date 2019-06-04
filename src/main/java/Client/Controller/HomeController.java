@@ -86,6 +86,8 @@ public class HomeController {
 
 
         ((SearchController)loader.getController()).setClient(client);
+        ((SearchController)loader.getController()).setPopUpStage(popUpStage);
+        ((SearchController)loader.getController()).setPrimaryStage(primaryStage);
     }
 
     @FXML
