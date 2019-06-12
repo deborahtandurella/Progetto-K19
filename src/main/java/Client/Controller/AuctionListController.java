@@ -29,7 +29,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AuctionListController {
@@ -42,16 +45,41 @@ public class AuctionListController {
 
     private final ObservableList<Auction> auction = FXCollections.observableArrayList();
 
+    private AuctionListController auctionListController;
 
 
-    public void initializeList() {
+
+    public void initializeList(int typeOfSearch, String toSearch) {
         Alist = null;
         auction.clear();
         //Richiedo al server una lista di 10 aste al massimo, successivamente posso chiedere di prenderne altre 10
-        try {
-            Alist = client.requestListAuction();
-        }catch (RemoteException e) {
-            e.printStackTrace();
+        if(typeOfSearch == 0) {
+            try {
+                Alist = client.requestListAuction();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (typeOfSearch == 1) {
+            try {
+                Alist = client.searchAuction(toSearch);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (typeOfSearch == 2) {
+            try {
+                Alist = client.requestFavoriteAuction();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (typeOfSearch == 3) {
+            try {
+                Alist = client.myAuction();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         if(Alist != null) {
             for (int i = 0; i < Alist.size(); i++) {
@@ -101,7 +129,7 @@ public class AuctionListController {
                                 }
 
                                 setGraphic(imgview);
-                                setText("Id:" + Integer.toString(au.getId()) + "\t\t" + "Name:" + au.getLot().getDescription() + "\t\t " + "Value:" + Integer.toString(au.getHigherOffer()) + "\n\t\t" + "Close Date:" + au.getClosingDate().toString());
+                                setText("Id: " + Integer.toString(au.getId()) + "\t\t\t" + "Name: " + au.getLot().getDescription() + "\t\t\t\t " + "Value: " + Integer.toString(au.getHigherOffer()) +  "\n\t\t\t\t" + "Close Date: " + parseDate(au.getClosingDate()));
 
                                 setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                             }
@@ -114,10 +142,32 @@ public class AuctionListController {
         }
     }
 
+    public String parseDate(LocalDateTime closingTime) {
+
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
+    }
+
+
 
     public void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList();
+        initializeList(0,null);
+    }
+
+
+    public void searchList(String toSearch) {
+        //Usato per cercare
+        initializeList(1,toSearch);
+    }
+
+    public void loadFavorite() {
+        //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
+        initializeList(2,null);
+    }
+
+    public void loadMyAuction() {
+        //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
+        initializeList(3,null);
     }
 
     @FXML
@@ -129,6 +179,22 @@ public class AuctionListController {
         popUpStage.initOwner(primaryStage);
         popUpStage.initModality(Modality.APPLICATION_MODAL);
         popUpStage.setScene(new Scene(root));
+
+        
+        // Calculate the center position of the parent Stage
+        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
+
+        // Hide the pop-up stage before it is shown and becomes relocated
+        popUpStage.setOnShowing(ev -> popUpStage.hide());
+
+        // Relocate the pop-up Stage
+        popUpStage.setOnShown(ev -> {
+            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
+            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
+            popUpStage.show();
+        });
+
         popUpStage.show();
 
         ((AuctionCardController)loader.getController()).setPopUpStage(popUpStage);
@@ -145,10 +211,22 @@ public class AuctionListController {
 
     public void setClient(ClientManager client) {
         this.client = client;
-        initializeList();
+        refreshList(); //In questo caso inizializzo
+    }
+
+    public void setC(ClientManager client) {
+        this.client = client;
     }
 
     public Stage getPrimaryStage() { return primaryStage; }
 
     public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
+
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
+
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
+    }
 }

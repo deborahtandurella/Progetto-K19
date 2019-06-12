@@ -22,8 +22,6 @@ public class Auction implements Serializable {
     @Column(name = "higheroffer")
     private int higherOffer;
 
-    @Transient
-    private List<String> partecipantsList;
 
     @Transient
     private File image;
@@ -34,6 +32,9 @@ public class Auction implements Serializable {
     @OneToMany(mappedBy = "au",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Bid> bidsList;
 
+    @ManyToMany(mappedBy = "partecipantAuction")
+    private List<User> partecipantsList = new ArrayList<>();
+
     @Column(name = "closingdate")
     private LocalDateTime closingDate;
 
@@ -42,6 +43,9 @@ public class Auction implements Serializable {
 
     @ManyToMany(mappedBy = "favoriteList")
     private List<User> userLike = new ArrayList<>();
+
+    @OneToOne(mappedBy = "auction",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private LifeCycleAuctionTaskDB timer;
 
 
 
@@ -151,12 +155,21 @@ public class Auction implements Serializable {
     public boolean isClosed() { return closed; }
 
     public void setClosed(boolean closed) { this.closed = closed; }
-    public List<String> getPartecipantsList() {
+
+    public List<User> getPartecipantsList() {
         return partecipantsList;
     }
 
-    public void setPartecipantsList(List<String> partecipantsList) {
+    public void setPartecipantsList(List<User> partecipantsList) {
         this.partecipantsList = partecipantsList;
+    }
+
+    public LifeCycleAuctionTaskDB getTimer() {
+        return timer;
+    }
+
+    public void setTimer(LifeCycleAuctionTaskDB timer) {
+        this.timer = timer;
     }
 
     public File getImage() {

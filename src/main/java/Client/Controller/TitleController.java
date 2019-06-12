@@ -1,9 +1,11 @@
 package Client.Controller;
 
 import Client.Domain.ClientManager;
+import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
@@ -26,7 +28,9 @@ public class TitleController {
     private JFXButton myAuction;
 
     @FXML
-    private JFXButton inventory;
+    private JFXButton favoriteButton;
+
+    private AuctionListController auctionListController;
 
     @FXML
     private void handleLogout(){
@@ -57,13 +61,46 @@ public class TitleController {
     @FXML
     private void viewFavorites() {
         try {
-            System.out.println(client.requestFavoriteAuction().get(0).getId()); //OK FINO A QUI FUNZIONA, RITORNA LA GIUSTA LISTA D'OGGETTI, ORA BISOGNA VISUALIZZARLA
+            setVisibleButtons();
+            auctionListController.loadFavorite();
+            //favoriteButton.setVisible(false);
+            new BounceOut(favoriteButton).play();
+            favoriteButton.setDisable(true);
+
         }catch (Exception e) {
             e.printStackTrace();
         }
-            //DA FARE
+    }
+
+    @FXML
+    private void myAuction () {
+        try {
+            setVisibleButtons();
+            //myAuction.setVisible(false);
+            new BounceOut(myAuction).play();
+            myAuction.setDisable(true);
+            auctionListController.loadMyAuction();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
+
+    public void setVisibleButtons() {
+        //favoriteButton.setVisible(true);
+        new BounceIn(favoriteButton).play();
+        favoriteButton.setDisable(false);
+
+        //userSection.setVisible(true);
+        new BounceIn(userSection).play();
+        userSection.setDisable(false);
+        //myAuction.setVisible(true);
+        new BounceIn(myAuction).play();
+        myAuction.setDisable(false);
+
+    }
+
 
     public ClientManager getClient() { return client; }
 
@@ -75,5 +112,13 @@ public class TitleController {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
+
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
     }
 }

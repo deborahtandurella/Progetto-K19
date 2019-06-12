@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -13,6 +14,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class SystemManager extends UnicastRemoteObject implements Proxy {
 
@@ -20,7 +23,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     private ConcurrentHashMap<Integer,Auction> auctionList;
     private HashMap<Integer,Auction> closedAuction;
     private HashMap<LifeCycleAuctionTask, Long> timerTasks;
-    private HashMap<LifeCycleAuctionTaskDB, Long> timerTasksDB;
+    private ArrayList<LifeCycleAuctionTaskDB> timerTasksDB;
     private int auctionIdCounter = 1; //Valido per FileManager, il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
@@ -113,11 +116,13 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         int auctionId = db.idOfAuction();
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
-        LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(auctionId,millis);
+        LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(db.getAuction(auctionId),millis);
         t.passArgument(timerTasksDB,db);
         timer.schedule(t, (millis - System.currentTimeMillis()));
-        timerTasksDB.put(t, millis );
+        timerTasksDB.add(t);
     }
+
+
 
 
 
@@ -191,8 +196,8 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         return LocalDateTime.now();
     }
 
-    public void saveAuctionImage(File image) throws RemoteException {
-
+    public synchronized void saveAuctionImage(File image) {
+        auctionIdCounter = db.idOfAuction();
         String pathSave = "src\\main\\java\\Server\\services\\AuctionImages\\" + auctionIdCounter + ".png";
 
         try {
@@ -204,6 +209,44 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }
     }
 
+    public void saveTimerStats() {
+        db.saveTimer(this.timerTasksDB);
+
+    }
+
+    public void refreshTimerStats() {
+        HashMap<Integer, BigInteger> timerValue = new HashMap<>();
+        timerValue = db.reloadTimer();
+
+        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
+            Integer key = entry.getKey();
+            Long value = entry.getValue().longValue();
+            System.out.println(key);
+            System.out.println(value);
+        }
+
+
+
+
+        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
+                // Reschedule task to initial value subtracted how much has already elapsed
+                LifeCycleAuctionTaskDB timerT = new LifeCycleAuctionTaskDB(entry.getKey(),entry.getValue().longValue());
+                timerT.passArgument(timerTasksDB,db);
+                Timer timer = new Timer();
+                long timeLeft = timerT.getTimeLeft();
+                if(timeLeft < 0) {
+                   timerT.run();
+                }
+                else {
+                    timer.schedule(timerT, timeLeft);
+                }
+
+            }
+        db.deleteTimer();
+    }
+
+    public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
+
     public ArrayList<Auction> favoriteAuction(String user) {
         return db.favoriteAuction(user);
     }
@@ -214,6 +257,10 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public ArrayList<Auction> takeAuctionList() {
         return db.AuctionList();
+    }
+
+    public ArrayList<Auction> searchAuctionList(String textToSearch) {
+        return db.searchAuctionList(textToSearch);
     }
 
     public Auction getAuction(int id) { return db.getAuction(id);}
@@ -256,9 +303,13 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public void setTimerTasks(HashMap<LifeCycleAuctionTask, Long> timerTasks) { this.timerTasks = timerTasks; }
 
-    public HashMap<LifeCycleAuctionTaskDB, Long> getTimerTasksDB() { return timerTasksDB; }
+    public ArrayList<LifeCycleAuctionTaskDB> getTimerTasksDB() {
+        return timerTasksDB;
+    }
 
-    public void setTimerTasksDB(HashMap<LifeCycleAuctionTaskDB, Long> timerTasksDB) { this.timerTasksDB = timerTasksDB; }
+    public void setTimerTasksDB(ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+        this.timerTasksDB = timerTasksDB;
+    }
 
     public int getAuctionIdCounter() { return auctionIdCounter; }
 
@@ -284,6 +335,6 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         timerTasks = new HashMap<>();
         files = new FileManager(this);
         db = new DBManager (this);
-        timerTasksDB = new HashMap<>();
+        timerTasksDB = new ArrayList<>();
     }
 }

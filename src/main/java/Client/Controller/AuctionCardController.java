@@ -23,12 +23,15 @@ import javafx.util.Duration;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 
@@ -67,7 +70,6 @@ public class AuctionCardController {
     private FontAwesomeIconView star;
 
 
-
     @FXML
     private Label timer;
     private Timeline timeline;
@@ -96,14 +98,13 @@ public class AuctionCardController {
         }
 
         vendor.setText(auction.getLot().getVendorDB().getUsername());
-        closeDate.setText(auction.getClosingDate().toString());
+        closeDate.setText(parseDate(auction.getClosingDate()));
 
 
         Image img;
-        auctionImage = new ImageView();
 
 
-        if(auction.getImage().exists()) {
+        if(auction.getImage() == null) {
 
                 //img = new Image(new FileInputStream(auction.getImage()),100,100,false,false);
                 //img = new Image((auction.getImage().toURI().toString()));
@@ -118,33 +119,23 @@ public class AuctionCardController {
                 }
                 //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
                 String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
+                img = new Image(new FileInputStream(absolutePath),268,226,false,false);
 
-                auctionImage = new ImageView();
                 auctionImage.setImage(img);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
         else {
-            try {
-                File file = null;
                 try {
-                    URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
-                    file = Paths.get(res.toURI()).toFile();
-                }catch (URISyntaxException e) {
+                    img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
+
+                    auctionImage.setImage(img);
+                }catch (IOException e) {
                     e.printStackTrace();
                 }
-                //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
-                String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
-                auctionImage = new ImageView();
-                auctionImage.setImage(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
         }
+
 
         ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
@@ -158,17 +149,17 @@ public class AuctionCardController {
                 if(second > 0) {
                     second--;
                 }
-                else if(second < 0 ) {
+                else if(second <= 0 ) {
                     second = 59;
                     if(minute > 0) {
                         minute--;
                     }
-                    else if (minute < 0) {
+                    else if (minute <= 0) {
                         minute = 59;
                         if(hour > 0) {
                             hour--;
                         }
-                        else if(hour < 0) {
+                        else if(hour <= 0) {
                             hour = 23;
                             if(day > 0) {
                                 day--;
@@ -177,7 +168,7 @@ public class AuctionCardController {
                     }
                 }
 
-                timer.setText(day + "D " + " H" + hour + " M" + minute + " S" + second);
+                timer.setText("D " + day  + "  H " + hour + "  M " + minute + "  S " + second);
 
                 if(second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
                     timeline.stop();
@@ -187,6 +178,11 @@ public class AuctionCardController {
         }));
         timeline.play();
 
+    }
+
+    public String parseDate(LocalDateTime closingTime) {
+
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
     }
 
     @FXML
@@ -220,6 +216,7 @@ public class AuctionCardController {
             alert.setTitle("Error Offer");
             alert.setHeaderText("Error ");
             alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
+            alert.initOwner(popUpStage);
 
             alert.showAndWait();
         }

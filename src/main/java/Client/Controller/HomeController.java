@@ -2,8 +2,11 @@ package Client.Controller;
 
 import Client.Domain.ClientManager;
 
+import Server.Domain.Auction;
 import animatefx.animation.FadeIn;
+import animatefx.animation.Pulse;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -32,10 +35,23 @@ public class HomeController {
     @FXML
     private AnchorPane auctionList;
 
-    @FXML AnchorPane windowsPane;
+    @FXML
+    private AnchorPane windowsPane;
 
     @FXML
     private JFXButton createAu;
+
+    @FXML
+    private JFXButton search;
+
+    @FXML
+    private JFXTextField searchText;
+
+    private TitleController titleController;
+
+    private AuctionListController auctionListController;
+
+    private HomeController homeController;
 
 
     @FXML
@@ -49,6 +65,21 @@ public class HomeController {
         popUpStage.initOwner(primaryStage);
         popUpStage.initModality(Modality.APPLICATION_MODAL);
         popUpStage.setScene(new Scene(root));
+
+        // Calculate the center position of the parent Stage
+        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
+        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
+
+        // Hide the pop-up stage before it is shown and becomes relocated
+        popUpStage.setOnShowing(ev -> popUpStage.hide());
+
+        // Relocate the pop-up Stage
+        popUpStage.setOnShown(ev -> {
+            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
+            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
+            popUpStage.show();
+        });
+
         popUpStage.show();
 
         windowsPane.setEffect(blur);
@@ -66,9 +97,25 @@ public class HomeController {
 
     @FXML
     public void reloadLatestAuction() {
-        ((AuctionListController)fxml.getController()).refreshList();
+
+        auctionListController.refreshList();
+        titleController.setVisibleButtons();
     }
 
+    @FXML
+    public void searchAuction() {
+        if(searchText == null) {
+            reloadLatestAuction();
+        }
+        else {
+            String text = searchText.getText();
+
+            auctionListController.searchList(text);
+
+            titleController.setVisibleButtons();
+        }
+        new Pulse(search).setSpeed(2).play();
+    }
 
 
 
@@ -79,9 +126,11 @@ public class HomeController {
 
     public void setClient(ClientManager client) {
         this.client = client;
-        initializeHeader();
         initializeAuctionList();
+        initializeHeader();
     }
+
+
 
     public Stage getPrimaryStage() { return primaryStage; }
 
@@ -98,8 +147,11 @@ public class HomeController {
         }
         header.getChildren().setAll(root);
 
-        ((TitleController)fxml.getController()).setPrimaryStage(primaryStage);
-        ((TitleController)fxml.getController()).setClient(client);
+        titleController = (TitleController) fxml.getController();
+
+        titleController.setPrimaryStage(primaryStage);
+        titleController.setClient(client);
+        titleController.setAuctionListController(auctionListController);
     }
 
     private void initializeAuctionList() {
@@ -115,13 +167,34 @@ public class HomeController {
         }
         auctionList.getChildren().setAll(root);
 
-        ((AuctionListController)fxml.getController()).setPrimaryStage(primaryStage);
-        ((AuctionListController)fxml.getController()).setClient(client);
+        auctionListController = (AuctionListController) fxml.getController();
+
+        auctionListController.setPrimaryStage(primaryStage);
+        auctionListController.setClient(client);
+        auctionListController.setAuctionListController(auctionListController);
     }
 
+    public TitleController getTitleController() {
+        return titleController;
+    }
 
+    public void setTitleController(TitleController titleController) {
+        this.titleController = titleController;
+    }
 
+    public AuctionListController getAuctionListController() {
+        return auctionListController;
+    }
 
+    public void setAuctionListController(AuctionListController auctionListController) {
+        this.auctionListController = auctionListController;
+    }
 
+    public HomeController getHomeController() {
+        return homeController;
+    }
 
+    public void setHomeController(HomeController homeController) {
+        this.homeController = homeController;
+    }
 }

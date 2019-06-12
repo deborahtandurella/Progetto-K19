@@ -10,13 +10,11 @@ import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import Server.services.DBConnection.HibernateUtil;
 
-
-import javax.transaction.Transactional;
 import java.io.File;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 public class DBManager {
@@ -193,9 +191,11 @@ public class DBManager {
             b.setActorDB(u);
             b.setAmount(amount);
             Auction a = s.get(Auction.class,id);
+            Hibernate.initialize(u.getPartecipantAuction());
             if(amount> a.getHigherOffer()) {
                 a.addBidDB(b);
                 a.setHigherOffer(amount);
+                u.getPartecipantAuction().add(a);
                 s.saveOrUpdate(a);
                 s.getTransaction().commit();
                 return true;
@@ -208,6 +208,7 @@ public class DBManager {
         }
         return false;
     }
+
 
     public boolean vendorOfAuction(int idAuction,String logged) {
        s = sessionFactory.openSession();
@@ -356,6 +357,38 @@ public class DBManager {
         return null;
     }
 
+    public ArrayList<Auction> searchAuctionList(String textToSearch) {
+        s = sessionFactory.openSession();
+        ArrayList<Auction> Alist = new ArrayList<>();
+
+        String sql = "FROM  Auction where closed= false";
+        try {
+            Query query = s.createQuery(sql);
+            List<Auction> list = (List<Auction>)query.list();
+
+            for (int i = 0; i < list.size(); i++) {
+                Auction a = list.get(i);
+                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                a.setImage(image);
+                String title = a.getLot().getDescription().toLowerCase();
+
+                textToSearch = ".*" + textToSearch.toLowerCase() + ".*";
+                Pattern PATTERN = Pattern.compile(textToSearch); //Uso la regex     ".*STRINGA.*"      per matchare ogni corrispondenza
+
+                if(PATTERN.matcher(title).matches()) {
+                    Alist.add(a);
+                }
+            }
+
+            return Alist;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
     public ArrayList<Auction> favoriteAuction(String user) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -374,12 +407,40 @@ public class DBManager {
                 File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 Alist.add(a);
-                System.out.println(a.getId());
             }
 
 
             return Alist;
 
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+
+    public ArrayList<Auction> myAuctionList(String username) {
+        s = sessionFactory.openSession();
+        ArrayList<Auction> Alist = new ArrayList<>();
+
+        String sql = "FROM  Auction";
+        try {
+            Query query = s.createQuery(sql);
+            List<Auction> list = (List<Auction>)query.list();
+            User user = s.get(User.class, username);
+            Hibernate.initialize(user.getPartecipantAuction());
+            for (int i = 0; i < list.size() && i <= 9; i++) {
+                Auction a = list.get(i);
+                if(a.getLot().getVendorDB().equals(user) || user.getPartecipantAuction().contains(a)) {
+                    File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                    a.setImage(image);
+
+                    Alist.add(a);
+                }
+            }
+
+            return Alist;
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -396,7 +457,8 @@ public class DBManager {
             query.setParameter("id",id);
             Auction a = (Auction)query.getSingleResult();
             File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
-            a.setImage(image);
+            if(image.exists())
+                a.setImage(image);
             return a;
         }catch (Exception e){
             e.printStackTrace();
@@ -475,9 +537,70 @@ public class DBManager {
         return false;
     }
 
-    public synchronized void updateHigherOffer(int id) {
+    public void saveTimer( ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+                for(LifeCycleAuctionTaskDB timer : timerTasksDB) {
+                s.saveOrUpdate(timer);
+            }
 
+
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.getTransaction().commit();
+            s.close();
+        }
     }
+
+    public HashMap<Integer, BigInteger> reloadTimer() {
+        s = sessionFactory.openSession();
+
+        String sql = "SELECT auction FROM timer ";
+        String sql2 = "SELECT millis FROM timer ";
+        try {
+            s.beginTransaction();
+            NativeQuery query = s.createSQLQuery(sql);
+            List<Integer> a = query.getResultList();
+            NativeQuery query2 = s.createSQLQuery(sql2);
+            List<BigInteger> b = query2.getResultList();
+            HashMap<Integer,BigInteger> timer = new HashMap<>();
+            for(int i =0; i < a.size(); i++) {
+                timer.put(a.get(i),b.get(i));
+            }
+            s.getTransaction().commit();
+            return timer;
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+
+            s.close();
+        }
+        return null;
+    }
+    
+    public void deleteTimer() {
+        s = sessionFactory.openSession();
+        String sql = "DELETE FROM LifeCycleAuctionTaskDB";
+
+        try {
+            s.beginTransaction();
+            Query query = s.createQuery(sql);
+            query.executeUpdate();
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.getTransaction().commit();
+            s.close();
+        }
+    }
+
+
+
+
+
+
 
 
     public DBManager(SystemManager sys) {

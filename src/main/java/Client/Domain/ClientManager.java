@@ -171,7 +171,7 @@ public class ClientManager {
     }
 
     public int createAuctionGUI(String name,String description,int basePrice,LocalDateTime close) throws RemoteException {
-        if(!close.isBefore(ad.currentiTime())) {
+        if(!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
             ad.addAuctionDB(name,basePrice,loggedUser,close);
             return 1;
         }
@@ -266,8 +266,16 @@ public class ClientManager {
         return ad.takeAuctionList();
     }
 
+    public ArrayList<Auction> searchAuction(String toSearch) throws RemoteException {
+        return ad.searchAuctionList(toSearch);
+    }
+
     public ArrayList<Auction> requestFavoriteAuction() throws RemoteException {
         return ad.favoriteAuction(loggedUser);
+    }
+
+    public ArrayList<Auction> myAuction() throws RemoteException {
+        return ad.myAuctionList(loggedUser);
     }
 
     public void saveUserStateFavorites(User user,Auction au, int choose) throws RemoteException {
