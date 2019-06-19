@@ -184,6 +184,14 @@ public class Auction implements Serializable {
 
     public void setUserLike(List<User> userLike) { this.userLike = userLike; }
 
+    public void setWinner(String winner){
+        this.lot.setWinner(winner);
+    }
+
+    public String declareWinner(){
+        return this.getLastBid().getActor();
+    }
+
     public Auction() {}
 
     public Auction(Lot lot, LocalDateTime closingDate) {

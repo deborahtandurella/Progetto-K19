@@ -46,11 +46,12 @@ public class LifeCycleAuctionTask extends TimerTask implements Serializable {
                 //timer.schedule(t, CLOSED_ITEM_CLEANUP_PERIOD);
                 //timerTasks.put(t, CLOSED_ITEM_CLEANUP_PERIOD);
                 if(expiredAuction.getLastBid() != null) {
-                    String winner = expiredAuction.getLastBid().getActor();
-                    expiredAuction.getLot().setWinner(winner);
+                    //usato pattern hidden visibility o qualcosa
+                    String winner = expiredAuction.declareWinner();
+                    expiredAuction.setWinner(winner);
                 }
                 else
-                    expiredAuction.getLot().setWinner("No winner!");
+                    expiredAuction.setWinner("No winner!");
             }
             //else {
                 // Remove the closed auction permanently after cleanup period
