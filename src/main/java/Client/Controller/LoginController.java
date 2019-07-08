@@ -7,21 +7,21 @@ import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 
-public class LoginDataController {
+public class LoginController {
     private ClientManager client;
     private Stage primaryStage;
 
@@ -40,6 +40,10 @@ public class LoginDataController {
     @FXML
     private JFXButton signUp;
 
+    @FXML
+    private AnchorPane windowsPane;
+
+
 
     @FXML
     private void handleSignIn() throws IOException {
@@ -57,7 +61,7 @@ public class LoginDataController {
 
             alert.showAndWait();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/Home.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Home.fxml"));
             Parent home = (Parent) loader.load();
 
             homeController = (HomeController)loader.getController();
@@ -90,8 +94,9 @@ public class LoginDataController {
 
     @FXML
     private void changeSceneSignUp() throws IOException {
+        BoxBlur blur = new BoxBlur(5,5,5);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/SignUp.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/SignUp.fxml"));
         Parent signup = (Parent) loader.load();
 
         Stage popUpStageSignUp = new Stage(StageStyle.TRANSPARENT);
@@ -116,14 +121,30 @@ public class LoginDataController {
 
         popUpStageSignUp.show();
 
+        windowsPane.setEffect(blur);
+
         new FadeIn(signup).play();
 
 
         signupController = (SignUpController) loader.getController();
         signupController.setPopUpStage(popUpStageSignUp);
+        signupController.setPrimaryStage(primaryStage);
         signupController.setClient(client);
+        signupController.initializeWindow();
 
     }
+
+    @FXML
+    public void handleCursorHand(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+    }
+
+
 
     public ClientManager getClient() { return client; }
 

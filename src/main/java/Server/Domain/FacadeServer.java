@@ -7,27 +7,29 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public class SystemManager extends UnicastRemoteObject implements Proxy {
+public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     private ConcurrentHashMap<String,User> usersList;
     private ConcurrentHashMap<Integer,Auction> auctionList;
     private HashMap<Integer,Auction> closedAuction;
-    private HashMap<LifeCycleAuctionTask, Long> timerTasks;
-    private ArrayList<LifeCycleAuctionTaskDB> timerTasksDB;
+    private HashMap<AuctionTimerStrategy, Long> timerTasks;
+    private ArrayList<AuctionDBTimerStrategy> timerTasksDB;
     private int auctionIdCounter = 1; //Valido per FileManager, il valore non e' salvato
     private transient Timer timer;
     private FileManager files;
-    private DBManager db;
+    private InterpreterRDB db;
+    private Registry reg = null;
 
 
     public void createUser(String username, String password){
@@ -95,7 +97,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
     private void createTimer(LocalDateTime closingTime) {
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
-        LifeCycleAuctionTask t = new LifeCycleAuctionTask(auctionIdCounter,millis);
+        AuctionTimerStrategy t = new AuctionTimerStrategy(auctionIdCounter,millis);
         t.passArgument(auctionList,closedAuction,timerTasks);
         timer.schedule(t, (millis - System.currentTimeMillis()));
         timerTasks.put(t, millis );
@@ -116,11 +118,21 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         int auctionId = db.idOfAuction();
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
-        LifeCycleAuctionTaskDB t = new LifeCycleAuctionTaskDB(db.getAuction(auctionId),millis);
+        AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(auctionId),millis);
         t.passArgument(timerTasksDB,db);
         timer.schedule(t, (millis - System.currentTimeMillis()));
         timerTasksDB.add(t);
     }
+
+    public synchronized void modifyAuctionDB(String title, int price, int id) {
+        db.modifyAuction(title,price,id);
+    }
+
+    public synchronized void closeAuction(int id) {
+        db.closeAuction(id);
+    }
+
+    public boolean isClosed(int id) { return db.isClosed(id);}
 
 
 
@@ -198,7 +210,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public synchronized void saveAuctionImage(File image) {
         auctionIdCounter = db.idOfAuction();
-        String pathSave = "src\\main\\java\\Server\\services\\AuctionImages\\" + auctionIdCounter + ".png";
+        String pathSave = "src\\main\\resources\\AuctionImages\\" + auctionIdCounter + ".png";
 
         try {
             BufferedImage bi = ImageIO.read(image);
@@ -209,14 +221,21 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
         }
     }
 
-    public void saveTimerStats() {
-        db.saveTimer(this.timerTasksDB);
+    private void saveTimerStats() {
+        db.saveTimer(timerTasksDB);
 
     }
 
     public void refreshTimerStats() {
         HashMap<Integer, BigInteger> timerValue = new HashMap<>();
         timerValue = db.reloadTimer();
+
+        for (Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
+            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()),entry.getValue().longValue());
+            t.passArgument(timerTasksDB,db);
+            timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
+            timerTasksDB.add(t);
+        }
 
         for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
             Integer key = entry.getKey();
@@ -230,7 +249,7 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
         for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
                 // Reschedule task to initial value subtracted how much has already elapsed
-                LifeCycleAuctionTaskDB timerT = new LifeCycleAuctionTaskDB(entry.getKey(),entry.getValue().longValue());
+                AuctionDBTimerStrategy timerT = new AuctionDBTimerStrategy(entry.getKey(),entry.getValue().longValue());
                 timerT.passArgument(timerTasksDB,db);
                 Timer timer = new Timer();
                 long timeLeft = timerT.getTimeLeft();
@@ -243,6 +262,29 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
             }
         db.deleteTimer();
+    }
+
+    public void closeServer() throws RemoteException {
+        try {
+            saveTimerStats();
+            db.getSessionFactory().close();
+            reg.unbind("progettok19");
+            UnicastRemoteObject.unexportObject(this,true);
+
+
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void init() throws RemoteException {
+        reg = LocateRegistry.createRegistry(999);
+
+        reg.rebind("progettok19", this);
+    }
+
+    public void reloadImages() {
+        setAuctionIdCounter(db.idOfAuction());
     }
 
     public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
@@ -299,15 +341,15 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public void setClosedAuction(HashMap<Integer, Auction> closedAuction) { this.closedAuction = closedAuction; }
 
-    public HashMap<LifeCycleAuctionTask, Long> getTimerTasks() { return timerTasks; }
+    public HashMap<AuctionTimerStrategy, Long> getTimerTasks() { return timerTasks; }
 
-    public void setTimerTasks(HashMap<LifeCycleAuctionTask, Long> timerTasks) { this.timerTasks = timerTasks; }
+    public void setTimerTasks(HashMap<AuctionTimerStrategy, Long> timerTasks) { this.timerTasks = timerTasks; }
 
-    public ArrayList<LifeCycleAuctionTaskDB> getTimerTasksDB() {
+    public ArrayList<AuctionDBTimerStrategy> getTimerTasksDB() {
         return timerTasksDB;
     }
 
-    public void setTimerTasksDB(ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+    public void setTimerTasksDB(ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         this.timerTasksDB = timerTasksDB;
     }
 
@@ -323,18 +365,18 @@ public class SystemManager extends UnicastRemoteObject implements Proxy {
 
     public void setFiles(FileManager files) { this.files = files; }
 
-    public DBManager getDb() { return db; }
+    public InterpreterRDB getDb() { return db; }
 
-    public void setDb(DBManager db) { this.db = db; }
+    public void setDb(InterpreterRDB db) { this.db = db; }
 
-    public SystemManager() throws RemoteException {
+    public FacadeServer() throws RemoteException {
         usersList = new ConcurrentHashMap<>();
         auctionList = new ConcurrentHashMap<>();
         closedAuction = new HashMap<>();
         timer = new Timer();
         timerTasks = new HashMap<>();
         files = new FileManager(this);
-        db = new DBManager (this);
+        db = new InterpreterRDB(this);
         timerTasksDB = new ArrayList<>();
     }
 }

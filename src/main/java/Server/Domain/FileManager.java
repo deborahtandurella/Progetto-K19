@@ -9,7 +9,7 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileManager {
-    private SystemManager s;
+    private FacadeServer s;
     private static final String USERS_FILE = "utenti.bin";
     private static final String AUCTION_FILE = "auctions.bin";
     private static final String TIMERS_FILE = "timers.bin";
@@ -72,7 +72,7 @@ public class FileManager {
     private void loadTimer() {
         try {
             ObjectInputStream i3 = new ObjectInputStream(new BufferedInputStream(new FileInputStream(TIMERS_FILE)));
-            s.setTimerTasks((HashMap<LifeCycleAuctionTask, Long>) i3.readObject());
+            s.setTimerTasks((HashMap<AuctionTimerStrategy, Long>) i3.readObject());
         }catch(IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class FileManager {
      */
     public void reloadTimer() {
         Timer timer = new Timer();
-        for (Map.Entry<LifeCycleAuctionTask, Long> t: s.getTimerTasks().entrySet()) {
+        for (Map.Entry<AuctionTimerStrategy, Long> t: s.getTimerTasks().entrySet()) {
             // Reschedule task to initial value subtracted how much has already elapsed
             t.getKey().passArgument(s.getAuctionList(),s.getClosedAuction(),s.getTimerTasks()); // lo faccio per riallineare i riferimenti
             long timeLeft = t.getKey().getTimeLeft();
@@ -114,7 +114,7 @@ public class FileManager {
         }
     }
 
-    public FileManager(SystemManager s) {
+    public FileManager(FacadeServer s) {
         this.s = s;
     }
 }

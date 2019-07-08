@@ -7,8 +7,7 @@ import java.util.TimerTask;
 
 @Entity
 @Table(name = "TIMER")
-public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
-
+public class AuctionDBTimerStrategy extends TimerTask implements Serializable,StrategyTimer {
     @Id
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id")
@@ -21,15 +20,12 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     private Long closeMillis;
 
     @Transient
-    private final long CLOSED_ITEM_CLEANUP_PERIOD = 60 * (60 * 1000); // DA USARE SOLO SE SI VUOLE PULIRE LA LISTA DI INSERZIONI CONCLUSE, espresso in millisecondi, attuale: 60 minuti
+    private ArrayList<AuctionDBTimerStrategy> timerTasks;
 
     @Transient
-    private ArrayList<LifeCycleAuctionTaskDB> timerTasks;
+    private InterpreterRDB dbManager;
 
-    @Transient
-    private DBManager dbManager;
-
-    public void passArgument(ArrayList<LifeCycleAuctionTaskDB> timerTasks, DBManager db){
+    public void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, InterpreterRDB db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -50,7 +46,6 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
     public void run() {
         synchronized(this) {
             if (!dbManager.isClosed(id)) {
-                System.out.println(id);
                 // Move auction to closed
                 dbManager.winner(id);
                 dbManager.closeAuction(id);
@@ -59,7 +54,7 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         }
     }
 
-    public LifeCycleAuctionTaskDB() {
+    public AuctionDBTimerStrategy() {
     }
 
     public Auction getAuction() {
@@ -78,16 +73,30 @@ public class LifeCycleAuctionTaskDB extends TimerTask implements Serializable {
         this.closeMillis = closeMillis;
     }
 
-    public void setDbManager(DBManager dbManager) {
+    public void setDbManager(InterpreterRDB dbManager) {
         this.dbManager = dbManager;
     }
 
-    public LifeCycleAuctionTaskDB(int id, long closeMillis) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Auction)
+            return ((Auction)obj).getId()==this.id;
+        else
+            return false;
+    }
+
+
+    public AuctionDBTimerStrategy(int id, long closeMillis) {
         this.id = id;
         this.closeMillis = closeMillis;
     }
 
-    public LifeCycleAuctionTaskDB(Auction auction, long millis) {
+    @Override
+    public int hashCode() {
+        return 101;
+    }
+
+    public AuctionDBTimerStrategy(Auction auction, long millis) {
         this.auction = auction;
         this.id = auction.getId();
         this.closeMillis = millis;

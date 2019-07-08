@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
@@ -32,7 +33,6 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class AuctionListController {
@@ -46,6 +46,8 @@ public class AuctionListController {
     private final ObservableList<Auction> auction = FXCollections.observableArrayList();
 
     private AuctionListController auctionListController;
+
+    private CreateAuctionFormController auctionFormController;
 
 
 
@@ -172,7 +174,8 @@ public class AuctionListController {
 
     @FXML
     public void chooseAuction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/AuctionCard.fxml"));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AuctionCard.fxml"));
         Parent root = (Parent) loader.load();
 
         Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
@@ -195,13 +198,23 @@ public class AuctionListController {
             popUpStage.show();
         });
 
-        popUpStage.show();
 
         ((AuctionCardController)loader.getController()).setPopUpStage(popUpStage);
         int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
-        ((AuctionCardController)loader.getController()).setAuction(client.getAuction(idChoose));
 
-        ((AuctionCardController)loader.getController()).setClient(client);
+        if(!client.isClosed(idChoose)) {
+            ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
+            ((AuctionCardController) loader.getController()).setClient(client);
+            ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
+            ((AuctionCardController) loader.getController()).initializeWindow();
+            popUpStage.show();
+
+        }
+        else {
+            initializeList(0,null);
+        }
+
+
     }
 
 
@@ -228,5 +241,13 @@ public class AuctionListController {
 
     public void setAuctionListController(AuctionListController auctionListController) {
         this.auctionListController = auctionListController;
+    }
+
+    public CreateAuctionFormController getAuctionFormController() {
+        return auctionFormController;
+    }
+
+    public void setAuctionFormController(CreateAuctionFormController auctionFormController) {
+        this.auctionFormController = auctionFormController;
     }
 }

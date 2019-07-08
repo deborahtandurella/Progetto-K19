@@ -5,14 +5,14 @@ import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class TitleController {
     private ClientManager client;
@@ -33,23 +33,32 @@ public class TitleController {
     private AuctionListController auctionListController;
 
     @FXML
+    public void handleCursorHand(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+    }
+
+    @FXML
     private void handleLogout(){
         try {
-
             if (client.logoutGUI()) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/java/Client/Controller/Login.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Login.fxml"));
                 AnchorPane root = loader.load();
 
                 Scene scene = new Scene(root);
                 // Show the scene containing the root layout.
                 primaryStage.setScene(scene);
 
-                ((LoginDataController) loader.getController()).setPrimaryStage(primaryStage);
-                ((LoginDataController) loader.getController()).setClient(client);
+                ((LoginController) loader.getController()).setPrimaryStage(primaryStage);
+                ((LoginController) loader.getController()).setClient(client);
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Logout");
-                alert.setHeaderText("Problemi nel logout, contatta l'amministratore");
+                alert.setHeaderText("Some error occured, contact your administrator");
 
                 alert.showAndWait();
             }
@@ -62,8 +71,8 @@ public class TitleController {
     private void viewFavorites() {
         try {
             setVisibleButtons();
+
             auctionListController.loadFavorite();
-            //favoriteButton.setVisible(false);
             new BounceOut(favoriteButton).play();
             favoriteButton.setDisable(true);
 
@@ -76,7 +85,7 @@ public class TitleController {
     private void myAuction () {
         try {
             setVisibleButtons();
-            //myAuction.setVisible(false);
+
             new BounceOut(myAuction).play();
             myAuction.setDisable(true);
             auctionListController.loadMyAuction();
@@ -88,17 +97,14 @@ public class TitleController {
     }
 
     public void setVisibleButtons() {
-        //favoriteButton.setVisible(true);
         new BounceIn(favoriteButton).play();
         favoriteButton.setDisable(false);
 
-        //userSection.setVisible(true);
         new BounceIn(userSection).play();
         userSection.setDisable(false);
-        //myAuction.setVisible(true);
+
         new BounceIn(myAuction).play();
         myAuction.setDisable(false);
-
     }
 
 

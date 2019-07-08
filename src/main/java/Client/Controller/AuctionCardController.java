@@ -3,6 +3,7 @@ package Client.Controller;
 import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import Server.People.User;
+import animatefx.animation.FadeIn;
 import com.jfoenix.controls.JFXButton;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -12,12 +13,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -39,6 +50,12 @@ public class AuctionCardController {
     private ClientManager client;
     private Stage popUpStage;
     private Auction auction;
+
+    @FXML
+    private AnchorPane windowsPane;
+
+
+    private CreateAuctionFormController auctionFormController;
 
     private long day;
     private long hour;
@@ -69,6 +86,9 @@ public class AuctionCardController {
     @FXML
     private FontAwesomeIconView star;
 
+    @FXML
+    private JFXButton modifyAuctionButton;
+
 
     @FXML
     private Label timer;
@@ -77,6 +97,15 @@ public class AuctionCardController {
 
     public void initializeNow() {
         try {
+
+            if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
+                offerButton.setDisable(true);
+                offerButton.setVisible(false);
+            }
+            else {
+                modifyAuctionButton.setDisable(true);
+                modifyAuctionButton.setVisible(false);
+            }
             if(!client.userLikeAuction(auction.getId())) { //Se l'asta non e' tra le preferite
                 star.setIcon(FontAwesomeIcon.STAR_ALT);
 
@@ -180,9 +209,58 @@ public class AuctionCardController {
 
     }
 
+    @FXML
+    public void modifyAuction() throws IOException {
+        BoxBlur blur = new BoxBlur(3,3,3);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
+        Parent root = (Parent) loader.load();
+
+        Stage modifyStage = new Stage(StageStyle.TRANSPARENT);
+        modifyStage.initOwner(popUpStage);
+        modifyStage.initModality(Modality.APPLICATION_MODAL);
+        modifyStage.setScene(new Scene(root));
+
+        // Calculate the center position of the parent Stage
+        double centerXPosition = popUpStage.getX() + popUpStage.getWidth()/2d;
+        double centerYPosition = popUpStage.getY() + popUpStage.getHeight()/2d;
+
+        // Hide the pop-up stage before it is shown and becomes relocated
+        modifyStage.setOnShowing(ev -> modifyStage.hide());
+
+        // Relocate the pop-up Stage
+        modifyStage.setOnShown(ev -> {
+            modifyStage.setX(centerXPosition - modifyStage.getWidth()/2d);
+            modifyStage.setY(centerYPosition - modifyStage.getHeight()/2d);
+            modifyStage.show();
+        });
+
+        modifyStage.show();
+
+        windowsPane.setEffect(blur);
+
+
+
+        //Animation
+        new FadeIn(root).play();
+
+
+        auctionFormController = (CreateAuctionFormController) loader.getController();
+
+        auctionFormController.setClient(client);
+        auctionFormController.setPopUpStage(modifyStage);
+        auctionFormController.setPrimaryStage(popUpStage);
+        auctionFormController.disableCreateAuction();
+        auctionFormController.setAuction(auction);
+        auctionFormController.setParameter();
+
+        windowsPane.setEffect(blur);
+
+    }
+
     public String parseDate(LocalDateTime closingTime) {
 
-        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
     @FXML
@@ -211,45 +289,66 @@ public class AuctionCardController {
 
     @FXML
     private void makeAnOffer() throws RemoteException {
-        if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Offer");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
-            alert.initOwner(popUpStage);
+        if(!client.isClosed(auction.getId())) {
+            if (client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error Offer");
+                alert.setHeaderText("Error ");
+                alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
+                alert.initOwner(popUpStage);
 
-            alert.showAndWait();
-        }
-        else {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Offer Dialog");
-            dialog.setHeaderText("Higher Offer:" + auction.getHigherOffer());
-            dialog.setContentText("Your Offer:");
+                alert.showAndWait();
+            } else {
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Offer Dialog");
+                dialog.setHeaderText("Higher Offer:" + auction.getHigherOffer());
+                dialog.setContentText("Your Offer:");
 
-            Optional<String> input = dialog.showAndWait();
-            input.ifPresent(offer -> {
-                int offerInt;
-                try {
-                    offerInt = Integer.parseInt(offer);
-                    if(client.makeBid(client.getLoggedUser(),offerInt,auction.getId())) {
-                        auction = client.getAuction(auction.getId());
-                        initializeNow();
+                Optional<String> input = dialog.showAndWait();
+                input.ifPresent(offer -> {
+                    int offerInt;
+                    try {
+                        offerInt = Integer.parseInt(offer);
+                        if (client.makeBid(client.getLoggedUser(), offerInt, auction.getId())) {
+                            auction = client.getAuction(auction.getId());
+                            initializeNow();
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Error Offer");
+                            alert.setHeaderText("Error ");
+                            alert.setContentText("L'offerta e' stata superata, ricarica");
+
+                            alert.showAndWait();
+                        }
+                    } catch (NumberFormatException e) {
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error Offer");
-                        alert.setHeaderText("Error ");
-                        alert.setContentText("L'offeta e' stata superata, ricarica");
-
-                        alert.showAndWait();
-                    }
-                }catch (NumberFormatException e) {
-                }catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            });
+                });
+            }
         }
     }
+
+    public void initializeWindow() {
+        popUpStage.getScene().setFill(Color.TRANSPARENT);
+        windowsPane.setStyle(
+
+                "-fx-background-insets: 5; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
+        );
+    }
+
+    @FXML
+    public void handleCursorHand(MouseEvent me) {
+        popUpStage.getScene().setCursor(Cursor.HAND);
+    }
+
+    @FXML
+    public void handleCursor(MouseEvent me) {
+        popUpStage.getScene().setCursor(Cursor.DEFAULT);
+    }
+
 
     public void countMilliToDay(Long ms) {
         final int SECOND = 1000;
@@ -273,7 +372,7 @@ public class AuctionCardController {
         }
         if (ms > SECOND) {
            second = ms / SECOND;
-            ms %= SECOND;
+           ms %= SECOND;
         }
     }
 
@@ -300,5 +399,13 @@ public class AuctionCardController {
 
     public void setAuction(Auction auction) {
         this.auction = auction;
+    }
+
+    public CreateAuctionFormController getAuctionFormController() {
+        return auctionFormController;
+    }
+
+    public void setAuctionFormController(CreateAuctionFormController auctionFormController) {
+        this.auctionFormController = auctionFormController;
     }
 }

@@ -13,10 +13,10 @@ public interface Proxy extends Remote {
     boolean alredyTakenUsernameDB(String username) throws RemoteException;
 
     void createUser(String username, String password) throws RemoteException;
-    void createUserDB (String username, String password) throws RemoteException;
+    void createUserDB(String username, String password) throws RemoteException;
 
-    boolean checkLogin(String username,String pass) throws RemoteException;
-    boolean checkLoginDB(String username,String pass) throws RemoteException;
+    boolean checkLogin(String username, String pass) throws RemoteException;
+    boolean checkLoginDB(String username, String pass) throws RemoteException;
 
     boolean logoutS(String username) throws RemoteException;
     boolean logoutSDB(String username) throws RemoteException;
@@ -33,11 +33,11 @@ public interface Proxy extends Remote {
     int higherOffer(int id) throws RemoteException;
     int higherOfferDB(int id) throws RemoteException;
 
-    void makeBid(String user, int amount,int id) throws RemoteException;
-    boolean makeBidDB(String user, int amount,int id) throws RemoteException;
+    void makeBid(String user, int amount, int id) throws RemoteException;
+    boolean makeBidDB(String user, int amount, int id) throws RemoteException;
 
-    boolean vendorOfAuction(int idAuction,String logged) throws RemoteException;
-    boolean vendorOfAuctionDB(int idAuction,String logged) throws RemoteException;
+    boolean vendorOfAuction(int idAuction, String logged) throws RemoteException;
+    boolean vendorOfAuctionDB(int idAuction, String logged) throws RemoteException;
 
     String showClosedAuctions() throws RemoteException;
     String showClosedAuctionsDB() throws RemoteException;
@@ -54,15 +54,22 @@ public interface Proxy extends Remote {
 
     User getUser(String username) throws RemoteException;
 
-    void saveUserStateDB(User user,Auction au,int choose) throws RemoteException;
+    void saveUserStateDB(User user, Auction au, int choose) throws RemoteException;
 
     void saveAuctionStateDB(Auction auction) throws RemoteException;
 
-    boolean userLikeAuction(String username,int id) throws RemoteException;
+    boolean userLikeAuction(String username, int id) throws RemoteException;
 
-    ArrayList<Auction> favoriteAuction(String  user) throws RemoteException;
+    ArrayList<Auction> favoriteAuction(String user) throws RemoteException;
 
     ArrayList<Auction> searchAuctionList(String textToSearch) throws RemoteException;
 
     ArrayList<Auction> myAuctionList(String username) throws RemoteException;
+
+    void modifyAuctionDB(String title, int price, int id) throws RemoteException;
+
+    void closeAuction(int id) throws RemoteException;
+
+    boolean isClosed(int id) throws RemoteException;
+
 }

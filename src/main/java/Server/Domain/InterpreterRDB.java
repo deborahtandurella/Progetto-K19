@@ -8,7 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
-import Server.services.DBConnection.HibernateUtil;
+import Server.Services.HibernateUtil;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -17,13 +17,13 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public class DBManager {
-    private SystemManager sys;
+public class InterpreterRDB {
+    private FacadeServer sys;
     private SessionFactory sessionFactory;
     private Session s;
 
 
-    public void addUser(String username, String pass) {
+    void addUser(String username, String pass) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -37,7 +37,7 @@ public class DBManager {
         }
     }
 
-   public boolean logout(String userna) {
+   boolean logout(String userna) {
         s = sessionFactory.openSession();
 
         try {
@@ -61,7 +61,7 @@ public class DBManager {
         return false;
     }
 
-    public boolean login(String userna, String pass) {
+    boolean login(String userna, String pass) {
         s = sessionFactory.openSession();
 
         try {
@@ -86,7 +86,7 @@ public class DBManager {
         return false;
     }
 
-    public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
+    void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         s = sessionFactory.openSession();
 
         try {
@@ -105,7 +105,28 @@ public class DBManager {
         }
     }
 
-    public boolean isClosed(int id) {
+    void modifyAuction(String title, int price,int id) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            Auction au = s.get(Auction.class,id);
+            if(title!= null) {
+                au.getLot().setDescription(title);
+            }
+            if(price!= -1) {
+                au.getLot().setBasePrice(price);
+                au.setHigherOffer(price);
+            }
+            s.saveOrUpdate(au);
+            s.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    }
+
+    boolean isClosed(int id) {
         s = sessionFactory.openSession();
 
         try {
@@ -121,7 +142,7 @@ public class DBManager {
         return false;
     }
 
-    public void closeAuction(int id) {
+    void closeAuction(int id) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -136,7 +157,7 @@ public class DBManager {
         }
     }
 
-    public void winner(int id) {
+    void winner(int id) {
         s = sessionFactory.openSession();
 
         try {
@@ -162,7 +183,7 @@ public class DBManager {
         }
     }
 
-    public synchronized int idOfAuction() {
+    synchronized int idOfAuction() {
         s = sessionFactory.openSession();
 
         String sql = "SELECT max(id) FROM auction";
@@ -182,7 +203,7 @@ public class DBManager {
         return  1;
     }
 
-    public synchronized boolean makeBid(String user, int amount,int id) {
+    synchronized boolean makeBid(String user, int amount,int id) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -210,7 +231,7 @@ public class DBManager {
     }
 
 
-    public boolean vendorOfAuction(int idAuction,String logged) {
+    boolean vendorOfAuction(int idAuction,String logged) {
        s = sessionFactory.openSession();
 
        try {
@@ -229,7 +250,7 @@ public class DBManager {
     }
 
 
-    public  boolean alredyTakenUsername(String userna) {
+    boolean alredyTakenUsername(String userna) {
        s = sessionFactory.openSession();
 
        try {
@@ -249,7 +270,7 @@ public class DBManager {
        return false;
     }
 
-    public int higherOffer(int id) {
+    int higherOffer(int id) {
         s = sessionFactory.openSession();
 
         try {
@@ -263,7 +284,7 @@ public class DBManager {
         return -1;
     }
 
-    public boolean checkExistingAuction(int id) {
+    boolean checkExistingAuction(int id) {
         s = sessionFactory.openSession();
 
         try {
@@ -283,7 +304,7 @@ public class DBManager {
     }
 
 
-    public String showAllActive() {
+    String showAllActive() {
         s = sessionFactory.openSession();
         String toPrint = "";
         String sql = " FROM  Auction where closed= false";
@@ -307,7 +328,7 @@ public class DBManager {
         return "NAN";
     }
 
-    public String showAllClosed() {
+    String showAllClosed() {
         s = sessionFactory.openSession();
         String toPrint = "";
         String sql = " FROM  Auction where closed= true ";
@@ -331,7 +352,7 @@ public class DBManager {
         return "NAN";
     }
 
-    public ArrayList<Auction> AuctionList() {
+    ArrayList<Auction> AuctionList() {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
 
@@ -342,7 +363,7 @@ public class DBManager {
 
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
 
                 Alist.add(a);
@@ -357,7 +378,7 @@ public class DBManager {
         return null;
     }
 
-    public ArrayList<Auction> searchAuctionList(String textToSearch) {
+    ArrayList<Auction> searchAuctionList(String textToSearch) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
 
@@ -368,7 +389,7 @@ public class DBManager {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 String title = a.getLot().getDescription().toLowerCase();
 
@@ -389,7 +410,7 @@ public class DBManager {
         return null;
     }
 
-    public ArrayList<Auction> favoriteAuction(String user) {
+    ArrayList<Auction> favoriteAuction(String user) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
         User u = s.get(User.class,user);
@@ -404,7 +425,7 @@ public class DBManager {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                 a.setImage(image);
                 Alist.add(a);
             }
@@ -420,7 +441,7 @@ public class DBManager {
         return null;
     }
 
-    public ArrayList<Auction> myAuctionList(String username) {
+    ArrayList<Auction> myAuctionList(String username) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
 
@@ -433,7 +454,7 @@ public class DBManager {
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
                 if(a.getLot().getVendorDB().equals(user) || user.getPartecipantAuction().contains(a)) {
-                    File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+                    File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                     a.setImage(image);
 
                     Alist.add(a);
@@ -449,14 +470,14 @@ public class DBManager {
         return null;
     }
 
-    public Auction getAuction(int id) {
+    Auction getAuction(int id) {
         s = sessionFactory.openSession();
         String sql = "FROM Auction where closed=false AND id=:id";
         try {
             Query query = s.createQuery(sql);
             query.setParameter("id",id);
             Auction a = (Auction)query.getSingleResult();
-            File image = new File("src\\main\\java\\Server\\services\\AuctionImages\\" + a.getId() + ".png");
+            File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
             if(image.exists())
                 a.setImage(image);
             return a;
@@ -468,7 +489,7 @@ public class DBManager {
         return null;
     }
 
-    public User getUser(String username) {
+    User getUser(String username) {
         s = sessionFactory.openSession();
         String sql = "FROM User where username=:user";
         try {
@@ -485,7 +506,7 @@ public class DBManager {
         return null;
     }
 
-    public synchronized void saveUserStateFavorites(User user,Auction au,int choose) {
+    synchronized void saveUserStateFavorites(User user,Auction au,int choose) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -506,7 +527,7 @@ public class DBManager {
         }
     }
 
-    public synchronized void saveAuctionState(Auction auction) {
+    synchronized void saveAuctionState(Auction auction) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -519,7 +540,7 @@ public class DBManager {
         }
     }
 
-    public synchronized boolean userLikeAuction(String username, int id) {
+    synchronized boolean userLikeAuction(String username, int id) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
@@ -537,11 +558,11 @@ public class DBManager {
         return false;
     }
 
-    public void saveTimer( ArrayList<LifeCycleAuctionTaskDB> timerTasksDB) {
+    void saveTimer( ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         s = sessionFactory.openSession();
         try {
             s.beginTransaction();
-                for(LifeCycleAuctionTaskDB timer : timerTasksDB) {
+                for(AuctionDBTimerStrategy timer : timerTasksDB) {
                 s.saveOrUpdate(timer);
             }
 
@@ -554,7 +575,7 @@ public class DBManager {
         }
     }
 
-    public HashMap<Integer, BigInteger> reloadTimer() {
+    HashMap<Integer, BigInteger> reloadTimer() {
         s = sessionFactory.openSession();
 
         String sql = "SELECT auction FROM timer ";
@@ -580,9 +601,9 @@ public class DBManager {
         return null;
     }
     
-    public void deleteTimer() {
+    void deleteTimer() {
         s = sessionFactory.openSession();
-        String sql = "DELETE FROM LifeCycleAuctionTaskDB";
+        String sql = "DELETE FROM AuctionDBTimerStrategy";
 
         try {
             s.beginTransaction();
@@ -597,13 +618,11 @@ public class DBManager {
     }
 
 
+    SessionFactory getSessionFactory() { return sessionFactory; }
 
+    void setSessionFactory(SessionFactory sessionFactory) { this.sessionFactory = sessionFactory; }
 
-
-
-
-
-    public DBManager(SystemManager sys) {
+    public InterpreterRDB(FacadeServer sys) {
         this.sys = sys;
         this.sessionFactory = HibernateUtil.getSessionFactory();
     }
