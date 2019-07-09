@@ -181,6 +181,12 @@ public class Auction implements Serializable {
     public String getDescriptionLot(){
         return this.lot.getDescription();
     }
+    public void setDescriptionLot(String title){
+        return this.lot.setDescription(title);
+    }
+    public String setBasePriceLot(){
+        return this.lot.setBasePrice();
+    }
     public String getUsernameVendorDB(){
         //protected variations
         return this.lot.getUsernamenVendorDB();
