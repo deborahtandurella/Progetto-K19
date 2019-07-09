@@ -73,6 +73,10 @@ public class Bid implements Serializable {
     public User getActorDB() {
         return actorDB;
     }
+    
+    public String getActorDBUsername(){
+     return this.actorDB.getUsername();
+    }
 
     public void setActorDB(User actorDB) {
         this.actorDB = actorDB;
