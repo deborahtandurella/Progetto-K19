@@ -233,10 +233,15 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         timerValue = db.reloadTimer();
 
         for (Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
-            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()),entry.getValue().longValue());
-            t.passArgument(timerTasksDB,db);
-            timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
-            timerTasksDB.add(t);
+            AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(entry.getKey()), entry.getValue().longValue());
+            t.passArgument(timerTasksDB, db);
+            if (entry.getValue().longValue() - System.currentTimeMillis() > 0) {
+                timer.schedule(t, (entry.getValue().longValue() - System.currentTimeMillis()));
+                timerTasksDB.add(t);
+            }
+            else {
+                t.run();
+            }
         }
 
         for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
@@ -246,23 +251,6 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
             System.out.println(value);
         }
 
-
-
-
-        for(Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
-                // Reschedule task to initial value subtracted how much has already elapsed
-                AuctionDBTimerStrategy timerT = new AuctionDBTimerStrategy(entry.getKey(),entry.getValue().longValue());
-                timerT.passArgument(timerTasksDB,db);
-                Timer timer = new Timer();
-                long timeLeft = timerT.getTimeLeft();
-                if(timeLeft < 0) {
-                   timerT.run();
-                }
-                else {
-                    timer.schedule(timerT, timeLeft);
-                }
-
-            }
         db.deleteTimer();
     }
 
