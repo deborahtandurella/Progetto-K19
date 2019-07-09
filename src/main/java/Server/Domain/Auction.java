@@ -169,6 +169,10 @@ public class Auction implements Serializable {
     public String getVendor(){
         return this.lot.getVendor();
     }
+    public User getVendorDB(){
+        return this.lot.getVendorDB();
+    }
+    
 
     public String getLastActor(){
         return this.getLastBid().getActor();
