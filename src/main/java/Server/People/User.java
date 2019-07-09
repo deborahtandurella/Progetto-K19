@@ -49,6 +49,15 @@ public class User implements Serializable {
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
+    
+    public isAPartecipant(Auction auction){
+     return partecipantAuction.contains(auction);
+    }
+
+    public isFavourite(Auction auction){
+     return favoriteList.contains(auction);
+    }
+        
 
     public void setLoggedIn(boolean loggedIn) {
         isLoggedIn = loggedIn;
@@ -82,7 +91,7 @@ public class User implements Serializable {
 
     public void setFavoriteList(List<Auction> favoriteList) { this.favoriteList = favoriteList; }
 
-    public List<Auction> getPartecipantAuction() {
+    public List<Auction> getAuction() {
         return partecipantAuction;
     }
 
