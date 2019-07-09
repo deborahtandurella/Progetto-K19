@@ -196,6 +196,9 @@ public class Auction implements Serializable {
     public void setWinner(String winner){
         this.lot.setWinner(winner);
     }
+    public void setWinnerDB(User winner){
+        this.lot.setWinnerDB(winner);
+    }
     public Auction(Lot lot, LocalDateTime closingDate) {
         this.lot = lot;
         this.closingDate = closingDate;
