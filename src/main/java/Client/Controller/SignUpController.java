@@ -21,6 +21,9 @@ public class SignUpController {
 
     @FXML
     private JFXTextField username;
+    
+    @FXML
+    private JFXTextField email;
 
     @FXML
     private JFXPasswordField password;
@@ -34,6 +37,7 @@ public class SignUpController {
     @FXML
     private void handleRegistration() throws RemoteException {
         String us = username.getText();
+        String email_text = email.getText();
         String pass = password.getText();
 
         int esito = client.signUpGUI(us,pass);
