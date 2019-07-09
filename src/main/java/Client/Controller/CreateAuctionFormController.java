@@ -131,7 +131,7 @@ public class CreateAuctionFormController {
         name = null;
         price = -1;
 
-        if( !itemName.getText().equals("") && !itemName.getText().equals(auction.getDescription())) {//protected variation
+        if( !itemName.getText().equals("") && !itemName.getText().equals(auction.getLot().getDescription())) {//protected variation
             name = itemName.getText();
         }
         if(!basePrice.getText().equals("") && (Integer.parseInt(basePrice.getText())>0) && auction.getBidsList().size()==0) {
@@ -214,7 +214,7 @@ public class CreateAuctionFormController {
             }
         }
 
-        itemName.setText(auction.getDescription());//protected var
+        itemName.setText(auction.getLot().getDescription());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
         closeDate.setVisible(false);
         closeTime.setVisible(false);
