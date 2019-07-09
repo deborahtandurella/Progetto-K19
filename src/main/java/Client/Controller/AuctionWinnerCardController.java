@@ -48,8 +48,8 @@ public class AuctionWinnerCardController {
     }
     public void initializeNow(){
         //PROTECTED VARIATIONS
-        auctionName.setText(auction.getLot().getDescription());
-        higherOffer.setText("$" + auction.getLastBid().getAmount());
+        auctionName.setText(auction.getDescription());
+        higherOffer.setText("$" + auction.getLastBidAmount());
         vendor.setText(auction.getUsernameVendorDB());
         e_mail.setText("e-mail");// aggiungiamo e-mail
         Image img;
