@@ -185,6 +185,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
 
     public boolean vendorOfAuction(int idAuction,String logged) {
+        //protected variation
         return (auctionListed(idAuction).getLot().getVendor().equalsIgnoreCase(logged));
     }
     public boolean vendorOfAuctionDB(int idAuction,String logged) { return db.vendorOfAuction(idAuction,logged); }
@@ -267,6 +268,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public void closeServer() throws RemoteException {
         try {
             saveTimerStats();
+            //protected variations
             db.getSessionFactory().close();
             reg.unbind("progettok19");
             UnicastRemoteObject.unexportObject(this,true);

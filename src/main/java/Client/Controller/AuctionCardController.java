@@ -97,7 +97,7 @@ public class AuctionCardController {
 
     public void initializeNow() {
         try {
-
+        //Protected variations
             if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
                 offerButton.setDisable(true);
                 offerButton.setVisible(false);
@@ -116,6 +116,7 @@ public class AuctionCardController {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        //protected variation
         auctionName.setText(auction.getLot().getDescription());
         if(auction.getLastBid() != null) {
             higherOffer.setText("$" + auction.getLastBid().getAmount());
@@ -290,6 +291,7 @@ public class AuctionCardController {
     @FXML
     private void makeAnOffer() throws RemoteException {
         if(!client.isClosed(auction.getId())) {
+            //protected variATIONS
             if (client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Offer");

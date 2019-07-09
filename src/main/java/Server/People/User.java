@@ -16,6 +16,9 @@ public class User implements Serializable {
     @Column(name = "username", updatable = false, nullable = false)
     private String username;
 
+    //@Column(name="e-mail",updatable=false,nullable=false)
+    private String e_mail;
+
     @Column(name = "pass")
     private String password;
 
@@ -64,6 +67,14 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getE_mail() {
+        return e_mail;
+    }
+
+    public void setE_mail(String e_mail) {
+        this.e_mail = e_mail;
     }
 
     public List<Auction> getFavoriteList() { return favoriteList; }
