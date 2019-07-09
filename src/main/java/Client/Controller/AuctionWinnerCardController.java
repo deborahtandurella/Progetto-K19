@@ -46,6 +46,10 @@ public class AuctionWinnerCardController {
     void backToLoginScreen(MouseEvent event) {
         popUpStage.close();
     }
+
+
+
+
     public void initializeNow(){
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getDescriptionLot());
