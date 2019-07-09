@@ -167,6 +167,10 @@ public class HomeController {
         titleController.setPrimaryStage(primaryStage);
         titleController.setClient(client);
         titleController.setAuctionListController(auctionListController);
+
+        //Inietto dipendenza
+        auctionListController.setTitleController(titleController);
+
     }
 
     private void initializeAuctionList() {

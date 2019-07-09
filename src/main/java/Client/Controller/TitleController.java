@@ -127,4 +127,16 @@ public class TitleController {
     public void setAuctionListController(AuctionListController auctionListController) {
         this.auctionListController = auctionListController;
     }
+
+    public JFXButton getUserSection() {
+        return userSection;
+    }
+
+    public JFXButton getMyAuction() {
+        return myAuction;
+    }
+
+    public JFXButton getFavoriteButton() {
+        return favoriteButton;
+    }
 }

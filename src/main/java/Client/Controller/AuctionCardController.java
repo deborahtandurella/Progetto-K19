@@ -97,8 +97,14 @@ public class AuctionCardController {
 
     public void initializeNow() {
         try {
-        //Protected variations
-            if(client.getLoggedUser().equals(auction.getUsernameVendorDB())) { //Auction chiede a Lot che chiede a User di restituire la stringa username
+
+            if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername()) && !client.isClosed(auction.getId())) {
+                offerButton.setDisable(true);
+                offerButton.setVisible(false);
+            }
+            else if(client.isClosed((auction.getId()))) {
+                modifyAuctionButton.setDisable(true);
+                modifyAuctionButton.setVisible(false);
                 offerButton.setDisable(true);
                 offerButton.setVisible(false);
             }
@@ -167,46 +173,48 @@ public class AuctionCardController {
         }
 
 
-        ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
-        long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
-        countMilliToDay(millis);
+        if(auction.getClosingDate().isAfter(LocalDateTime.now())) { //Andrebbe richiesta data attuale al server
+            ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
+            long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
+            countMilliToDay(millis);
 
-        timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(second > 0) {
-                    second--;
-                }
-                else if(second <= 0 ) {
-                    second = 59;
-                    if(minute > 0) {
-                        minute--;
-                    }
-                    else if (minute <= 0) {
-                        minute = 59;
-                        if(hour > 0) {
-                            hour--;
-                        }
-                        else if(hour <= 0) {
-                            hour = 23;
-                            if(day > 0) {
-                                day--;
+            timeline = new Timeline();
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (second > 0) {
+                        second--;
+                    } else if (second <= 0) {
+                        second = 59;
+                        if (minute > 0) {
+                            minute--;
+                        } else if (minute <= 0) {
+                            minute = 59;
+                            if (hour > 0) {
+                                hour--;
+                            } else if (hour <= 0) {
+                                hour = 23;
+                                if (day > 0) {
+                                    day--;
+                                }
                             }
                         }
                     }
+
+                    timer.setText("D " + day + "  H " + hour + "  M " + minute + "  S " + second);
+
+                    if (second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
+                        timeline.stop();
+                    }
+
                 }
-
-                timer.setText("D " + day  + "  H " + hour + "  M " + minute + "  S " + second);
-
-                if(second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
-                    timeline.stop();
-                }
-
-            }
-        }));
-        timeline.play();
+            }));
+            timeline.play();
+        }
+        else {
+            timer.setText("D " + 0 + "  H " + 0 + "  M " + 0 + "  S " + 0);
+        }
 
     }
 
