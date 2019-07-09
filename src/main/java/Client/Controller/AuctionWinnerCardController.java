@@ -50,7 +50,7 @@ public class AuctionWinnerCardController {
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getLot().getDescription());
         higherOffer.setText("$" + auction.getLastBid().getAmount());
-        vendor.setText(auction.getLot().getVendorDB().getUsername());
+        vendor.setText(auction.getUsernameVendorDB());
         e_mail.setText("e-mail");// aggiungiamo e-mail
         Image img;
 

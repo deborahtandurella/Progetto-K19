@@ -45,12 +45,12 @@ public class AuctionTimerStrategy extends TimerTask implements Serializable,Stra
                 //timer.schedule(t, CLOSED_ITEM_CLEANUP_PERIOD);
                 //timerTasks.put(t, CLOSED_ITEM_CLEANUP_PERIOD);
                 if(expiredAuction.getLastBid() != null) {
-                    //proteccted variations (copiare e modificare il branch)
-                    String winner = expiredAuction.getLastBid().getActor();
-                    expiredAuction.getLot().setWinner(winner);
+                    //protected variations (copiare e modificare il branch)
+                    String winner = expiredAuction.getLastActor(); //Auction chiede a Bid di restituire la stringa dell'attore dell'ultima offerta
+                    expiredAuction.setWinner(winner);// Auction dice a Lot di settare il vincitore
                 }
                 else
-                    expiredAuction.getLot().setWinner("No winner!");
+                    expiredAuction.setWinner("No winner!");
             }
             //else {
                 // Remove the closed auction permanently after cleanup period

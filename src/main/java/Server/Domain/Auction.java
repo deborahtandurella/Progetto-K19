@@ -166,6 +166,30 @@ public class Auction implements Serializable {
 
     public Auction() {}
 
+    public String getVendor(){
+        return this.lot.getVendor();
+    }
+
+    public String getLastActor(){
+        return this.getLastBid().getActor();
+    }
+
+    public int getLastBidAmount(){
+        return this.getLastBid().getAmount();
+    }
+
+    public String getDescriptionLot(){
+        return this.lot.getDescription();
+    }
+    public String getUsernameVendorDB(){
+        //protected variations
+        return this.lot.getUsernamenVendorDB();
+        //Lot chiede a User di restituire la stringa username
+    }
+
+    public void setWinner(String winner){
+        this.lot.setWinner(winner);
+    }
     public Auction(Lot lot, LocalDateTime closingDate) {
         this.lot = lot;
         this.closingDate = closingDate;

@@ -17,6 +17,7 @@ public class User implements Serializable {
     private String username;
 
     //@Column(name="e-mail",updatable=false,nullable=false)
+    @Transient
     private String e_mail;
 
     @Column(name = "pass")

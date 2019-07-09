@@ -617,6 +617,10 @@ public class InterpreterRDB {
         }
     }
 
+    public void closeSession(){
+        this.sessionFactory.close();
+    }
+
 
     SessionFactory getSessionFactory() { return sessionFactory; }
 

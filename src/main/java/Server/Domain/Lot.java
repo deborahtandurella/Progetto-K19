@@ -120,6 +120,10 @@ public class Lot implements Serializable {
         this.auL = auL;
     }
 
+
+    public String getUsernamenVendorDB(){
+        return this.vendorDB.getUsername();
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)

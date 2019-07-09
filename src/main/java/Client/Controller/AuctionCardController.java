@@ -98,7 +98,7 @@ public class AuctionCardController {
     public void initializeNow() {
         try {
         //Protected variations
-            if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
+            if(client.getLoggedUser().equals(auction.getUsernameVendorDB())) { //Auction chiede a Lot che chiede a User di restituire la stringa username
                 offerButton.setDisable(true);
                 offerButton.setVisible(false);
             }
@@ -117,19 +117,19 @@ public class AuctionCardController {
             e.printStackTrace();
         }
         //protected variation
-        auctionName.setText(auction.getLot().getDescription());
+        auctionName.setText(auction.getDescriptionLot());
         if(auction.getLastBid() != null) {
-            higherOffer.setText("$" + auction.getLastBid().getAmount());
-            bidderHigher.setText(auction.getLastBid().getActorDB().getUsername());
+            higherOffer.setText("$" + auction.getLastBidAmount());
+            bidderHigher.setText(auction.getLastActor());
         }
         else {
             higherOffer.setText("$"+auction.getHigherOffer());
             bidderHigher.setText("null");
         }
 
-        vendor.setText(auction.getLot().getVendorDB().getUsername());
+        vendor.setText(auction.getUsernameVendorDB());
         closeDate.setText(parseDate(auction.getClosingDate()));
-
+        //
 
         Image img;
 
@@ -292,7 +292,7 @@ public class AuctionCardController {
     private void makeAnOffer() throws RemoteException {
         if(!client.isClosed(auction.getId())) {
             //protected variATIONS
-            if (client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername())) {
+            if (client.getLoggedUser().equals(auction.getUsernameVendorDB())) {//come sopra
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Offer");
                 alert.setHeaderText("Error ");
