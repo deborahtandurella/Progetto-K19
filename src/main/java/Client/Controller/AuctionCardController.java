@@ -139,7 +139,6 @@ public class AuctionCardController {
 
         Image img;
 
-
         if(auction.getImage() == null) {
 
                 //img = new Image(new FileInputStream(auction.getImage()),100,100,false,false);

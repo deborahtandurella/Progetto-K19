@@ -37,6 +37,7 @@ public class InterpreterRDB {
         }
     }
 
+
    boolean logout(String userna) {
         s = sessionFactory.openSession();
 
@@ -363,7 +364,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                 a.setImage(image);
 
                 Alist.add(a);
@@ -389,7 +390,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                 a.setImage(image);
                 String title = a.getLot().getDescription().toLowerCase();
 
@@ -425,7 +426,7 @@ public class InterpreterRDB {
 
             for (int i = 0; i < list.size(); i++) {
                 Auction a = list.get(i);
-                File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
+                File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                 a.setImage(image);
                 Alist.add(a);
             }
@@ -454,7 +455,7 @@ public class InterpreterRDB {
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
                 if(a.getLot().getVendorDB().equals(user) || user.isAPartecipant(a)) {
-                    File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
+                    File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                     a.setImage(image);
 
                     Alist.add(a);
@@ -477,7 +478,7 @@ public class InterpreterRDB {
             Query query = s.createQuery(sql);
             query.setParameter("id",id);
             Auction a = (Auction)query.getSingleResult();
-            File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
+            File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
             if(image.exists())
                 a.setImage(image);
             return a;
@@ -630,4 +631,6 @@ public class InterpreterRDB {
         this.sys = sys;
         this.sessionFactory = HibernateUtil.getSessionFactory();
     }
+
+
 }

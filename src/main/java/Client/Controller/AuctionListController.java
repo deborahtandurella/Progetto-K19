@@ -60,6 +60,9 @@ public class AuctionListController {
         if(typeOfSearch == 0) {
             try {
                 Alist = client.requestListAuction();
+                for(Auction a: Alist){
+                    System.out.println("Nome"+a.getId()+ "         path: "+a.getImage().getAbsolutePath());
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
