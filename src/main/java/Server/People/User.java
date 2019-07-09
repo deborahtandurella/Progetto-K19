@@ -50,14 +50,17 @@ public class User implements Serializable {
         return isLoggedIn;
     }
     
-    public isAPartecipant(Auction auction){
+    public boolean isAPartecipant(Auction auction){
      return partecipantAuction.contains(auction);
     }
 
-    public isFavourite(Auction auction){
+    public boolean isFavourite(Auction auction){
      return favoriteList.contains(auction);
     }
-        
+
+    public List<Auction> getPartecipantAuction() {
+        return partecipantAuction;
+    }
 
     public void setLoggedIn(boolean loggedIn) {
         isLoggedIn = loggedIn;

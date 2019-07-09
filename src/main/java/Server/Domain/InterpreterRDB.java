@@ -111,10 +111,10 @@ public class InterpreterRDB {
             s.beginTransaction();
             Auction au = s.get(Auction.class,id);
             if(title!= null) {
-                au.getLot().setDescription(title);
+                au.setDescriptionLot(title);
             }
             if(price!= -1) {
-                au.getLot().setBasePrice(price);
+                au.setBasePriceLot(price);
                 au.setHigherOffer(price);
             }
             s.saveOrUpdate(au);
@@ -453,7 +453,7 @@ public class InterpreterRDB {
             Hibernate.initialize(user.getPartecipantAuction());
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                if(a.getLot().getVendorDB().equals(user) || user.getPartecipantAuction().contains(a)) {
+                if(a.getLot().getVendorDB().equals(user) || user.isAPartecipant(a)) {
                     File image = new File("src\\main\\java\\Server\\Services\\AuctionImages\\" + a.getId() + ".png");
                     a.setImage(image);
 
@@ -546,7 +546,7 @@ public class InterpreterRDB {
             s.beginTransaction();
             User u = s.get(User.class,username);
             Auction a = s.get(Auction.class,id);
-            if(u.getFavoriteList().contains(a))
+            if(u.isFavourite(a))
                 return true;
             return false;
         }catch (HibernateException e) {
