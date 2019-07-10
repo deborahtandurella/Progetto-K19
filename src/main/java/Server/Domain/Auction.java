@@ -46,14 +46,14 @@ public class Auction implements Serializable {
     private File image;
 
     /**
-     * Aggiunge offerta all'asta
+     * Add bid to the auction
      */
-    public void addBid(Bid bid) {
+    void addBid(Bid bid) {
         bidsList.add(bid);
         higherOffer = bid.getAmount();
     }
 
-    public void addBidDB(Bid bid) {
+    void addBidDB(Bid bid) {
         if(bid != null) {
             if(bidsList == null) {
                 bidsList = new ArrayList<>();
@@ -64,37 +64,37 @@ public class Auction implements Serializable {
     }
 
     /**
-     * Stampa informazioni su asta aperta
+     * Print info of if the auction is open
      */
-    public String auctionInformation() {
+    String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String closeDate = closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
     }
 
-    public String openAuctionInfoDB() {
+    String openAuctionInfoDB() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String closeDate = closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.informationDB() + "\t"  + "Data Fine:" + closeDate + "\n";
     }
 
     /**
-     * Stampa informazioni su asta chiusa
+     * Print info of if the auction is closed
      */
-    public String closedAuctionInformation() {
+    String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
     }
 
-    public String closedAuctionInfoDB() {
+    String closedAuctionInfoDB() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformationDB() + "\n";
     }
 
     /**
-     * Ottiene l'attuale offerta piu' alta
+     * Return the latest bid
      */
     public Bid getLastBid() {
         if(bidsList.size() != 0) {
@@ -126,7 +126,7 @@ public class Auction implements Serializable {
 
     public int getHigherOffer() { return higherOffer; }
 
-    public void setHigherOffer(int higherOffer) { this.higherOffer = higherOffer; }
+    void setHigherOffer(int higherOffer) { this.higherOffer = higherOffer; }
 
     public Lot getLot() { return lot; }
 
@@ -140,9 +140,9 @@ public class Auction implements Serializable {
 
     public void setClosingDate(LocalDateTime closingDate) { this.closingDate = closingDate; }
 
-    public boolean isClosed() { return closed; }
+    boolean isClosed() { return closed; }
 
-    public void setClosed(boolean closed) { this.closed = closed; }
+    void setClosed(boolean closed) { this.closed = closed; }
 
     public List<User> getPartecipantsList() { return partecipantsList; }
 
@@ -186,10 +186,10 @@ public class Auction implements Serializable {
         return this.lot.getDescription();
     }
 
-    public void setDescriptionLot(String title){
+    void setDescriptionLot(String title){
          this.lot.setDescription(title);
     }
-    public void setBasePriceLot(int price){
+    void setBasePriceLot(int price){
          this.lot.setBasePrice(price);
     }
     public String getUsernameVendorDB(){
@@ -199,7 +199,7 @@ public class Auction implements Serializable {
     }
 
 
-    public void setWinner(String winner){
+    void setWinner(String winner){
         this.lot.setWinner(winner);
     }
     public void setWinnerDB(User winner){

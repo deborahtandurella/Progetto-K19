@@ -30,11 +30,11 @@ public class Bid implements Serializable {
     @Transient
     private String actor;
 
-    public String getActor() {
+    String getActor() {
         return actor;
     }
 
-    public int getAmount() {
+    int getAmount() {
         return amount;
     }
 
@@ -50,7 +50,7 @@ public class Bid implements Serializable {
         return au;
     }
 
-    public void setAu(Auction au) {
+    void setAu(Auction au) {
         this.au = au;
     }
 
@@ -58,7 +58,7 @@ public class Bid implements Serializable {
         this.actor = actor;
     }
 
-    public void setAmount(int amount) {
+    void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -70,7 +70,7 @@ public class Bid implements Serializable {
         this.idAu = idAu;
     }
 
-    public User getActorDB() {
+    User getActorDB() {
         return actorDB;
     }
     
@@ -84,7 +84,7 @@ public class Bid implements Serializable {
 
     public Bid() {}
 
-    public Bid(int idAu, String actor, int amount) {
+    Bid(int idAu, String actor, int amount) {
         this.idAu = idAu;
         this.actor = actor;
         this.amount = amount;

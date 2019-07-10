@@ -25,14 +25,13 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
     @Transient
     private InterpreterRDB dbManager;
 
-    public void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, InterpreterRDB db){
+    void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, InterpreterRDB db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
 
     /**
-     * Il metodo ritorna il numero di millisecondi che mancano alla fine dell'asta, e' usato nello schedulare i timer
-     *
+     * Used to return the millis to the end of the auction
      */
     public long getTimeLeft() {
         return closeMillis - System.currentTimeMillis();
@@ -96,7 +95,7 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
         return 101;
     }
 
-    public AuctionDBTimerStrategy(Auction auction, long millis) {
+    AuctionDBTimerStrategy(Auction auction, long millis) {
         this.auction = auction;
         this.id = auction.getId();
         this.closeMillis = millis;

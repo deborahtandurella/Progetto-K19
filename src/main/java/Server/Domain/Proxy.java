@@ -71,5 +71,4 @@ public interface Proxy extends Remote {
     void closeAuction(int id) throws RemoteException;
 
     boolean isClosed(int id) throws RemoteException;
-
 }

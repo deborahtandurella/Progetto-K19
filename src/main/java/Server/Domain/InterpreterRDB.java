@@ -17,14 +17,16 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-public class InterpreterRDB {
-    private FacadeServer sys;
+class InterpreterRDB {
     private SessionFactory sessionFactory;
     private Session s;
 
-
+    /**
+     * Create the user and store it in the DB
+     */
     void addUser(String username, String pass) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             User u = new User(username, pass);
@@ -37,18 +39,20 @@ public class InterpreterRDB {
         }
     }
 
-
-   boolean logout(String userna) {
+    /**
+     * Check if the user is registered and logout
+     */
+    boolean logout(String username) {
         s = sessionFactory.openSession();
 
         try {
             s.beginTransaction();
-            String sql = "SELECT COUNT(*) FROM User where User.username= :userna";
+            String sql = "SELECT COUNT(*) FROM User where User.username= :username";
             NativeQuery sqlQuery = s.createSQLQuery(sql);
-            sqlQuery.setParameter("userna",userna);
+            sqlQuery.setParameter("username",username);
             int numb = ((Number)sqlQuery.getSingleResult()).intValue();
             if(numb == 1) {
-                User user = s.get(User.class, userna);
+                User user = s.get(User.class, username);
                 user.setLoggedIn(false);
                 s.saveOrUpdate(user);
                 s.getTransaction().commit();
@@ -62,18 +66,21 @@ public class InterpreterRDB {
         return false;
     }
 
-    boolean login(String userna, String pass) {
+    /**
+     * Check if the user is registered and login
+     */
+    boolean login(String username, String pass) {
         s = sessionFactory.openSession();
 
         try {
             s.beginTransaction();
             String sql = "SELECT COUNT(*) FROM User where username= :userna AND pass= :pass AND loggedstatus=false";
             NativeQuery sqlQuery = s.createSQLQuery(sql);
-            sqlQuery.setParameter("userna",userna);
+            sqlQuery.setParameter("userna",username);
             sqlQuery.setParameter("pass", pass);
             int numb = ((Number)sqlQuery.getSingleResult()).intValue();
             if (numb == 1) {
-                User u = s.get(User.class,userna);
+                User u = s.get(User.class,username);
                 u.setLoggedIn(true);
                 s.saveOrUpdate(u);
                 s.getTransaction().commit();
@@ -87,6 +94,9 @@ public class InterpreterRDB {
         return false;
     }
 
+    /**
+     * Create a new auction
+     */
     void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         s = sessionFactory.openSession();
 
@@ -106,8 +116,13 @@ public class InterpreterRDB {
         }
     }
 
+
+    /**
+     * Modify an existing (and not closed) auction
+     */
     void modifyAuction(String title, int price,int id) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             Auction au = s.get(Auction.class,id);
@@ -127,6 +142,9 @@ public class InterpreterRDB {
         }
     }
 
+    /**
+     * Check if the auction is closed
+     */
     boolean isClosed(int id) {
         s = sessionFactory.openSession();
 
@@ -143,8 +161,12 @@ public class InterpreterRDB {
         return false;
     }
 
+    /**
+     * Close the auction
+     */
     void closeAuction(int id) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             Auction au = s.get(Auction.class,id);
@@ -158,6 +180,9 @@ public class InterpreterRDB {
         }
     }
 
+    /**
+     * Set the winner of the auction (the biggest offer), in addition the method order the bids
+     */
     void winner(int id) {
         s = sessionFactory.openSession();
 
@@ -184,7 +209,10 @@ public class InterpreterRDB {
         }
     }
 
-    synchronized int idOfAuction() {
+    /**
+     * Used to get the latest used id for the auction
+     */
+    synchronized int latestId() {
         s = sessionFactory.openSession();
 
         String sql = "SELECT max(id) FROM auction";
@@ -204,8 +232,12 @@ public class InterpreterRDB {
         return  1;
     }
 
+    /**
+     * Add a bid to the auction's bids list
+     */
     synchronized boolean makeBid(String user, int amount,int id) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             User u = s.get(User.class,user);
@@ -231,7 +263,9 @@ public class InterpreterRDB {
         return false;
     }
 
-
+    /**
+     * Used to check if the user that is trying to do something is the vendor
+     */
     boolean vendorOfAuction(int idAuction,String logged) {
        s = sessionFactory.openSession();
 
@@ -250,7 +284,9 @@ public class InterpreterRDB {
        return false;
     }
 
-
+    /**
+     * Check if the username is alredy registered
+     */
     boolean alredyTakenUsername(String userna) {
        s = sessionFactory.openSession();
 
@@ -261,8 +297,6 @@ public class InterpreterRDB {
            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
            if (numb == 1)
                return true;
-           else
-               return false;
        } catch (Exception e){
            e.printStackTrace();
        } finally {
@@ -271,7 +305,10 @@ public class InterpreterRDB {
        return false;
     }
 
-    int higherOffer(int id) {
+    /**
+     * Return the highest for a specific auction
+     */
+    int highestOffer(int id) {
         s = sessionFactory.openSession();
 
         try {
@@ -285,6 +322,9 @@ public class InterpreterRDB {
         return -1;
     }
 
+    /**
+     * Check if an auction exists
+     */
     boolean checkExistingAuction(int id) {
         s = sessionFactory.openSession();
 
@@ -293,9 +333,8 @@ public class InterpreterRDB {
             NativeQuery sqlQuery = s.createSQLQuery(sql);
             sqlQuery.setParameter("idA",id);
             int numb = ((Number)sqlQuery.getSingleResult()).intValue();
-            if (numb == 1) {
+            if (numb == 1)
                 return true;
-            }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -304,7 +343,9 @@ public class InterpreterRDB {
         return false;
     }
 
-
+    /**
+     * Return all the open auctions
+     */
     String showAllActive() {
         s = sessionFactory.openSession();
         String toPrint = "";
@@ -329,6 +370,9 @@ public class InterpreterRDB {
         return "NAN";
     }
 
+    /**
+     * Return all the closed auctions
+     */
     String showAllClosed() {
         s = sessionFactory.openSession();
         String toPrint = "";
@@ -353,11 +397,15 @@ public class InterpreterRDB {
         return "NAN";
     }
 
+    /**
+     * Return a list of open auction (used by the GUI)
+     */
     ArrayList<Auction> AuctionList() {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
 
         String sql = "FROM  Auction where closed= false";
+
         try {
             Query query = s.createQuery(sql);
             List<Auction> list = (List<Auction>)query.list();
@@ -369,7 +417,6 @@ public class InterpreterRDB {
 
                 Alist.add(a);
             }
-
             return Alist;
         } catch (Exception e){
             e.printStackTrace();
@@ -379,6 +426,9 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Return a list of auction that have a specific text in the title
+     */
     ArrayList<Auction> searchAuctionList(String textToSearch) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -411,13 +461,16 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Return a list of favorite auctions for a specific user
+     */
     ArrayList<Auction> favoriteAuction(String user) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
         User u = s.get(User.class,user);
         String sql = " SELECT a FROM Auction a INNER JOIN Favorites f on a=f.auctionLiked where :u=f.liker ";
         try {
-            Hibernate.initialize(u.getFavoriteList());
+            Hibernate.initialize(u.getFavoriteList()); //Essenziale nel caso di relazione Many to Many
 
             Query query = s.createQuery(sql);
             query.setParameter("u", u);
@@ -431,7 +484,6 @@ public class InterpreterRDB {
                 Alist.add(a);
             }
 
-
             return Alist;
 
         } catch (Exception e){
@@ -442,6 +494,9 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Return a list of auction where the user has participated or has sold
+     */
     ArrayList<Auction> myAuctionList(String username) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -471,9 +526,13 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Return an Auction given the id
+     */
     Auction getAuction(int id) {
         s = sessionFactory.openSession();
         String sql = "FROM Auction where id=:id";
+
         try {
             Query query = s.createQuery(sql);
             query.setParameter("id",id);
@@ -490,15 +549,18 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Return an User given the username
+     */
     User getUser(String username) {
         s = sessionFactory.openSession();
         String sql = "FROM User where username=:user";
+
         try {
             Query query = s.createQuery(sql);
             query.setParameter("user",username);
-            User u = (User)query.getSingleResult();
 
-            return u;
+            return (User)query.getSingleResult();
         }catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -507,8 +569,12 @@ public class InterpreterRDB {
         return null;
     }
 
+    /**
+     * Update the User's stats
+     */
     synchronized void saveUserStateFavorites(User user,Auction au,int choose) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             User u = s.get(User.class,user.getUsername());
@@ -522,14 +588,18 @@ public class InterpreterRDB {
 
             s.getTransaction().commit();
         }catch (HibernateException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         } finally {
-        s.close();
+            s.close();
         }
     }
 
+    /**
+     * Update Auction's state
+     */
     synchronized void saveAuctionState(Auction auction) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             s.saveOrUpdate(auction);
@@ -541,15 +611,18 @@ public class InterpreterRDB {
         }
     }
 
+    /**
+     * Return if the User likes a specific Auction
+     */
     synchronized boolean userLikeAuction(String username, int id) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
             User u = s.get(User.class,username);
             Auction a = s.get(Auction.class,id);
             if(u.isFavourite(a))
                 return true;
-            return false;
         }catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -559,14 +632,17 @@ public class InterpreterRDB {
         return false;
     }
 
+    /**
+     * Save the Timers
+     */
     void saveTimer( ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         s = sessionFactory.openSession();
+
         try {
             s.beginTransaction();
                 for(AuctionDBTimerStrategy timer : timerTasksDB) {
                 s.saveOrUpdate(timer);
             }
-
 
         }catch (HibernateException e) {
             e.printStackTrace();
@@ -576,6 +652,9 @@ public class InterpreterRDB {
         }
     }
 
+    /**
+     * Reload the Timers
+     */
     HashMap<Integer, BigInteger> reloadTimer() {
         s = sessionFactory.openSession();
 
@@ -588,20 +667,24 @@ public class InterpreterRDB {
             NativeQuery query2 = s.createSQLQuery(sql2);
             List<BigInteger> b = query2.getResultList();
             HashMap<Integer,BigInteger> timer = new HashMap<>();
+
             for(int i =0; i < a.size(); i++) {
                 timer.put(a.get(i),b.get(i));
             }
+
             s.getTransaction().commit();
             return timer;
         }catch (HibernateException e) {
             e.printStackTrace();
         } finally {
-
             s.close();
         }
         return null;
     }
-    
+
+    /**
+     * Delete all the Timers
+      */
     void deleteTimer() {
         s = sessionFactory.openSession();
         String sql = "DELETE FROM AuctionDBTimerStrategy";
@@ -618,19 +701,16 @@ public class InterpreterRDB {
         }
     }
 
-    public void closeSession(){
+    /**
+     * Close the Hibernate's session factory
+     */
+    void closeSession(){
         this.sessionFactory.close();
     }
 
 
-    SessionFactory getSessionFactory() { return sessionFactory; }
-
-    void setSessionFactory(SessionFactory sessionFactory) { this.sessionFactory = sessionFactory; }
-
-    public InterpreterRDB(FacadeServer sys) {
-        this.sys = sys;
+    public InterpreterRDB() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
     }
-
 
 }

@@ -38,7 +38,7 @@ public class Lot implements Serializable {
     private String vendor;
 
 
-    public int getBasePrice() {
+    int getBasePrice() {
         return basePrice;
     }
 
@@ -49,19 +49,19 @@ public class Lot implements Serializable {
 
     public String getDescription() { return description; }
 
-    public String information() {
+    String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
-    public String informationDB() {
+
+    String informationDB() {
         return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\n";
     }
 
-
-    public String closedInformation() {
+    String closedInformation() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + winner + "\n";
     }
 
-    public String closedInformationDB() {
+    String closedInformationDB() {
         return "Name:" + description + "\t" + "Vendor: " + vendorDB.getUsername() + "\t" + "Base Price:" + basePrice + "\t\t" + "Winner:" + valuateWinner() + "\n";
     }
 
@@ -76,7 +76,7 @@ public class Lot implements Serializable {
             return winnerDB.getUsername();
     }
 
-    public void setWinner(String winner) {
+    void setWinner(String winner) {
         this.winner = winner;
     }
 
@@ -92,7 +92,7 @@ public class Lot implements Serializable {
         return vendorDB;
     }
 
-    public void setVendorDB(User vendorDB) {
+    void setVendorDB(User vendorDB) {
         this.vendorDB = vendorDB;
     }
 
@@ -100,15 +100,15 @@ public class Lot implements Serializable {
         return winnerDB;
     }
 
-    public void setWinnerDB(User winnerDB) {
+    void setWinnerDB(User winnerDB) {
         this.winnerDB = winnerDB;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public void setBasePrice(int basePrice) {
+    void setBasePrice(int basePrice) {
         this.basePrice = basePrice;
     }
 
@@ -120,10 +120,10 @@ public class Lot implements Serializable {
         this.auL = auL;
     }
 
-
-    public String getUsernamenVendorDB(){
+    String getUsernamenVendorDB(){
         return this.vendorDB.getUsername();
     }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)

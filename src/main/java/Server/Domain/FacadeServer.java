@@ -115,7 +115,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public synchronized void addAuctionDB(String title, int price, String vendor, LocalDateTime closingTime) {
         db.addAuction(title,price,vendor,closingTime);
-        int auctionId = db.idOfAuction();
+        int auctionId = db.latestId();
         ZonedDateTime zdt = closingTime.atZone(ZoneId.of("Europe/Rome"));
         long millis = zdt.toInstant().toEpochMilli();
         AuctionDBTimerStrategy t = new AuctionDBTimerStrategy(db.getAuction(auctionId),millis);
@@ -181,7 +181,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         else
             return -1;
     }
-    public int higherOfferDB(int id) { return db.higherOffer(id); }
+    public int higherOfferDB(int id) { return db.highestOffer(id); }
 
 
     public boolean vendorOfAuction(int idAuction,String logged) {
@@ -211,7 +211,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public synchronized void saveAuctionImage(File image) {
-        auctionIdCounter = db.idOfAuction();
+        auctionIdCounter = db.latestId();
         String pathSave = "src\\main\\resources\\Images\\" + auctionIdCounter + ".png";
 
         try {
@@ -276,7 +276,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public void reloadImages() {
-        setAuctionIdCounter(db.idOfAuction());
+        setAuctionIdCounter(db.latestId());
     }
 
     public ArrayList<Auction> myAuctionList(String username) { return db.myAuctionList(username); }
@@ -321,21 +321,21 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         System.out.println(files.loadState());
     }
 
-    public ConcurrentHashMap<String, User> getUsersList() { return usersList; }
+    ConcurrentHashMap<String, User> getUsersList() { return usersList; }
 
-    public void setUsersList(ConcurrentHashMap<String, User> usersList) { this.usersList = usersList; }
+    void setUsersList(ConcurrentHashMap<String, User> usersList) { this.usersList = usersList; }
 
-    public ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
+    ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
 
-    public void setAuctionList(ConcurrentHashMap<Integer, Auction> auctionList) { this.auctionList = auctionList; }
+    void setAuctionList(ConcurrentHashMap<Integer, Auction> auctionList) { this.auctionList = auctionList; }
 
-    public HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
+    HashMap<Integer, Auction> getClosedAuction() { return closedAuction; }
 
-    public void setClosedAuction(HashMap<Integer, Auction> closedAuction) { this.closedAuction = closedAuction; }
+    void setClosedAuction(HashMap<Integer, Auction> closedAuction) { this.closedAuction = closedAuction; }
 
-    public HashMap<AuctionTimerStrategy, Long> getTimerTasks() { return timerTasks; }
+    HashMap<AuctionTimerStrategy, Long> getTimerTasks() { return timerTasks; }
 
-    public void setTimerTasks(HashMap<AuctionTimerStrategy, Long> timerTasks) { this.timerTasks = timerTasks; }
+    void setTimerTasks(HashMap<AuctionTimerStrategy, Long> timerTasks) { this.timerTasks = timerTasks; }
 
     public ArrayList<AuctionDBTimerStrategy> getTimerTasksDB() {
         return timerTasksDB;
@@ -347,7 +347,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public int getAuctionIdCounter() { return auctionIdCounter; }
 
-    public void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
+    void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
 
     public Timer getTimer() { return timer; }
 
@@ -368,7 +368,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         timer = new Timer();
         timerTasks = new HashMap<>();
         files = new FileManager(this);
-        db = new InterpreterRDB(this);
+        db = new InterpreterRDB();
         timerTasksDB = new ArrayList<>();
     }
 }

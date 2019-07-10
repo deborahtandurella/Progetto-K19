@@ -221,21 +221,25 @@ public class CreateAuctionFormController {
     }
 
     private boolean validateInput() {
-        if(itemName.getText().equals(""))
-            return false;
-        name = itemName.getText();
-        if(basePrice.getText().equals(""))
-            return false;
-        price = Integer.parseInt(basePrice.getText());
-        if(closeDate.getValue() == null)
-            return false;
-        if(closeTime.getValue() == null)
-            return false;
-        LocalDate date = closeDate.getValue();
-        LocalTime time = closeTime.getValue();
-        close = LocalDateTime.of(date,time);
+        try {
+            if (itemName.getText().equals(""))
+                return false;
+            name = itemName.getText();
+            if (basePrice.getText().equals(""))
+                return false;
+            price = Integer.parseInt(basePrice.getText());
+            if (closeDate.getValue() == null)
+                return false;
+            if (closeTime.getValue() == null)
+                return false;
+            LocalDate date = closeDate.getValue();
+            LocalTime time = closeTime.getValue();
+            close = LocalDateTime.of(date, time);
 
-        return true;
+            return true;
+        }catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public void disableModifyDeleteAuction() {

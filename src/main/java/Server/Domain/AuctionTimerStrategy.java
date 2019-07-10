@@ -13,15 +13,14 @@ public class AuctionTimerStrategy extends TimerTask implements Serializable,Stra
     private HashMap<Integer,Auction> closedAuction;
     private HashMap<AuctionTimerStrategy, Long> timerTasks;
 
-    public void passArgument(ConcurrentHashMap<Integer,Auction> openAuction, HashMap<Integer,Auction> closedAuction,HashMap<AuctionTimerStrategy, Long> timerTasks){
+    void passArgument(ConcurrentHashMap<Integer,Auction> openAuction, HashMap<Integer,Auction> closedAuction,HashMap<AuctionTimerStrategy, Long> timerTasks){
         this.openAuction = openAuction;
         this.closedAuction = closedAuction;
         this.timerTasks = timerTasks;
     }
 
     /**
-     * Il metodo ritorna il numero di millisecondi che mancano alla fine dell'asta, e' usato nello schedulare i timer
-     *
+     * Used to return the millis to the end of the auction
     */
     public long getTimeLeft() {
         return closeMillis - System.currentTimeMillis();
@@ -61,7 +60,7 @@ public class AuctionTimerStrategy extends TimerTask implements Serializable,Stra
         }
     }
 
-    public AuctionTimerStrategy(int auctionId, long millis) {
+    AuctionTimerStrategy(int auctionId, long millis) {
         this.id = auctionId;
         this.closeMillis = millis;
     }
