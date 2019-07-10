@@ -124,6 +124,10 @@ public class Lot implements Serializable {
         return this.vendorDB.getUsername();
     }
 
+    String getEmailVendor(){
+        return this.vendorDB.getEmail();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Auction)
@@ -131,6 +135,7 @@ public class Lot implements Serializable {
         else
             return false;
     }
+
 
     public Lot() {}
 

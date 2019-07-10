@@ -435,6 +435,26 @@ public class ClientManager {
         return ad.userLikeAuction(loggedUser,id);
     }
 
+    public int changeEmail(String email,String username) throws RemoteException{
+            if(validateEmail(email)) {
+                ad.changeEmail(email,username);
+                return 1;
+            }
+            else
+                return -1;
+    }
+    public int changePassword(String pswNew,String pswRep,String username) throws RemoteException {
+        if (pswNew.equals(pswRep)){
+            if (validatePassword(pswNew)) {
+                ad.changePassword(pswNew, username);
+                return 1;
+            } else
+                return -1;
+        }
+        else
+            return -2;
+    }
+
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
         ad = bind;

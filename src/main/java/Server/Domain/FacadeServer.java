@@ -40,6 +40,13 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         db.addUser(username,password,email);
     }
 
+    public void changeEmail(String email,String username){
+        db.changeEmail(email,username);
+    }
+    public void changePassword(String psw,String username){
+        db.changeEmail(psw,username);
+    }
+
 
     public boolean logoutS(String username) {
         userListed(username).setLoggedIn(false);

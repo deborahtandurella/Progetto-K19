@@ -39,6 +39,53 @@ class InterpreterRDB {
         }
     }
 
+    boolean changeEmail(String email,String username){
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            String sql = "SELECT COUNT(*) FROM User where User.username= :username";
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            sqlQuery.setParameter("username",username);
+            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
+            if(numb == 1) {
+                User user = s.get(User.class, username);
+                user.setEmail(email);
+                s.saveOrUpdate(user);
+                s.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
+    }
+    boolean changePassword(String password,String username){
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            String sql = "SELECT COUNT(*) FROM User where User.username= :username";
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            sqlQuery.setParameter("username",username);
+            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
+            if(numb == 1) {
+                User user = s.get(User.class, username);
+                user.setPassword(password);
+                s.saveOrUpdate(user);
+                s.getTransaction().commit();
+                return true;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
+    }
+
     /**
      * Check if the user is registered and logout
      */
@@ -193,12 +240,12 @@ class InterpreterRDB {
             if (list.size() != 0) {
                 list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
                 int lastOne = list.size()-1;
-                String winner = list.get(lastOne).getActorDB().getUsername();//questo si può cambiare c'è già il metodo
+                String winner = list.get(lastOne).getActorDBUsername();//questo si può cambiare c'è già il metodo
                 User u = s.get(User.class,winner);
-                au.getLot().setWinnerDB(u);
+                au.setWinnerDB(u);
             }
             else {
-                au.getLot().setWinner("No Winner!");
+                au.setWinner("No Winner!");
             }
             s.saveOrUpdate(au);
             s.getTransaction().commit();
@@ -275,7 +322,7 @@ class InterpreterRDB {
            Query query = s.createQuery(sql);
            Auction au = (Auction)query.getSingleResult();
            s.getTransaction().commit();
-           return (au.getLot().getVendorDB().getUsername().equalsIgnoreCase(logged));//anche questo si può modificare getusernamevendor
+           return (au.getUsernameVendorDB().equalsIgnoreCase(logged));//anche questo si può modificare getusernamevendor
        } catch (Exception e){
            e.printStackTrace();
        } finally {
@@ -589,6 +636,7 @@ class InterpreterRDB {
         }
         return null;
     }
+
 
     /**
      * Update the User's stats

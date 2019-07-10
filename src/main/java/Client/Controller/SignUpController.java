@@ -42,7 +42,6 @@ public class SignUpController extends TemplateController {
             alert.setHeaderText(null);
             alert.setContentText("User create successfully");
             alert.initOwner(popUpStage);
-
             alert.showAndWait();
         }
         if(esito == 0) {

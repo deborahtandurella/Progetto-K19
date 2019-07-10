@@ -198,6 +198,10 @@ public class Auction implements Serializable {
         //Lot chiede a User di restituire la stringa username
     }
 
+    public String getEmailVendor(){
+        return this.lot.getEmailVendor();
+    }
+
 
     void setWinner(String winner){
         this.lot.setWinner(winner);

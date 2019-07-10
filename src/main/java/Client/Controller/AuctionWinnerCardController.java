@@ -56,7 +56,7 @@ public class AuctionWinnerCardController extends TemplateController {
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
         vendor.setText(auction.getUsernameVendorDB());
-        e_mail.setText("INSERIRE EMAIL CON QUERY");//
+        e_mail.setText(auction.getLot().getVendorDB().getEmail());//
         Image img;
 
 

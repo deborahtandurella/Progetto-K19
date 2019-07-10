@@ -12,6 +12,9 @@ public interface Proxy extends Remote {
     boolean alredyTakenUsername(String username) throws RemoteException;
     boolean alredyTakenUsernameDB(String username) throws RemoteException;
 
+    void changeEmail(String email,String username)throws RemoteException;
+    void changePassword(String psw,String username)throws RemoteException;
+
     void createUser(String username, String password) throws RemoteException;
     void createUserDB(String username, String password,String email) throws RemoteException;
 
