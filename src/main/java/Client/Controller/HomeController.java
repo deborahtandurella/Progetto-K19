@@ -51,9 +51,12 @@ public class HomeController {
 
     private AuctionListController auctionListController;
 
-    private HomeController homeController;
-
     private CreateAuctionFormController auctionFormController;
+
+    public void init() {
+        initializeAuctionList();
+        initializeHeader();
+    }
 
 
     @FXML
@@ -134,18 +137,11 @@ public class HomeController {
     }
 
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage; }
+    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
 
     public ClientManager getClient() { return client; }
 
-    public void setClient(ClientManager client) {
-        this.client = client;
-        initializeAuctionList();
-        initializeHeader();
-    }
-
-
+    public void setClient(ClientManager client) { this.client = client; }
 
     public Stage getPrimaryStage() { return primaryStage; }
 
@@ -170,6 +166,8 @@ public class HomeController {
 
         //Inietto dipendenza
         auctionListController.setTitleController(titleController);
+
+        titleController.setHomeController(this);
 
     }
 
@@ -213,11 +211,11 @@ public class HomeController {
         this.auctionListController = auctionListController;
     }
 
-    public HomeController getHomeController() {
-        return homeController;
+    public AnchorPane getAuctionList() {
+        return auctionList;
     }
 
-    public void setHomeController(HomeController homeController) {
-        this.homeController = homeController;
+    public void setAuctionList(AnchorPane auctionList) {
+        this.auctionList = auctionList;
     }
 }

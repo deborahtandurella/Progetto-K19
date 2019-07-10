@@ -67,7 +67,7 @@ public class LoginController {
             homeController = (HomeController)loader.getController();
             homeController.setPrimaryStage(primaryStage);
             homeController.setClient(client);
-            homeController.setHomeController(homeController);
+            homeController.init();
 
             primaryStage.setScene(new Scene(home));
         }

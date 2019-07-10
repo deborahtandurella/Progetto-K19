@@ -107,7 +107,7 @@ public class SignUpController {
         this.client = client;
     }
 
-    public void initializeWindow() {
+    void initializeWindow() {
         popUpStage.getScene().setFill(Color.TRANSPARENT);
         windowsPane.setStyle(
 
