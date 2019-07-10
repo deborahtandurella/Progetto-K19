@@ -24,9 +24,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 
-public class HomeController {
-    private ClientManager client;
-    private Stage primaryStage;
+public class HomeController extends TemplateController {
+
     private FXMLLoader fxml = null;
 
     @FXML
@@ -63,42 +62,14 @@ public class HomeController {
     public void createAuctionAction(ActionEvent event) throws IOException {
         BoxBlur blur = new BoxBlur(3,3,3);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
-        Parent root = (Parent) loader.load();
-
-        Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
-        popUpStage.initOwner(primaryStage);
-        popUpStage.initModality(Modality.APPLICATION_MODAL);
-        popUpStage.setScene(new Scene(root));
-
-        // Calculate the center position of the parent Stage
-        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        popUpStage.setOnShowing(ev -> popUpStage.hide());
-
-        // Relocate the pop-up Stage
-        popUpStage.setOnShown(ev -> {
-            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
-            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
-            popUpStage.show();
-        });
-
-        popUpStage.show();
+        Stage popUpStageCreate = loadScenePopUp("/View/CreateAuctionForm.fxml");
 
         windowsPane.setEffect(blur);
 
-
-
-        //Animation
-        new FadeIn(root).play();
-
-
-        auctionFormController = (CreateAuctionFormController) loader.getController();
+        auctionFormController = loader.getController();
 
         auctionFormController.setClient(client);
-        auctionFormController.setPopUpStage(popUpStage);
+        auctionFormController.setPopUpStage(popUpStageCreate);
         auctionFormController.setPrimaryStage(primaryStage);
         auctionFormController.disableModifyDeleteAuction();
 
@@ -136,14 +107,6 @@ public class HomeController {
         primaryStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
-
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) { this.client = client; }
-
-    public Stage getPrimaryStage() { return primaryStage; }
 
     private void initializeHeader() {
         FXMLLoader fxml = null;
@@ -191,6 +154,7 @@ public class HomeController {
 
         auctionListController.setPrimaryStage(primaryStage);
         auctionListController.setClient(client);
+        auctionListController.refreshList();
         auctionListController.setAuctionListController(auctionListController);
         auctionListController.setAuctionFormController((CreateAuctionFormController) loader.getController());
     }

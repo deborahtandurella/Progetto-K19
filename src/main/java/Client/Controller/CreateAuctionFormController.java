@@ -28,10 +28,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
-public class CreateAuctionFormController {
-    private ClientManager client;
-    private Stage popUpStage;
-    private Stage primaryStage;
+public class CreateAuctionFormController extends TemplateController {
     private  File selectedFile;
     private Auction auction;
 
@@ -71,7 +68,7 @@ public class CreateAuctionFormController {
     private JFXButton createAuction;
 
     @FXML
-    public void loadImageAction(ActionEvent event) {
+    public void loadImageAction() {
         FileChooser fc = new FileChooser();
         selectedFile = fc.showOpenDialog(null);
 
@@ -92,7 +89,7 @@ public class CreateAuctionFormController {
     }
 
     @FXML
-    public void createAuctionAction(ActionEvent event) throws RemoteException {
+    public void createAuctionAction() throws RemoteException {
         if(validateInput()) {
             if(client.createAuctionGUI(name,price,close) == 1) {
                 if(selectedFile != null) {
@@ -260,18 +257,6 @@ public class CreateAuctionFormController {
         AnchorPane pane = (AnchorPane) primaryStage.getScene().lookup("#windowsPane");
         pane.setEffect(null);
         popUpStage.close();
-    }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-    }
-
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 
     public Auction getAuction() {

@@ -1,23 +1,17 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
-public class SignUpController {
-    private ClientManager client;
-    private Stage popUpStage;
-    private Stage primaryStage;
+public class SignUpController extends TemplateController {
 
     @FXML
     private JFXTextField username;
@@ -109,22 +103,6 @@ public class SignUpController {
         backButton.setStyle("-fx-background-color:transparent;");
     }
 
-
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
-
-    public Stage getPrimaryStage() { return primaryStage; }
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
-
-    public ClientManager getClient() {
-        return client;
-    }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-    }
 
     void initializeWindow() {
         popUpStage.getScene().setFill(Color.TRANSPARENT);

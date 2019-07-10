@@ -46,9 +46,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 
-public class AuctionCardController {
-    private ClientManager client;
-    private Stage popUpStage;
+public class AuctionCardController extends TemplateController{
     private Auction auction;
 
     @FXML
@@ -385,22 +383,6 @@ public class AuctionCardController {
         }
     }
 
-    public ClientManager getClient() {
-        return client;
-    }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-        initializeNow();
-    }
-
-    public Stage getPopUpStage() {
-        return popUpStage;
-    }
-
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
 
     public Auction getAuction() {
         return auction;

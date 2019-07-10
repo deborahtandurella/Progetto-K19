@@ -17,10 +17,7 @@ import javafx.stage.Stage;
 import java.awt.event.ActionEvent;
 import java.rmi.RemoteException;
 
-public class UserPageController {
-    private ClientManager client;
-    private Stage primaryStage;
-    private Stage popUpStage;
+public class UserPageController extends TemplateController {
 
     private TitleController titleController;
 
@@ -112,18 +109,6 @@ public class UserPageController {
     public void setUser(User user) {
         this.user = user;
     }
-
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) { this.client = client; }
-
-    public Stage getPrimaryStage() { return primaryStage; }
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
-
-    public Stage getPopUpStage() { return popUpStage; }
-
-    public void setPopUpStage(Stage popUpStage) { this.popUpStage = popUpStage; }
 
     public TitleController getTitleController() { return titleController; }
 

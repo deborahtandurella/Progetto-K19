@@ -18,9 +18,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-public class TitleController {
-    private ClientManager client;
-    private Stage primaryStage;
+public class TitleController extends TemplateController {
 
     @FXML
     private JFXButton logout;
@@ -119,40 +117,15 @@ public class TitleController {
 
         BoxBlur blur = new BoxBlur(5,5,5);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/UserPage.fxml"));
-        Parent signup = (Parent) loader.load();
-
-        Stage popUpStageSignUp = new Stage(StageStyle.TRANSPARENT);
-        popUpStageSignUp.initOwner(primaryStage);
-        popUpStageSignUp.initModality(Modality.APPLICATION_MODAL);
-        Scene sigUpScene = new Scene(signup);
-        popUpStageSignUp.setScene(sigUpScene);
-
-        // Calculate the center position of the parent Stage
-        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        popUpStageSignUp.setOnShowing(ev -> popUpStageSignUp.hide());
-
-        // Relocate the pop-up Stage
-        popUpStageSignUp.setOnShown(ev -> {
-            popUpStageSignUp.setX(centerXPosition - popUpStageSignUp.getWidth()/2d);
-            popUpStageSignUp.setY(centerYPosition - popUpStageSignUp.getHeight()/2d);
-            popUpStageSignUp.show();
-        });
-
-        popUpStageSignUp.show();
+        Stage popUpStageUserPage = loadScenePopUp("/View/UserPage.fxml");
 
         primaryStage.getScene().lookup("#windowsPane").setEffect(blur);
-
-        new FadeIn(signup).play();
 
 
         userPageController = (UserPageController) loader.getController();
         userPageController.setPrimaryStage(primaryStage);
         userPageController.setClient(client);
-        userPageController.setPopUpStage(popUpStageSignUp);
+        userPageController.setPopUpStage(popUpStageUserPage);
         userPageController.initializeWindow();
         userPageController.initializeNow();
         userPageController.setTitleController(this);
@@ -170,18 +143,6 @@ public class TitleController {
         myAuction.setDisable(false);
     }
 
-
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) { this.client = client; }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
 
     public AuctionListController getAuctionListController() {
         return auctionListController;

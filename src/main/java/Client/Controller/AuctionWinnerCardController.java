@@ -1,6 +1,5 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -8,9 +7,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,9 +17,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-public class AuctionWinnerCardController {
-    private ClientManager client;
-    private Stage popUpStage;
+public class AuctionWinnerCardController extends TemplateController {
     private Auction auction;
 
     @FXML
@@ -61,7 +56,7 @@ public class AuctionWinnerCardController {
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
         vendor.setText(auction.getUsernameVendorDB());
-        e_mail.setText("e-mail");// aggiungiamo e-mail
+        e_mail.setText("INSERIRE EMAIL CON QUERY");//
         Image img;
 
 
@@ -98,23 +93,6 @@ public class AuctionWinnerCardController {
         }
     }
 
-
-    public ClientManager getClient() {
-        return client;
-    }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-        initializeNow();
-    }
-
-    public Stage getPopUpStage() {
-        return popUpStage;
-    }
-
-    public void setPopUpStage(Stage popUpStage) {
-        this.popUpStage = popUpStage;
-    }
 
     public Auction getAuction() {
         return auction;

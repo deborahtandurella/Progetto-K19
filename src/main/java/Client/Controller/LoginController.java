@@ -21,9 +21,7 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 
 
-public class LoginController {
-    private ClientManager client;
-    private Stage primaryStage;
+public class LoginController extends TemplateController {
 
     private HomeController homeController;
     private SignUpController signupController;
@@ -96,37 +94,12 @@ public class LoginController {
     private void changeSceneSignUp() throws IOException {
         BoxBlur blur = new BoxBlur(5,5,5);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/SignUp.fxml"));
-        Parent signup = (Parent) loader.load();
-
-        Stage popUpStageSignUp = new Stage(StageStyle.TRANSPARENT);
-        popUpStageSignUp.initOwner(primaryStage);
-        popUpStageSignUp.initModality(Modality.APPLICATION_MODAL);
-        Scene sigUpScene = new Scene(signup);
-        popUpStageSignUp.setScene(sigUpScene);
-
-        // Calculate the center position of the parent Stage
-        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        popUpStageSignUp.setOnShowing(ev -> popUpStageSignUp.hide());
-
-        // Relocate the pop-up Stage
-        popUpStageSignUp.setOnShown(ev -> {
-            popUpStageSignUp.setX(centerXPosition - popUpStageSignUp.getWidth()/2d);
-            popUpStageSignUp.setY(centerYPosition - popUpStageSignUp.getHeight()/2d);
-            popUpStageSignUp.show();
-        });
-
-        popUpStageSignUp.show();
+        Stage popUpStageSignUp = loadScenePopUp("/View/SignUp.fxml");
 
         windowsPane.setEffect(blur);
 
-        new FadeIn(signup).play();
+        signupController = loader.getController();
 
-
-        signupController = (SignUpController) loader.getController();
         signupController.setPopUpStage(popUpStageSignUp);
         signupController.setPrimaryStage(primaryStage);
         signupController.setClient(client);
@@ -135,24 +108,15 @@ public class LoginController {
     }
 
     @FXML
-    public void handleCursorHand(MouseEvent me) {
+    public void handleCursorHand() {
         primaryStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
-    public void handleCursor(MouseEvent me) {
+    public void handleCursor() {
         primaryStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
-
-
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) { this.client = client; }
-
-    public Stage getPrimaryStage() { return primaryStage; }
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
 
     public HomeController getHomeController() { return homeController; }
 

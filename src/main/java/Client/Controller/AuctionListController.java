@@ -35,9 +35,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
-public class AuctionListController {
-    private ClientManager client;
-    private Stage primaryStage;
+public class AuctionListController extends TemplateController {
     private ArrayList<Auction> Alist;
 
     @FXML
@@ -156,7 +154,7 @@ public class AuctionListController {
 
 
 
-    public void refreshList() {
+    void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
         initializeList(0,null);
     }
@@ -179,51 +177,33 @@ public class AuctionListController {
 
     @FXML
     public void chooseAuction() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/AuctionCard.fxml"));
-        Parent root = (Parent) loader.load();
-
-        Stage popUpStage = new Stage(StageStyle.TRANSPARENT);
-        popUpStage.initOwner(primaryStage);
-        popUpStage.initModality(Modality.APPLICATION_MODAL);
-        popUpStage.setScene(new Scene(root));
-
-
-        // Calculate the center position of the parent Stage
-        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        popUpStage.setOnShowing(ev -> popUpStage.hide());
-
-        // Relocate the pop-up Stage
-        popUpStage.setOnShown(ev -> {
-            popUpStage.setX(centerXPosition - popUpStage.getWidth()/2d);
-            popUpStage.setY(centerYPosition - popUpStage.getHeight()/2d);
-            popUpStage.show();
-        });
-
-
-        ((AuctionCardController)loader.getController()).setPopUpStage(popUpStage);
         try {
-
 
             int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
 
-            if(client.isClosed(idChoose) && (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser()))) { // se l'utente e' il vincitore
-                loader = new FXMLLoader(getClass().getResource("/View/AuctionWinnerCard.fxml"));
-                root = (Parent) loader.load();
+            if(client.isClosed(idChoose) && client.getAuction(idChoose).getLastBid()!= null) {
+                if (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser())) { // se l'utente e' il vincitore
+                    Stage popUpStageWinnerCard = loadScenePopUp("/View/AuctionWinnerCard.fxml");
 
-                popUpStage.setScene(new Scene(root));
+                    ((AuctionWinnerCardController)loader.getController()).setPopUpStage(popUpStageWinnerCard);
+                    ((AuctionWinnerCardController) loader.getController()).setAuction(client.getAuction(idChoose));
+                    ((AuctionWinnerCardController) loader.getController()).setClient(client);
+                    ((AuctionWinnerCardController) loader.getController()).initializeNow();
 
-                popUpStage.show();
+                    popUpStageWinnerCard.show();
+                }
             }
-            else if (!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) {
+            else if ((!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) || (client.isClosed(idChoose) && !(client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser())))) {
+                Stage popUpStageAuctionCard = loadScenePopUp("/View/AuctionCard.fxml");
+
+                ((AuctionCardController)loader.getController()).setPopUpStage(popUpStageAuctionCard);
+
                 ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
                 ((AuctionCardController) loader.getController()).setClient(client);
+                ((AuctionCardController) loader.getController()).initializeNow();
                 ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
                 ((AuctionCardController) loader.getController()).initializeWindow();
-                popUpStage.show();
+                popUpStageAuctionCard.show();
 
             }
             else {
@@ -237,21 +217,6 @@ public class AuctionListController {
 
 
 
-
-    public ClientManager getClient() { return client; }
-
-    public void setClient(ClientManager client) {
-        this.client = client;
-        refreshList(); //In questo caso inizializzo
-    }
-
-    public void setC(ClientManager client) {
-        this.client = client;
-    }
-
-    public Stage getPrimaryStage() { return primaryStage; }
-
-    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
 
     public AuctionListController getAuctionListController() {
         return auctionListController;
