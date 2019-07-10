@@ -155,6 +155,7 @@ public class TitleController {
         userPageController.setPopUpStage(popUpStageSignUp);
         userPageController.initializeWindow();
         userPageController.initializeNow();
+        userPageController.setTitleController(this);
 
     }
 

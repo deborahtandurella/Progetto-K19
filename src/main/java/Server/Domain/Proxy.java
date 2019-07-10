@@ -13,7 +13,7 @@ public interface Proxy extends Remote {
     boolean alredyTakenUsernameDB(String username) throws RemoteException;
 
     void createUser(String username, String password) throws RemoteException;
-    void createUserDB(String username, String password) throws RemoteException;
+    void createUserDB(String username, String password,String email) throws RemoteException;
 
     boolean checkLogin(String username, String pass) throws RemoteException;
     boolean checkLoginDB(String username, String pass) throws RemoteException;
@@ -71,4 +71,6 @@ public interface Proxy extends Remote {
     void closeAuction(int id) throws RemoteException;
 
     boolean isClosed(int id) throws RemoteException;
+
+    boolean alredyTakenEmailDB(String email) throws RemoteException;
 }

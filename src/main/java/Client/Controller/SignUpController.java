@@ -37,10 +37,10 @@ public class SignUpController {
     @FXML
     private void handleRegistration() throws RemoteException {
         String us = username.getText();
-        String email_text = email.getText();
+        String emailText = email.getText();
         String pass = password.getText();
 
-        int esito = client.signUpGUI(us,pass);
+        int esito = client.signUpGUI(us,pass,emailText);
 
         if(esito == 1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -65,6 +65,25 @@ public class SignUpController {
             alert.setTitle("Error SignUp");
             alert.setHeaderText("Error ");
             alert.setContentText("Use at least 1.....ELENCO PARAMETRI PASS");
+            alert.initOwner(popUpStage);
+
+            alert.showAndWait();
+        }
+        if(esito == -2) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error SignUp");
+            alert.setHeaderText("Error ");
+            alert.setContentText("Email non rispetta i parametri reali");
+            alert.initOwner(popUpStage);
+
+            alert.showAndWait();
+        }
+
+        if(esito == -3) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Error SignUp");
+            alert.setHeaderText("Error ");
+            alert.setContentText("Email gia' in uso");
             alert.initOwner(popUpStage);
 
             alert.showAndWait();

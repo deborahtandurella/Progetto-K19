@@ -36,8 +36,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         User user = new User(username,password);
         addUser(user);
     }
-    public void createUserDB (String username, String password){
-        db.addUser(username,password);
+    public void createUserDB (String username, String password,String email){
+        db.addUser(username,password,email);
     }
 
 
@@ -64,6 +64,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         return (usersList.containsKey(username));
     }
     public boolean alredyTakenUsernameDB(String username) { return db.alredyTakenUsername(username); }
+
+    public boolean alredyTakenEmailDB(String email) { return db.alredyTakenEmail(email); }
 
 
     public String showAllActiveAuctions() {

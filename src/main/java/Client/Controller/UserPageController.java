@@ -3,6 +3,7 @@ package Client.Controller;
 import Client.Domain.ClientManager;
 import Server.People.User;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
@@ -21,6 +22,9 @@ public class UserPageController {
     private Stage primaryStage;
     private Stage popUpStage;
 
+    private TitleController titleController;
+
+    private User user;
     @FXML
     private AnchorPane windowsPane;
 
@@ -30,7 +34,20 @@ public class UserPageController {
     @FXML
     private JFXTextField email;
 
-    private User user;
+    @FXML
+    private JFXTextField newEmail;
+
+    @FXML
+    private JFXPasswordField password;
+
+    @FXML
+    private JFXPasswordField passwordOld;
+
+    @FXML
+    private JFXPasswordField passwordNew;
+
+    @FXML
+    private JFXPasswordField passwordRepeat;
 
     @FXML
     private JFXButton changeEmailButton;
@@ -49,14 +66,13 @@ public class UserPageController {
     @FXML
     void changePws() {
 
-
     }
 
     public void initializeNow() throws RemoteException {
         user = client.getUser();
         username.setText(user.getUsername());
         username.setEditable(false);
-        email.setText(user.getE_mail());
+        email.setText(user.getEmail());
         email.setEditable(false);
     }
 
@@ -75,6 +91,8 @@ public class UserPageController {
         AnchorPane pane = (AnchorPane) primaryStage.getScene().lookup("#windowsPane");
         pane.setEffect(null);
         popUpStage.close();
+        titleController.setVisibleButtons();
+
     }
 
     @FXML
@@ -106,4 +124,8 @@ public class UserPageController {
     public Stage getPopUpStage() { return popUpStage; }
 
     public void setPopUpStage(Stage popUpStage) { this.popUpStage = popUpStage; }
+
+    public TitleController getTitleController() { return titleController; }
+
+    public void setTitleController(TitleController titleController) { this.titleController = titleController; }
 }

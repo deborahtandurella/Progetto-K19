@@ -24,12 +24,12 @@ class InterpreterRDB {
     /**
      * Create the user and store it in the DB
      */
-    void addUser(String username, String pass) {
+    void addUser(String username, String pass,String email) {
         s = sessionFactory.openSession();
 
         try {
             s.beginTransaction();
-            User u = new User(username, pass);
+            User u = new User(username, pass,email);
             s.save(u);
             s.getTransaction().commit();
         } catch (HibernateException e) {
@@ -303,6 +303,27 @@ class InterpreterRDB {
            s.close();
        }
        return false;
+    }
+
+    /**
+     * Check if the email is alredy registered
+     */
+    boolean alredyTakenEmail(String email) {
+        s = sessionFactory.openSession();
+
+        try {
+            String sql = "SELECT COUNT(*) FROM User where User.email= :email";
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            sqlQuery.setParameter("email",email);
+            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
+            if (numb == 1)
+                return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
     }
 
     /**

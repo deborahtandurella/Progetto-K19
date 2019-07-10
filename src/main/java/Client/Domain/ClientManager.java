@@ -11,6 +11,8 @@ import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ClientManager {
     private String loggedUser;
@@ -69,8 +71,8 @@ public class ClientManager {
             System.out.println("Enter your Password:");
             String pw = scan.nextLine();
             if (validatePassword(pw)) {
-                if (!ad.alredyTakenUsernameDB(uid)) {
-                    ad.createUserDB(uid, pw);
+                if (!ad.alredyTakenUsername(uid)) {
+                    ad.createUser(uid, pw);
                     System.out.println("Utente creato con successo: " + uid + "\t" + pw);
                 } else
                     System.out.println("Username gia' in uso, riprovare");
@@ -80,16 +82,22 @@ public class ClientManager {
         }
     }
 
-    public int signUpGUI(String username, String password) throws RemoteException {
+    public int signUpGUI(String username, String password,String email) throws RemoteException {
         try {
 
             if (validatePassword(password)) {
-                if (!ad.alredyTakenUsernameDB(username)) {
-                    ad.createUserDB(username, password);
-                    return 1; //Utente inserito con successo
-                } else
-                    return 0; //Username gia' in uso
-            } else
+                if (validateEmail(email)) {
+                    if (!ad.alredyTakenUsernameDB(username)) {
+                        if (!ad.alredyTakenEmailDB(email)) {
+                            ad.createUserDB(username, password, email);
+                            return 1; //Utente inserito con successo
+                        }else
+                            return -3; //Email gia' in uso
+                    } else
+                        return 0; //Username gia' in uso
+                }else
+                    return -2; //Email non valida
+            }else
                 return -1; //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
@@ -159,6 +167,15 @@ public class ClientManager {
             return false;
         }
         return true;
+    }
+
+    private boolean validateEmail(String email) {
+        String regex = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+
     }
 
     /**

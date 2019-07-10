@@ -16,9 +16,8 @@ public class User implements Serializable {
     @Column(name = "username", updatable = false, nullable = false)
     private String username;
 
-    //@Column(name="e-mail",updatable=false,nullable=false)
-    @Transient
-    private String e_mail;
+    @Column(name="email",updatable=false,nullable=false)
+    private String email;
 
     @Column(name = "pass")
     private String password;
@@ -82,13 +81,9 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public String getE_mail() {
-        return e_mail;
-    }
+    public String getEmail() { return email; }
 
-    public void setE_mail(String e_mail) {
-        this.e_mail = e_mail;
-    }
+    public void setEmail(String email) { this.email = email; }
 
     public List<Auction> getFavoriteList() { return favoriteList; }
 
@@ -104,11 +99,16 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(String username,String password) {
+    public User(String username,String password, String email) {
         this.username = username;
+        this.email = email;
         this.password = password;
         this.isLoggedIn = false;
     }
 
-
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+        this.isLoggedIn = false;
+    }
 }

@@ -47,6 +47,6 @@
       </Label>
       <JFXPasswordField fx:id="passwordOld" layoutX="22.0" layoutY="265.0" prefHeight="33.0" prefWidth="153.0" promptText="Old Password" />
       <JFXPasswordField fx:id="passwordNew" layoutX="222.0" layoutY="265.0" prefHeight="33.0" prefWidth="153.0" promptText="New Password" />
-      <JFXPasswordField fx:id="passwordOld1" layoutX="222.0" layoutY="309.0" prefHeight="33.0" prefWidth="153.0" promptText="Repeat New Password" />
+      <JFXPasswordField fx:id="passwordRepeat" layoutX="222.0" layoutY="309.0" prefHeight="33.0" prefWidth="153.0" promptText="Repeat New Password" />
    </children>
 </AnchorPane>
