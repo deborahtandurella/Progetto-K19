@@ -210,7 +210,15 @@ public class AuctionListController {
 
             int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
 
-            if (!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) {
+            if(client.isClosed(idChoose) && (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser()))) { // se l'utente e' il vincitore
+                loader = new FXMLLoader(getClass().getResource("/View/AuctionWinnerCard.fxml"));
+                root = (Parent) loader.load();
+
+                popUpStage.setScene(new Scene(root));
+
+                popUpStage.show();
+            }
+            else if (!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) {
                 ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
                 ((AuctionCardController) loader.getController()).setClient(client);
                 ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);

@@ -23,7 +23,6 @@
       <Label fx:id="vendor" layoutX="248.0" layoutY="60.0" text="Label" textFill="WHITE" />
       <Label layoutX="184.0" layoutY="88.0" text="Offer:" />
       <Label fx:id="higherOffer" layoutX="248.0" layoutY="88.0" text="Label" textFill="WHITE" />
-      <FontAwesomeIconView glyphName="ANGLE_LEFT" layoutX="19.0" layoutY="36.0" onMouseClicked="#backToLoginScreen" size="26" />
       <Label alignment="TOP_LEFT" layoutX="27.0" layoutY="148.0" prefHeight="17.0" prefWidth="306.0" text="Congratulazioni! Sei il vincitore dell'asta." />
       <Label layoutX="27.0" layoutY="172.0" prefHeight="17.0" prefWidth="281.0" text="Per effettuare il pagamento e ricevere il prodotto, la" />
       <Label layoutX="27.0" layoutY="193.0" prefHeight="17.0" prefWidth="281.0" text="preghiamo di contattare l'indirizzo e-mail del " />
@@ -33,5 +32,6 @@
             <Font size="18.0" />
          </font>
       </Hyperlink>
+      <FontAwesomeIconView fx:id="backButton" glyphName="ANGLE_LEFT" layoutX="16.0" layoutY="35.0" onMouseClicked="#backToLoginScreen" onMouseEntered="#handleCursorHand" onMouseExited="#handleCursor" size="25" wrappingWidth="23.0" />
    </children>
 </AnchorPane>

@@ -3,14 +3,15 @@ package Client.Controller;
 import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,12 +44,17 @@ public class AuctionWinnerCardController {
     private Hyperlink e_mail;
 
     @FXML
-    void backToLoginScreen(MouseEvent event) {
+    void backToLoginScreen() {
         popUpStage.close();
     }
 
+    @FXML
+    public void handleCursorHand() {
+        popUpStage.getScene().setCursor(Cursor.HAND);
+    }
 
-
+    @FXML
+    public void handleCursor() { popUpStage.getScene().setCursor(Cursor.DEFAULT); }
 
     public void initializeNow(){
         //PROTECTED VARIATIONS
