@@ -193,7 +193,7 @@ class InterpreterRDB {
             if (list.size() != 0) {
                 list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
                 int lastOne = list.size()-1;
-                String winner = list.get(lastOne).getActorDB().getUsername();
+                String winner = list.get(lastOne).getActorDB().getUsername();//questo si può cambiare c'è già il metodo
                 User u = s.get(User.class,winner);
                 au.getLot().setWinnerDB(u);
             }
@@ -275,7 +275,7 @@ class InterpreterRDB {
            Query query = s.createQuery(sql);
            Auction au = (Auction)query.getSingleResult();
            s.getTransaction().commit();
-           return (au.getLot().getVendorDB().getUsername().equalsIgnoreCase(logged));
+           return (au.getLot().getVendorDB().getUsername().equalsIgnoreCase(logged));//anche questo si può modificare getusernamevendor
        } catch (Exception e){
            e.printStackTrace();
        } finally {
@@ -530,7 +530,7 @@ class InterpreterRDB {
             Hibernate.initialize(user.getPartecipantAuction());
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                if(a.getLot().getVendorDB().equals(user) || user.isAPartecipant(a)) {
+                if(a.getLot().getVendorDB().equals(user) || user.isAPartecipant(a)) {// si può cambiare anche questo getVendorDB in au
                     File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                     a.setImage(image);
 
