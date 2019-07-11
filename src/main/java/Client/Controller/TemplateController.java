@@ -40,20 +40,7 @@ public abstract class TemplateController {
         popUp.setScene(sigUpScene);
 
         // Calculate the center position of the parent Stage
-        double centerXPosition = primaryStage.getX() + primaryStage.getWidth()/2d;
-        double centerYPosition = primaryStage.getY() + primaryStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        popUp.setOnShowing(ev -> popUp.hide());
-
-        // Relocate the pop-up Stage
-        popUp.setOnShown(ev -> {
-            popUp.setX(centerXPosition - popUp.getWidth()/2d);
-            popUp.setY(centerYPosition - popUp.getHeight()/2d);
-            popUp.show();
-        });
-
-        popUp.show();
+        ControllerServices.getInstance().setCenterofPage(popUp,primaryStage);
 
         new FadeIn(parent).play();
 
@@ -104,20 +91,4 @@ public abstract class TemplateController {
 
     }
 
-    public void setCenterofPage(Stage modifyStage){
-        double centerXPosition = popUpStage.getX() + popUpStage.getWidth()/2d;
-        double centerYPosition = popUpStage.getY() + popUpStage.getHeight()/2d;
-
-        // Hide the pop-up stage before it is shown and becomes relocated
-        modifyStage.setOnShowing(ev -> modifyStage.hide());
-
-        // Relocate the pop-up Stage
-        modifyStage.setOnShown(ev -> {
-            modifyStage.setX(centerXPosition - modifyStage.getWidth()/2d);
-            modifyStage.setY(centerYPosition - modifyStage.getHeight()/2d);
-            modifyStage.show();
-        });
-
-        modifyStage.show();
-    }
 }

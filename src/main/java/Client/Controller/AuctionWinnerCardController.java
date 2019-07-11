@@ -70,7 +70,7 @@ public class AuctionWinnerCardController extends TemplateController {
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
-        setImagetoAuction(auction,auctionImage);
+        ControllerServices.getInstance().setImagetoTheAuction(auction,auctionImage);
         if(client.getLoggedUser().equals(auction.getUsernameVendorDB())) {
             line1.setText("Congratulazioni! Il tuo oggetto e' stato venduto.");
             line2.setText("Verrai contattato dal vincitore sul tuo indirizzo email");
