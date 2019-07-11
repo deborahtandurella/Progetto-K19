@@ -139,12 +139,12 @@ public class Lot implements Serializable {
 
     public Lot() {}
 
-    public Lot(String description, int basePrice) {
+    Lot(String description, int basePrice) {
         this.description = description;
         this.basePrice = basePrice;
     }
 
-    public Lot(String description, int basePrice, String vendor) {
+    Lot(String description, int basePrice, String vendor) {
         this.description = description;
         this.basePrice = basePrice;
         this.vendor = vendor;

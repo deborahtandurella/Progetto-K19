@@ -1,6 +1,6 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
+
 import Server.Domain.Auction;
 import Server.People.User;
 import animatefx.animation.FadeIn;
@@ -30,14 +30,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -93,7 +87,7 @@ public class AuctionCardController extends TemplateController{
     private Timeline timeline;
 
 
-    public void initializeNow() {
+    void initializeNow() {
         try {
 
             if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername()) && !client.isClosed(auction.getId())) {
@@ -154,35 +148,32 @@ public class AuctionCardController extends TemplateController{
 
             timeline = new Timeline();
             timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    if (second > 0) {
-                        second--;
-                    } else if (second <= 0) {
-                        second = 59;
-                        if (minute > 0) {
-                            minute--;
-                        } else if (minute <= 0) {
-                            minute = 59;
-                            if (hour > 0) {
-                                hour--;
-                            } else if (hour <= 0) {
-                                hour = 23;
-                                if (day > 0) {
-                                    day--;
-                                }
+            timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), event -> {
+                if (second > 0) {
+                    second--;
+                } else {
+                    second = 59;
+                    if (minute > 0) {
+                        minute--;
+                    } else {
+                        minute = 59;
+                        if (hour > 0) {
+                            hour--;
+                        } else {
+                            hour = 23;
+                            if (day > 0) {
+                                day--;
                             }
                         }
                     }
-
-                    timer.setText("D " + day + "  H " + hour + "  M " + minute + "  S " + second);
-
-                    if (second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
-                        timeline.stop();
-                    }
-
                 }
+
+                timer.setText("D " + day + "  H " + hour + "  M " + minute + "  S " + second);
+
+                if (second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
+                    timeline.stop();
+                }
+
             }));
             timeline.play();
         }
@@ -197,7 +188,7 @@ public class AuctionCardController extends TemplateController{
         BoxBlur blur = new BoxBlur(3,3,3);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
-        Parent root = (Parent) loader.load();
+        Parent root = loader.load();
 
         Stage modifyStage = new Stage(StageStyle.TRANSPARENT);
         modifyStage.initOwner(popUpStage);
@@ -214,7 +205,7 @@ public class AuctionCardController extends TemplateController{
         new FadeIn(root).play();
 
 
-        auctionFormController = (CreateAuctionFormController) loader.getController();
+        auctionFormController = loader.getController();
 
         auctionFormController.setClient(client);
         auctionFormController.setPopUpStage(modifyStage);
@@ -227,7 +218,7 @@ public class AuctionCardController extends TemplateController{
 
     }
 
-    public String parseDate(LocalDateTime closingTime) {
+    private String parseDate(LocalDateTime closingTime) {
 
         return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
@@ -290,8 +281,7 @@ public class AuctionCardController extends TemplateController{
 
                             alert.showAndWait();
                         }
-                    } catch (NumberFormatException e) {
-                    } catch (RemoteException e) {
+                    } catch (NumberFormatException|RemoteException e) {
                         e.printStackTrace();
                     }
                 });
@@ -299,7 +289,7 @@ public class AuctionCardController extends TemplateController{
         }
     }
 
-    public void initializeWindow() {
+    void initializeWindow() {
         popUpStage.getScene().setFill(Color.TRANSPARENT);
         windowsPane.setStyle(
 
@@ -320,7 +310,7 @@ public class AuctionCardController extends TemplateController{
     }
 
 
-    public void countMilliToDay(Long ms) {
+    private void countMilliToDay(Long ms) {
         final int SECOND = 1000;
         final int MINUTE = 60 * SECOND;
         final int HOUR = 60 * MINUTE;
@@ -342,7 +332,6 @@ public class AuctionCardController extends TemplateController{
         }
         if (ms > SECOND) {
            second = ms / SECOND;
-           ms %= SECOND;
         }
     }
 

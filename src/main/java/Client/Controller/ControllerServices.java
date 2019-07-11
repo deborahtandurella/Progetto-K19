@@ -1,6 +1,5 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,18 +13,17 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 
-public class ControllerServices {
+class ControllerServices {
 
     private static ControllerServices instance;
-    private ClientManager client;
 
-    public static ControllerServices getInstance() {
+    static ControllerServices getInstance() {
         if(instance==null)
             instance = new ControllerServices();
         return instance;
     }
 
-    public void setImagetoTheAuction(Auction auction, ImageView auctionImage){
+    void setImagetoTheAuction(Auction auction, ImageView auctionImage){
 
         if(auction.getImage() == null) {
             loadLocalImage(auctionImage);
@@ -40,26 +38,22 @@ public class ControllerServices {
         }
     }
 
-    public void loadLocalImage(ImageView auctionImage){
+    void loadLocalImage(ImageView auctionImage){
         try {
-
-            File file = null;
-            try {
+                File file;
                 URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                assert res != null;
                 file = Paths.get(res.toURI()).toFile();
-            }catch (URISyntaxException e) {
-                e.printStackTrace();
+                String absolutePath = file.getAbsolutePath();
+                Image img = new Image(new FileInputStream(absolutePath),268,226,false,false);
+                auctionImage.setImage(img);
             }
-            //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
-            String absolutePath = file.getAbsolutePath();
-            Image img = new Image(new FileInputStream(absolutePath),268,226,false,false);
-            auctionImage.setImage(img);
-        } catch (FileNotFoundException e) {
+        catch (URISyntaxException|FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public void setCenterofPage(Stage children,Stage parent){
+    void setCenterofPage(Stage children,Stage parent){
         double centerXPosition =parent.getX() + parent.getWidth()/2d;
         double centerYPosition = parent.getY() + parent.getHeight()/2d;
 

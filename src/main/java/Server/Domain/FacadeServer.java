@@ -77,29 +77,29 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
 
     public String showAllActiveAuctions() {
-        String toPrint = "";
+        StringBuilder toPrint2=new StringBuilder();
         for (Map.Entry<Integer,Auction> entry : auctionList.entrySet()) {
             Auction entryValue = entry.getValue();
-            toPrint =  toPrint + entryValue.auctionInformation();
+            toPrint2.append(entryValue.closedAuctionInformation());
         }
         if(auctionList.isEmpty()) {
-            toPrint = "Nessun Inserzione Esistente" + "\n";
+            return  "Nessun Inserzione Esistente" + "\n";
         }
-        return toPrint;
+        return toPrint2.toString();
     }
     public String showAllActiveAuctionsDB() { return db.showAllActive(); }
 
 
     public String showClosedAuctions() {
-        String toPrint = "";
+        StringBuilder toPrint2=new StringBuilder();
         for (Map.Entry<Integer,Auction> entry : closedAuction.entrySet()) {
             Auction entryValue = entry.getValue();
-            toPrint =  toPrint + entryValue.closedAuctionInformation();
+            toPrint2.append(entryValue.closedAuctionInformation());
         }
         if(closedAuction.isEmpty()) {
-            toPrint = "Nessun Inserzione Chiusa" + "\n";
+            return  "Nessun Inserzione Chiusa" + "\n";
         }
-        return toPrint;
+        return toPrint2.toString();
     }
     public String showClosedAuctionsDB() { return db.showAllClosed(); }
 
@@ -172,12 +172,8 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
 
     private User userListed(String username) {
-        if(usersList.containsKey(username))
-            return usersList.get(username);
-        else
-            return null;
+        return usersList.getOrDefault(username,null);
     }
-
 
     public boolean checkExistingAuction (int idAuction) {
         return (auctionList.containsKey(idAuction));
@@ -203,10 +199,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
 
     private Auction auctionListed(int idAuction) {
-        if(auctionList.containsKey(idAuction))
-            return auctionList.get(idAuction);
-        else
-            return null;
+        return auctionList.getOrDefault(idAuction,null);
     }
 
     public synchronized void makeBid(String user, int amount,int id){
@@ -239,7 +232,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public void refreshTimerStats() {
-        HashMap<Integer, BigInteger> timerValue = new HashMap<>();
+        HashMap<Integer, BigInteger> timerValue;
         timerValue = db.reloadTimer();
 
         for (Map.Entry<Integer, BigInteger> entry : timerValue.entrySet()) {
@@ -357,7 +350,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
     public int getAuctionIdCounter() { return auctionIdCounter; }
 
-    void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
+    private void setAuctionIdCounter(int auctionIdCounter) { this.auctionIdCounter = auctionIdCounter; }
 
     public Timer getTimer() { return timer; }
 

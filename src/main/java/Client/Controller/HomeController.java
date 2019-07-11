@@ -1,32 +1,22 @@
 package Client.Controller;
-
-import Client.Domain.ClientManager;
-
-import animatefx.animation.FadeIn;
 import animatefx.animation.Pulse;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
 
 public class HomeController extends TemplateController {
 
-    private FXMLLoader fxml = null;
 
     @FXML
     private AnchorPane header;
@@ -50,23 +40,21 @@ public class HomeController extends TemplateController {
 
     private AuctionListController auctionListController;
 
-    private CreateAuctionFormController auctionFormController;
-
-    public void init() {
+    void init() {
         initializeAuctionList();
         initializeHeader();
     }
 
 
     @FXML
-    public void createAuctionAction(ActionEvent event) throws IOException {
+    public void createAuctionAction() throws IOException {
         BoxBlur blur = new BoxBlur(3,3,3);
 
         Stage popUpStageCreate = loadScenePopUp("/View/CreateAuctionForm.fxml");
 
         windowsPane.setEffect(blur);
 
-        auctionFormController = loader.getController();
+        CreateAuctionFormController auctionFormController = loader.getController();
 
         auctionFormController.setClient(client);
         auctionFormController.setPopUpStage(popUpStageCreate);
@@ -98,12 +86,12 @@ public class HomeController extends TemplateController {
     }
 
     @FXML
-    public void handleCursorHand(MouseEvent me) {
+    public void handleCursorHand() {
         primaryStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
-    public void handleCursor(MouseEvent me) {
+    public void handleCursor() {
         primaryStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
@@ -115,13 +103,13 @@ public class HomeController extends TemplateController {
         try {
             fxml = new FXMLLoader();
             fxml.setLocation(getClass().getResource("/View/Title.fxml"));
-            root = (Parent)fxml.load();
+            root = fxml.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         header.getChildren().setAll(root);
 
-        titleController = (TitleController) fxml.getController();
+        titleController = fxml.getController();
 
         titleController.setPrimaryStage(primaryStage);
         titleController.setClient(client);
@@ -135,28 +123,24 @@ public class HomeController extends TemplateController {
     }
 
     private void initializeAuctionList() {
-        fxml = null;
+        FXMLLoader fxml = new FXMLLoader();
         Parent root = null;
 
         try {
-            fxml = new FXMLLoader();
             fxml.setLocation(getClass().getResource("/View/AuctionList.fxml"));
-            root = (Parent)fxml.load();
+            root = fxml.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         auctionList.getChildren().setAll(root);
-
-        auctionListController = (AuctionListController) fxml.getController();
-
-
+        auctionListController = fxml.getController();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/CreateAuctionForm.fxml"));
 
         auctionListController.setPrimaryStage(primaryStage);
         auctionListController.setClient(client);
         auctionListController.refreshList();
         auctionListController.setAuctionListController(auctionListController);
-        auctionListController.setAuctionFormController((CreateAuctionFormController) loader.getController());
+        auctionListController.setAuctionFormController( loader.getController());
     }
 
     public TitleController getTitleController() {

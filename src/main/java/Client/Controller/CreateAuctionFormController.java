@@ -1,27 +1,17 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import Server.Domain.Auction;
 import com.jfoenix.controls.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -62,7 +52,7 @@ public class CreateAuctionFormController extends TemplateController {
 
 
     @FXML
-    private JFXListView listview;
+    private JFXListView<String> listview;
 
     @FXML
     private JFXButton createAuction;
@@ -152,35 +142,33 @@ public class CreateAuctionFormController extends TemplateController {
         alert.setHeaderText("Are you sure want to delete this auction");
 
         Optional<ButtonType> option = alert.showAndWait();
-
-
-        if (option.get() == null) {
-        }
-        else if (option.get() == ButtonType.OK) {
-            client.closeAuction(auction.getId());
-            popUpStage.close();
-            primaryStage.close();
-        } else if (option.get() == ButtonType.CANCEL) {
-            popUpStage.close();
-            primaryStage.close();
+        if(option.isPresent()) {
+            if (option.get() == ButtonType.OK) {
+                client.closeAuction(auction.getId());
+                popUpStage.close();
+                primaryStage.close();
+            } else if (option.get() == ButtonType.CANCEL) {
+                popUpStage.close();
+                primaryStage.close();
+            }
         }
 
     }
 
 
     @FXML
-    public void handleCursorHand(MouseEvent me) {
+    public void handleCursorHand() {
         primaryStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
-    public void handleCursor(MouseEvent me) {
+    public void handleCursor() {
         primaryStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
 
 
-    public void setParameter() {
+    void setParameter() {
         ControllerServices.getInstance().setImagetoTheAuction(auction,imageView);
         itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
@@ -210,14 +198,14 @@ public class CreateAuctionFormController extends TemplateController {
         }
     }
 
-    public void disableModifyDeleteAuction() {
+    void disableModifyDeleteAuction() {
         modifyAuction.setDisable(true);
         modifyAuction.setVisible(false);
         deleteAuction.setDisable(true);
         deleteAuction.setVisible(false);
     }
 
-    public void disableCreateAuction() {
+    void disableCreateAuction() {
         createAuction.setDisable(true);
         createAuction.setVisible(false);
 

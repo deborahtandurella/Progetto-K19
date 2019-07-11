@@ -2,22 +2,14 @@ package Client.Controller;
 
 
 import Server.Domain.Auction;
-import Client.Domain.ClientManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 
 
@@ -50,26 +42,24 @@ public class AuctionListController extends TemplateController {
     private TitleController titleController;
 
 
-    public void clearLists(){
+    private void clearLists(){
         Alist = null;
         auction.clear();
 
     }
 
-    public void initializeList() {
+    private void initializeList() {
         if(Alist != null) {
-            for (int i = 0; i < Alist.size(); i++) {
-                auction.add(Alist.get(i));
-            }
+            auction.addAll(Alist);
             auctionList.setCellFactory(handleListView());
             auctionList.setItems(auction);
         }
     }
-    public Callback<ListView<Auction>, ListCell<Auction>> handleListView(){
+    private Callback<ListView<Auction>, ListCell<Auction>> handleListView(){
         return new Callback<ListView<Auction>, ListCell<Auction>>() {
             @Override
             public ListCell<Auction> call(ListView<Auction> param) {
-                ListCell<Auction> cell = new ListCell<Auction>() {
+                return new ListCell<Auction>() {
                     Image img;
                     ImageView imgview = null;
 
@@ -90,17 +80,19 @@ public class AuctionListController extends TemplateController {
                             }
                             else {
                                 try {
-                                    File file = null;
+                                    File file;
+                                    String absolutePath;
                                     try {
                                         URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                                        assert res != null;
                                         file = Paths.get(res.toURI()).toFile();
-                                    }catch (URISyntaxException e) {
+                                        absolutePath = file.getAbsolutePath();
+                                        img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
+
+                                    }catch (NullPointerException|URISyntaxException e) {
                                         e.printStackTrace();
                                     }
                                     //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
-                                    String absolutePath = file.getAbsolutePath();
-                                    img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
                                     imgview = new ImageView();
                                     imgview.setImage(img);
                                 } catch (FileNotFoundException e) {
@@ -109,19 +101,19 @@ public class AuctionListController extends TemplateController {
                             }
 
                             setGraphic(imgview);
-                            setText("Id: " + Integer.toString(au.getId()) + "\t\t\t" + "Name: " + au.getLot().getDescription() + "\t\t\t\t " + "Value: " + Integer.toString(au.getHigherOffer()) +  "\n\t\t\t\t" + "Close Date: " + parseDate(au.getClosingDate()));
+                            setText(String.format("Id: %d\t\t\tName: %s\t\t\t\t Value: %s\n\t\t\t\tClose Date: %s", au.getId(), au.getLot().getDescription(), Integer.toString(au.getHigherOffer()), parseDate(au.getClosingDate())));
 
                             setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                         }
                     }
                 };
-                return cell;
+
             }
         };
     }
 
-    public String parseDate(LocalDateTime closingTime) {
-        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
+    private String parseDate(LocalDateTime closingTime) {
+        return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
 
@@ -139,7 +131,7 @@ public class AuctionListController extends TemplateController {
     }
 
 
-    public void searchList(String toSearch) {
+    void searchList(String toSearch) {
         clearLists();
         //Usato per cercare
         try {
@@ -151,7 +143,7 @@ public class AuctionListController extends TemplateController {
         initializeList();
     }
 
-    public void loadFavorite() {
+    void loadFavorite() {
         clearLists();
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
         try {
@@ -163,7 +155,7 @@ public class AuctionListController extends TemplateController {
         initializeList();
     }
 
-    public void loadMyAuction() {
+    void loadMyAuction() {
         clearLists();
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
         try {
@@ -221,7 +213,7 @@ public class AuctionListController extends TemplateController {
         return auctionListController;
     }
 
-    public void setAuctionListController(AuctionListController auctionListController) {
+    void setAuctionListController(AuctionListController auctionListController) {
         this.auctionListController = auctionListController;
     }
 
@@ -229,7 +221,7 @@ public class AuctionListController extends TemplateController {
         return auctionFormController;
     }
 
-    public void setAuctionFormController(CreateAuctionFormController auctionFormController) {
+    void setAuctionFormController(CreateAuctionFormController auctionFormController) {
         this.auctionFormController = auctionFormController;
     }
 
@@ -237,7 +229,7 @@ public class AuctionListController extends TemplateController {
         return titleController;
     }
 
-    public void setTitleController(TitleController titleController) {
+    void setTitleController(TitleController titleController) {
         this.titleController = titleController;
     }
 }

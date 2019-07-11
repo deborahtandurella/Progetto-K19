@@ -163,10 +163,7 @@ public class ClientManager {
      */
     private boolean validatePassword(String password) {
         CharAnalizer analizer = new CharAnalizer();
-        if(!analizer.validatePassword(password)) {
-            return false;
-        }
-        return true;
+        return analizer.validatePassword(password);
     }
 
     private boolean validateEmail(String email) {

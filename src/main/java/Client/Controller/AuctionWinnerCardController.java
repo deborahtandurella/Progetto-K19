@@ -66,7 +66,7 @@ public class AuctionWinnerCardController extends TemplateController {
     @FXML
     public void handleCursor() { popUpStage.getScene().setCursor(Cursor.DEFAULT); }
 
-    public void initializeNow() throws RemoteException {
+    void initializeNow() throws RemoteException {
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
