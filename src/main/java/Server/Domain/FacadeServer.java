@@ -32,6 +32,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     private Registry reg = null;
 
 
+
     public void createUser(String username, String password){
         User user = new User(username,password);
         addUser(user);
@@ -44,7 +45,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         db.changeEmail(email,username);
     }
     public void changePassword(String psw,String username){
-        db.changeEmail(psw,username);
+        db.changePassword(psw,username);
     }
 
 
@@ -365,6 +366,10 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public FileManager getFiles() { return files; }
 
     public void setFiles(FileManager files) { this.files = files; }
+
+    public String getVendorEmail(String username){
+        return db.getVendorEmail(username);
+    }
 
     public InterpreterRDB getDb() { return db; }
 

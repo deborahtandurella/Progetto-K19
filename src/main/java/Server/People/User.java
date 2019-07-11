@@ -16,7 +16,7 @@ public class User implements Serializable {
     @Column(name = "username", updatable = false, nullable = false)
     private String username;
 
-    @Column(name="email",updatable=false,nullable=false)
+    @Column(name="email",updatable=true,nullable=false)
     private String email;
 
     @Column(name = "pass")
@@ -92,6 +92,7 @@ public class User implements Serializable {
     public List<Auction> getAuction() {
         return partecipantAuction;
     }
+
 
     public void setPartecipantAuction(List<Auction> partecipantAuction) {
         this.partecipantAuction = partecipantAuction;

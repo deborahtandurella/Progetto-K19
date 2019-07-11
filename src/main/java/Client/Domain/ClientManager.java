@@ -455,6 +455,10 @@ public class ClientManager {
             return -2;
     }
 
+    public String getVendorEmail(String username) throws RemoteException{
+        return ad.getVendorEmail(username);
+    }
+
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
         ad = bind;

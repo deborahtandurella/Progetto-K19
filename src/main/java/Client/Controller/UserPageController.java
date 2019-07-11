@@ -60,8 +60,6 @@ public class UserPageController extends TemplateController {
     void changeEmail() throws RemoteException{
         String emailChanged= newEmail.getText();
         String psw = password.getText();
-        System.out.println(psw);
-        System.out.println(user.getPassword());
         if (user.checkPassword(psw)){
             int esito = client.changeEmail(emailChanged,user.getUsername());
             if(esito == 1) {

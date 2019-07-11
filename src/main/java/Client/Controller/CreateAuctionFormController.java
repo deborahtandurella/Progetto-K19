@@ -181,36 +181,7 @@ public class CreateAuctionFormController extends TemplateController {
 
 
     public void setParameter() {
-        Image img;
-
-        if (auction.getImage() != null) {
-            try {
-                img = new Image(new FileInputStream(auction.getImage()), 100, 100, false, false);
-
-                imageView.setImage(img);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            try {
-                File file = null;
-                try {
-                    URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
-                    file = Paths.get(res.toURI()).toFile();
-                }catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-                String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
-                imageView.setImage(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
+        setImagetoAuction(auction,imageView);
         itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
         closeDate.setVisible(false);

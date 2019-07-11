@@ -12,6 +12,7 @@ import Server.Services.HibernateUtil;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -39,9 +40,7 @@ class InterpreterRDB {
         }
     }
 
-    boolean changeEmail(String email,String username){
-        s = sessionFactory.openSession();
-
+    boolean changeEmail(String email,String username){ s = sessionFactory.openSession();
         try {
             s.beginTransaction();
             String sql = "SELECT COUNT(*) FROM User where User.username= :username";
@@ -629,6 +628,21 @@ class InterpreterRDB {
             query.setParameter("user",username);
 
             return (User)query.getSingleResult();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
+    }
+    String getVendorEmail(String username) {
+        s = sessionFactory.openSession();
+        String sql = "FROM User where username=:user";
+
+        try {
+            Query query = s.createQuery(sql);
+            query.setParameter("user",username);
+            return ((User)query.getSingleResult()).getEmail();
         }catch (Exception e){
             e.printStackTrace();
         } finally {
