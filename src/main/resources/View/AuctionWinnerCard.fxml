@@ -19,15 +19,14 @@
             <Font size="25.0" />
          </font>
       </Label>
-      <Label layoutX="184.0" layoutY="60.0" text="Vendor:" />
+      <Label fx:id="vendorWinner" layoutX="184.0" layoutY="60.0" text="Vendor:" />
       <Label fx:id="vendor" layoutX="248.0" layoutY="60.0" text="Label" textFill="WHITE" />
       <Label layoutX="184.0" layoutY="88.0" text="Offer:" />
       <Label fx:id="higherOffer" layoutX="248.0" layoutY="88.0" text="Label" textFill="WHITE" />
-      <Label alignment="TOP_LEFT" layoutX="27.0" layoutY="148.0" prefHeight="17.0" prefWidth="306.0" text="Congratulazioni! Sei il vincitore dell'asta." />
-      <Label layoutX="27.0" layoutY="172.0" prefHeight="17.0" prefWidth="281.0" text="Per effettuare il pagamento e ricevere il prodotto, la" />
-      <Label layoutX="27.0" layoutY="193.0" prefHeight="17.0" prefWidth="281.0" text="preghiamo di contattare l'indirizzo e-mail del " />
-      <Label layoutX="27.0" layoutY="217.0" prefHeight="17.0" prefWidth="281.0" text="venditore. " />
-      <Hyperlink fx:id="e_mail" alignment="CENTER" layoutX="28.0" layoutY="256.0" prefHeight="48.0" prefWidth="281.0" text="Hyperlink">
+      <Label fx:id="line1" alignment="TOP_LEFT" layoutX="17.0" layoutY="155.0" prefHeight="17.0" prefWidth="317.0" />
+      <Label fx:id="line2" layoutX="17.0" layoutY="172.0" prefHeight="17.0" prefWidth="317.0" />
+      <Label fx:id="line3" layoutX="17.0" layoutY="192.0" prefHeight="17.0" prefWidth="317.0" />
+      <Hyperlink fx:id="e_mail" alignment="CENTER" layoutX="28.0" layoutY="245.0" prefHeight="48.0" prefWidth="281.0" text="Hyperlink">
          <font>
             <Font size="18.0" />
          </font>

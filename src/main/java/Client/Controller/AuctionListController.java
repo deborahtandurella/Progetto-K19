@@ -182,7 +182,7 @@ public class AuctionListController extends TemplateController {
             int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
 
             if(client.isClosed(idChoose) && client.getAuction(idChoose).getLastBid()!= null) {
-                if (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser())) { // se l'utente e' il vincitore
+                if (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser()) || client.getLoggedUser().equals(client.getAuction(idChoose).getUsernameVendorDB())) { // Apro la winning se l'utente e' il vincitore oppure se il venditore ha venduto!
                     Stage popUpStageWinnerCard = loadScenePopUp("/View/AuctionWinnerCard.fxml");
 
                     ((AuctionWinnerCardController)loader.getController()).setPopUpStage(popUpStageWinnerCard);

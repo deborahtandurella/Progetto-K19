@@ -28,6 +28,20 @@ public class AuctionWinnerCardController extends TemplateController {
     private ImageView auctionImage;
 
     @FXML
+    private Label vendorWinner;
+
+    @FXML
+    private Label line1;
+
+    @FXML
+    private Label line2;
+
+    @FXML
+    private Label line3;
+
+
+
+    @FXML
     private Label auctionName;
 
     @FXML
@@ -56,9 +70,23 @@ public class AuctionWinnerCardController extends TemplateController {
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
-        vendor.setText(auction.getUsernameVendorDB());
-        e_mail.setText(client.getVendorEmail(auction.getUsernameVendorDB()));
         setImagetoAuction(auction,auctionImage);
+        if(client.getLoggedUser().equals(auction.getUsernameVendorDB())) {
+            line1.setText("Congratulazioni! Il tuo oggetto e' stato venduto.");
+            line2.setText("Verrai contattato dal vincitore sul tuo indirizzo email");
+            line3.setText("in alternativa, contattalo entro 48h dalla chiusura.");
+            vendorWinner.setText("Winner");
+            vendor.setText(auction.getLastBid().getActorDBUsername());
+            e_mail.setText(client.getVendorEmail(auction.getLastBid().getActorDBUsername()));
+        }
+        else {
+            line1.setText("Congratulazioni! Sei il vincitore dell'asta.");
+            line2.setText("Per effettuare il pagamento e ricevere il prodotto, la");
+            line3.setText("preghiamo di contattare l'indirizzo e-mail del venditore.");
+
+            vendor.setText(auction.getUsernameVendorDB());
+            e_mail.setText(client.getVendorEmail(auction.getUsernameVendorDB()));
+        }
     }
 
 
