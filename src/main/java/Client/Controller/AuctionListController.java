@@ -50,49 +50,19 @@ public class AuctionListController extends TemplateController {
     private TitleController titleController;
 
 
-
-    public void initializeList(int typeOfSearch, String toSearch) {
+    public void clearLists(){
         Alist = null;
         auction.clear();
-        //Richiedo al server una lista di 10 aste al massimo, successivamente posso chiedere di prenderne altre 10
-        handleSearchRequest(typeOfSearch,toSearch);
+
+    }
+
+    public void initializeList() {
         if(Alist != null) {
             for (int i = 0; i < Alist.size(); i++) {
                 auction.add(Alist.get(i));
             }
-
             auctionList.setCellFactory(handleListView());
             auctionList.setItems(auction);
-        }
-    }
-    public void handleSearchRequest(int typeOfSearch,String toSearch){
-        if(typeOfSearch == 0) {
-            try {
-                Alist = client.requestListAuction();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (typeOfSearch == 1) {
-            try {
-                Alist = client.searchAuction(toSearch);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (typeOfSearch == 2) {
-            try {
-                Alist = client.requestFavoriteAuction();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        else if (typeOfSearch == 3) {
-            try {
-                Alist = client.myAuction();
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
         }
     }
     public Callback<ListView<Auction>, ListCell<Auction>> handleListView(){
@@ -151,31 +121,57 @@ public class AuctionListController extends TemplateController {
     }
 
     public String parseDate(LocalDateTime closingTime) {
-
         return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
     }
 
 
 
     void refreshList() {
+        clearLists();
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList(0,null);
+        try {
+            Alist = client.requestListAuction();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        initializeList();
     }
 
 
     public void searchList(String toSearch) {
+        clearLists();
         //Usato per cercare
-        initializeList(1,toSearch);
+        try {
+            Alist = client.searchAuction(toSearch);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        initializeList();
     }
 
     public void loadFavorite() {
+        clearLists();
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList(2,null);
+        try {
+            Alist = client.requestFavoriteAuction();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
+        initializeList();
     }
 
     public void loadMyAuction() {
+        clearLists();
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell
-        initializeList(3,null);
+        try {
+            Alist = client.myAuction();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        initializeList();
     }
 
     @FXML
@@ -210,10 +206,10 @@ public class AuctionListController extends TemplateController {
 
             }
             else {
-                initializeList(0, null);
+                refreshList();
             }
         }catch (NullPointerException e) {
-            initializeList(0, null);
+            refreshList();
         }
 
     }
