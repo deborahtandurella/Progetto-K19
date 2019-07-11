@@ -181,7 +181,7 @@ public class CreateAuctionFormController extends TemplateController {
 
 
     public void setParameter() {
-        setImagetoAuction(auction,imageView);
+        ControllerServices.getInstance().setImagetoTheAuction(auction,imageView);
         itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
         closeDate.setVisible(false);

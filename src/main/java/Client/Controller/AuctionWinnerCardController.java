@@ -54,11 +54,12 @@ public class AuctionWinnerCardController extends TemplateController {
 
     public void initializeNow() throws RemoteException {
         //PROTECTED VARIATIONS
+
         auctionName.setText(auction.getDescriptionLot());
         higherOffer.setText("$" + auction.getLastBidAmount());
         vendor.setText(auction.getUsernameVendorDB());
         e_mail.setText(client.getVendorEmail(auction.getUsernameVendorDB()));
-        setImagetoAuction(auction,auctionImage);
+        ControllerServices.getInstance().setImagetoTheAuction(auction,auctionImage);
     }
 
 

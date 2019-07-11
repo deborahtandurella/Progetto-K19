@@ -55,6 +55,17 @@ public class AuctionListController extends TemplateController {
         Alist = null;
         auction.clear();
         //Richiedo al server una lista di 10 aste al massimo, successivamente posso chiedere di prenderne altre 10
+        handleSearchRequest(typeOfSearch,toSearch);
+        if(Alist != null) {
+            for (int i = 0; i < Alist.size(); i++) {
+                auction.add(Alist.get(i));
+            }
+
+            auctionList.setCellFactory(handleListView());
+            auctionList.setItems(auction);
+        }
+    }
+    public void handleSearchRequest(int typeOfSearch,String toSearch){
         if(typeOfSearch == 0) {
             try {
                 Alist = client.requestListAuction();
@@ -86,73 +97,66 @@ public class AuctionListController extends TemplateController {
                 e.printStackTrace();
             }
         }
-        if(Alist != null) {
-            for (int i = 0; i < Alist.size(); i++) {
-                auction.add(Alist.get(i));
-            }
+    }
+    public Callback<ListView<Auction>, ListCell<Auction>> handleListView(){
+        return new Callback<ListView<Auction>, ListCell<Auction>>() {
+            @Override
+            public ListCell<Auction> call(ListView<Auction> param) {
+                ListCell<Auction> cell = new ListCell<Auction>() {
+                    Image img;
+                    ImageView imgview = null;
 
-            auctionList.setCellFactory(new Callback<ListView<Auction>, ListCell<Auction>>() {
-                @Override
-                public ListCell<Auction> call(ListView<Auction> param) {
-                    ListCell<Auction> cell = new ListCell<Auction>() {
-                        Image img;
-                        ImageView imgview = null;
+                    protected void updateItem(Auction au, boolean bt1) {
+                        super.updateItem(au,bt1);
+                        if(bt1)
+                            setStyle("-fx-background-color: #81c784"); // Da togliere se si vuole lo stacco
+                        if(au != null) {
+                            if(au.getImage().exists()) {
+                                try {
+                                    img = new Image(new FileInputStream(au.getImage()),100,100,false,false);
 
-                        protected void updateItem(Auction au, boolean bt1) {
-                            super.updateItem(au,bt1);
-                            if(bt1)
-                                setStyle("-fx-background-color: #81c784"); // Da togliere se si vuole lo stacco
-                            if(au != null) {
-                                if(au.getImage().exists()) {
-                                    try {
-                                        img = new Image(new FileInputStream(au.getImage()),100,100,false,false);
-
-                                        imgview = new ImageView();
-                                        imgview.setImage(img);
-                                    }catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                                    imgview = new ImageView();
+                                    imgview.setImage(img);
+                                }catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                                else {
-                                    try {
-                                        File file = null;
-                                        try {
-                                            URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
-                                            file = Paths.get(res.toURI()).toFile();
-                                        }catch (URISyntaxException e) {
-                                            e.printStackTrace();
-                                        }
-                                        //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
-                                        String absolutePath = file.getAbsolutePath();
-                                        img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
-
-                                        imgview = new ImageView();
-                                        imgview.setImage(img);
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-                                setGraphic(imgview);
-                                setText("Id: " + Integer.toString(au.getId()) + "\t\t\t" + "Name: " + au.getLot().getDescription() + "\t\t\t\t " + "Value: " + Integer.toString(au.getHigherOffer()) +  "\n\t\t\t\t" + "Close Date: " + parseDate(au.getClosingDate()));
-
-                                setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                             }
+                            else {
+                                try {
+                                    File file = null;
+                                    try {
+                                        URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                                        file = Paths.get(res.toURI()).toFile();
+                                    }catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                    //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
+                                    String absolutePath = file.getAbsolutePath();
+                                    img = new Image(new FileInputStream(absolutePath), 100, 100, false, false);
+
+                                    imgview = new ImageView();
+                                    imgview.setImage(img);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            setGraphic(imgview);
+                            setText("Id: " + Integer.toString(au.getId()) + "\t\t\t" + "Name: " + au.getLot().getDescription() + "\t\t\t\t " + "Value: " + Integer.toString(au.getHigherOffer()) +  "\n\t\t\t\t" + "Close Date: " + parseDate(au.getClosingDate()));
+
+                            setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                         }
-                    };
-                    return cell;
-                }
-            });
-            auctionList.setItems(auction);
-        }
+                    }
+                };
+                return cell;
+            }
+        };
     }
 
     public String parseDate(LocalDateTime closingTime) {
 
         return closingTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")).toString();
     }
-
-
 
     void refreshList() {
         //Per un bug visuale se non ricarico la Lista andando ad aggiornare solo l'observable list si buggano le immagini, probabilmente visto che uso una custom list cell

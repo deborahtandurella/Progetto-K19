@@ -135,8 +135,17 @@ public class AuctionCardController extends TemplateController{
         closeDate.setText(parseDate(auction.getClosingDate()));
         //
 
-        setImagetoAuction(auction,auctionImage);
-
+        if(auction.getImage() == null) {
+            ControllerServices.getInstance().loadLocalImage(auctionImage);
+        }
+        else {
+            try {
+                Image img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
+                auctionImage.setImage(img);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         if(auction.getClosingDate().isAfter(LocalDateTime.now())) { //Andrebbe richiesta data attuale al server
             ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
             long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
@@ -195,7 +204,7 @@ public class AuctionCardController extends TemplateController{
         modifyStage.setScene(new Scene(root));
 
         // Calculate the center position of the parent Stage
-        setCenterofPage(modifyStage);
+        ControllerServices.getInstance().setCenterofPage(modifyStage,popUpStage);
         windowsPane.setEffect(blur);
 
 
