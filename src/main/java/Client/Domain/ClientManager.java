@@ -456,8 +456,15 @@ public class ClientManager {
         return ad.getVendorEmail(username);
     }
 
+    public String getActualWinner(int id) throws RemoteException{
+        return ad.getActualWinner(id);
+    }
     public ClientManager(ConnectionLayer c, Proxy bind) {
         connection = c;
         ad = bind;
+    }
+
+    public boolean checkActor(String username,int id) throws RemoteException{
+        return ad.checkActor(username,id);
     }
 }

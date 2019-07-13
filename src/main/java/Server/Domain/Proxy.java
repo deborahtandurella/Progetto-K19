@@ -71,6 +71,7 @@ public interface Proxy extends Remote {
 
     ArrayList<Auction> myAuctionList(String username) throws RemoteException;
 
+    String getActualWinner(int id) throws RemoteException;
     void modifyAuctionDB(String title, int price, int id) throws RemoteException;
 
     void closeAuction(int id) throws RemoteException;
@@ -78,4 +79,6 @@ public interface Proxy extends Remote {
     boolean isClosed(int id) throws RemoteException;
 
     boolean alredyTakenEmailDB(String email) throws RemoteException;
+
+    boolean checkActor(String username, int id) throws RemoteException;
 }

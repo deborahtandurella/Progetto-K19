@@ -175,7 +175,10 @@ public class Auction implements Serializable {
     
 
     public String getLastActor(){
-        return this.getLastBid().getActor();
+        if (bidsList.isEmpty())
+            return this.getLastBid().getActor();
+        else
+            return "";
     }
 
     public int getLastBidAmount(){
@@ -213,6 +216,9 @@ public class Auction implements Serializable {
         this.lot = lot;
         this.closingDate = closingDate;
         this.higherOffer=lot.getBasePrice();
+    }
+    int getLastBidID(){
+       return this.getLastBid().getId();
     }
 
     public Auction(int id, Lot lot, LocalDateTime closingDate) {

@@ -364,6 +364,12 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         return db.getVendorEmail(username);
     }
 
+    public boolean checkActor(String username,int id){
+        return db.checkActor(username,id);
+    }
+    public String getActualWinner(int id){
+        return db.getActualWinner( id);
+    }
     public InterpreterRDB getDb() { return db; }
 
     public void setDb(InterpreterRDB db) { this.db = db; }

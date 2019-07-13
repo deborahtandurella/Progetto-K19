@@ -7,7 +7,6 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
@@ -172,6 +171,7 @@ public class CreateAuctionFormController extends TemplateController {
         ControllerServices.getInstance().setImagetoTheAuction(auction,imageView);
         itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
+        basePrice.setDisable(true);
         closeDate.setVisible(false);
         closeTime.setVisible(false);
     }

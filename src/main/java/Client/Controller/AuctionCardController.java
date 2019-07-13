@@ -87,10 +87,10 @@ public class AuctionCardController extends TemplateController{
     private Timeline timeline;
 
 
-    void initializeNow() {
+    void initializeNow() throws RemoteException {
         try {
 
-            if(client.getLoggedUser().equals(auction.getLot().getVendorDB().getUsername()) && !client.isClosed(auction.getId())) {
+            if(client.getLoggedUser().equals(auction.getUsernameVendorDB()) && !client.isClosed(auction.getId())) {
                 offerButton.setDisable(true);
                 offerButton.setVisible(false);
             }
@@ -118,7 +118,8 @@ public class AuctionCardController extends TemplateController{
         auctionName.setText(auction.getDescriptionLot());
         if(auction.getLastBid() != null) {
             higherOffer.setText("$" + auction.getLastBidAmount());
-            bidderHigher.setText(auction.getLastActor());
+            System.out.println(client.getActualWinner(auction.getId()));
+            bidderHigher.setText(client.getActualWinner(auction.getId()));
         }
         else {
             higherOffer.setText("$"+auction.getHigherOffer());
@@ -251,13 +252,12 @@ public class AuctionCardController extends TemplateController{
     private void makeAnOffer() throws RemoteException {
         if(!client.isClosed(auction.getId())) {
             //protected variATIONS
-            if (client.getLoggedUser().equals(auction.getUsernameVendorDB())) {//come sopra
+            if (client.checkActor(client.getLoggedUser(),auction.getId())) {//come sopra
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error Offer");
                 alert.setHeaderText("Error ");
-                alert.setContentText("Il creatore dell'asta non puo' fare offerte sulla stessa");
+                alert.setContentText("Non puoi ribattere la tua stessa offerta");
                 alert.initOwner(popUpStage);
-
                 alert.showAndWait();
             } else {
                 TextInputDialog dialog = new TextInputDialog();

@@ -5,6 +5,7 @@ import Server.Domain.Auction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -83,7 +84,7 @@ public class AuctionListController extends TemplateController {
                                     File file;
                                     String absolutePath;
                                     try {
-                                        URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                                        URL res = getClass().getClassLoader().getResource("Images/Destrauction.png");
                                         assert res != null;
                                         file = Paths.get(res.toURI()).toFile();
                                         absolutePath = file.getAbsolutePath();
@@ -92,7 +93,7 @@ public class AuctionListController extends TemplateController {
                                     }catch (NullPointerException|URISyntaxException e) {
                                         e.printStackTrace();
                                     }
-                                    //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
+                                    //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/Destrauction.png
                                     imgview = new ImageView();
                                     imgview.setImage(img);
                                 } catch (FileNotFoundException e) {
@@ -102,7 +103,6 @@ public class AuctionListController extends TemplateController {
 
                             setGraphic(imgview);
                             setText(String.format("Id: %d\t\t\tName: %s\t\t\t\t Value: %s\n\t\t\t\tClose Date: %s", au.getId(), au.getLot().getDescription(), Integer.toString(au.getHigherOffer()), parseDate(au.getClosingDate())));
-
                             setStyle("-fx-background-color: #81c784"); //Da togliere se si vuole lo stacco
                         }
                     }

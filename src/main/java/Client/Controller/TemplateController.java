@@ -66,12 +66,12 @@ public abstract class TemplateController {
             try {
                 File file = null;
                 try {
-                    URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                    URL res = getClass().getClassLoader().getResource("Images/Destrauction.png");
                     file = Paths.get(res.toURI()).toFile();
                 }catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/i_have_no_idea.png
+                //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/Destrauction.png
                 String absolutePath = file.getAbsolutePath();
                 img = new Image(new FileInputStream(absolutePath),268,226,false,false);
 

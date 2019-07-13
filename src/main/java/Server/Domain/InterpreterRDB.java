@@ -12,7 +12,6 @@ import Server.Services.HibernateUtil;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -110,6 +109,23 @@ class InterpreterRDB {
             s.close();
         }
         return false;
+    }
+
+    void logoutAll(){
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            String sql = "update User set loggedstatus=0";
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            sqlQuery.executeUpdate();
+            s.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+
     }
 
     /**
@@ -231,7 +247,6 @@ class InterpreterRDB {
      */
     void winner(int id) {
         s = sessionFactory.openSession();
-
         try {
             s.beginTransaction();
             Auction au = s.get(Auction.class,id);
@@ -253,6 +268,28 @@ class InterpreterRDB {
         } finally {
             s.close();
         }
+    }
+
+    String getActualWinner(int id) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            Auction au = s.get(Auction.class,id);
+            List<Bid> list = au.getBidsList();
+            if (list.size() != 0) {
+                list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
+                int lastOne = list.size()-1;
+               return list.get(lastOne).getActorDBUsername();//questo si può cambiare c'è già il metodo
+            }
+            else {
+                return "No Winner!";
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return null;
     }
 
     /**
@@ -410,6 +447,23 @@ class InterpreterRDB {
         return false;
     }
 
+    boolean checkActor(String username,int id){
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            Bid bid= s.get(Bid.class,id);
+            System.out.println(bid.getActorDBUsername());
+            if (bid.getActorDBUsername().equals(username))
+                return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    return false;
+    }
+
     /**
      * Return all the open auctions
      */
@@ -417,6 +471,7 @@ class InterpreterRDB {
         s = sessionFactory.openSession();
         String toPrint = "";
         String sql = " FROM  Auction where closed= false";
+
 
         try {
             Query query = s.createQuery(sql);
@@ -792,8 +847,53 @@ class InterpreterRDB {
     }
 
 
+    void deleteAuctions(){
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            String sql ="select auction.id from auction left join lot on " +
+                    "auction.id = lot.auctionid where closingdate<now() and winner is null;";
+            NativeQuery query = s.createSQLQuery(sql);
+            ArrayList<Integer> numbers = (ArrayList<Integer>) query.getResultList();
+            sql="delete from favorites where id in :numbers";
+            query = s.createSQLQuery(sql);
+            query.setParameterList("numbers",numbers);
+            query.executeUpdate();
+            sql="delete from partecipants where id in :numbers";
+            query = s.createSQLQuery(sql);
+            query.setParameterList("numbers",numbers);
+            query.executeUpdate();
+            sql="delete from bid where auctionid in :numbers";
+            query = s.createSQLQuery(sql);
+            query.setParameterList("numbers",numbers);
+            query.executeUpdate();
+            sql="delete from lot where auctionid in :numbers";
+            query = s.createSQLQuery(sql);
+            query.setParameterList("numbers",numbers);
+            query.executeUpdate();
+            sql="delete from auction where id in :numbers";
+            query = s.createSQLQuery(sql);
+            query.setParameterList("numbers",numbers);
+            query.executeUpdate();
+            s.getTransaction().commit();
+        }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    }
+
+
+
     public InterpreterRDB() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
+    }
+
+    public static void main(String[] args) {
+        InterpreterRDB db = new InterpreterRDB();
+        db.logoutAll();
+        db.deleteAuctions();
     }
 
 }

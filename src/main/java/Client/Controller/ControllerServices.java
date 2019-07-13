@@ -41,7 +41,7 @@ class ControllerServices {
     void loadLocalImage(ImageView auctionImage){
         try {
                 File file;
-                URL res = getClass().getClassLoader().getResource("Images/i_have_no_idea.png");
+                URL res = getClass().getClassLoader().getResource("Images/Destrauction.png");
                 assert res != null;
                 file = Paths.get(res.toURI()).toFile();
                 String absolutePath = file.getAbsolutePath();
