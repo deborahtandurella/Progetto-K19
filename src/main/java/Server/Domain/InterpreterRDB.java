@@ -235,6 +235,9 @@ class InterpreterRDB {
             au.setClosed(true);
             s.saveOrUpdate(au);
             s.getTransaction().commit();
+            ArrayList<Integer> numbers=new ArrayList<>();
+            numbers.add(au.getId());
+            deleteImages(numbers);
         } catch (Exception e){
             e.printStackTrace();
         } finally {
