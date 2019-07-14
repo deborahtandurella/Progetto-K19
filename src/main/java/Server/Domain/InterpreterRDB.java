@@ -899,6 +899,6 @@ class InterpreterRDB {
         logoutAll();
         deleteAuctions();
     }
-    
+
 
 }
