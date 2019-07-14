@@ -260,6 +260,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public void closeServer() throws RemoteException {
         try {
             saveTimerStats();
+            db.logoutAll();
             //protected variations
             db.closeSession();
             //Facade interagisce con InterpreterRDB per chiudere Session Factory
@@ -276,6 +277,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         reg = LocateRegistry.createRegistry(999);
 
         reg.rebind("progettok19", this);
+        db.logoutAll();
     }
 
     public void reloadImages() {
