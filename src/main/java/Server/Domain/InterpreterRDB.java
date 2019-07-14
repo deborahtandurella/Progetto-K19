@@ -856,44 +856,49 @@ class InterpreterRDB {
                     "auction.id = lot.auctionid where closingdate<now() and winner is null;";
             NativeQuery query = s.createSQLQuery(sql);
             ArrayList<Integer> numbers = (ArrayList<Integer>) query.getResultList();
-            sql="delete from favorites where id in :numbers";
-            query = s.createSQLQuery(sql);
-            query.setParameterList("numbers",numbers);
-            query.executeUpdate();
-            sql="delete from partecipants where id in :numbers";
-            query = s.createSQLQuery(sql);
-            query.setParameterList("numbers",numbers);
-            query.executeUpdate();
-            sql="delete from bid where auctionid in :numbers";
-            query = s.createSQLQuery(sql);
-            query.setParameterList("numbers",numbers);
-            query.executeUpdate();
-            sql="delete from lot where auctionid in :numbers";
-            query = s.createSQLQuery(sql);
-            query.setParameterList("numbers",numbers);
-            query.executeUpdate();
-            sql="delete from auction where id in :numbers";
-            query = s.createSQLQuery(sql);
-            query.setParameterList("numbers",numbers);
-            query.executeUpdate();
-            s.getTransaction().commit();
+            if (!numbers.isEmpty()) {
+                    sql = "delete from favorites where id in :numbers";
+                    query = s.createSQLQuery(sql);
+                    query.setParameterList("numbers", numbers);
+                    query.executeUpdate();
+                    sql = "delete from partecipants where id in :numbers";
+                    query = s.createSQLQuery(sql);
+                    query.setParameterList("numbers", numbers);
+                    query.executeUpdate();
+                    sql = "delete from bid where auctionid in :numbers";
+                    query = s.createSQLQuery(sql);
+                    query.setParameterList("numbers", numbers);
+                    query.executeUpdate();
+                    sql = "delete from lot where auctionid in :numbers";
+                    query = s.createSQLQuery(sql);
+                    query.setParameterList("numbers", numbers);
+                    query.executeUpdate();
+                    sql = "delete from auction where id in :numbers";
+                    query = s.createSQLQuery(sql);
+                    query.setParameterList("numbers", numbers);
+                    query.executeUpdate();
+                    s.getTransaction().commit();
+                    deleteImages(numbers);
+            }
         }catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             s.close();
         }
     }
-
+    void deleteImages(ArrayList<Integer> numbers){
+        for(Integer id:numbers){
+            File image = new File("src\\main\\resources\\Images\\" + id + ".png");
+            image.delete();
+        }
+    }
 
 
     public InterpreterRDB() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
+        logoutAll();
+        deleteAuctions();
     }
-
-    public static void main(String[] args) {
-        InterpreterRDB db = new InterpreterRDB();
-        db.logoutAll();
-        db.deleteAuctions();
-    }
+    
 
 }
