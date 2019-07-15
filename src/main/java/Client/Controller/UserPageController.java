@@ -154,12 +154,12 @@ public class UserPageController extends TemplateController {
     }
 
     @FXML
-    public void handleCursorHand(MouseEvent me) {
+    public void handleCursorHand() {
         popUpStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
-    public void handleCursor(MouseEvent me) {
+    public void handleCursor() {
         popUpStage.getScene().setCursor(Cursor.DEFAULT);
     }
 

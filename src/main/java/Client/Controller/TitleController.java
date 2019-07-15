@@ -1,20 +1,16 @@
 package Client.Controller;
 
-import Client.Domain.ClientManager;
 import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -122,7 +118,7 @@ public class TitleController extends TemplateController {
         primaryStage.getScene().lookup("#windowsPane").setEffect(blur);
 
 
-        userPageController = (UserPageController) loader.getController();
+        userPageController =loader.getController();
         userPageController.setPrimaryStage(primaryStage);
         userPageController.setClient(client);
         userPageController.setPopUpStage(popUpStageUserPage);

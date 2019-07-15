@@ -60,35 +60,4 @@ public abstract class TemplateController {
 
     public void setPopUpStage(Stage popUpStage) { this.popUpStage = popUpStage; }
 
-    public void setImagetoAuction(Auction auction, ImageView auctionImage){
-        Image img;
-        if(auction.getImage() == null) {
-            try {
-                File file = null;
-                try {
-                    URL res = getClass().getClassLoader().getResource("Images/Destrauction.png");
-                    file = Paths.get(res.toURI()).toFile();
-                }catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                //In alternativa a tutto quello sopra a partire dal try si puo' usare questo path: target/classes/Images/Destrauction.png
-                String absolutePath = file.getAbsolutePath();
-                img = new Image(new FileInputStream(absolutePath),268,226,false,false);
-
-                auctionImage.setImage(img);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            try {
-                img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
-                auctionImage.setImage(img);
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
 }

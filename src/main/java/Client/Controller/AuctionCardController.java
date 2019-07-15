@@ -86,10 +86,12 @@ public class AuctionCardController extends TemplateController{
     private Label timer;
     private Timeline timeline;
 
-
+    /**
+     * Il creatore dell'asta visualizzerà il tasto per modificare l'asta, mentre il resto degli utenti il tasto per fare un'offerta
+     * @throws RemoteException
+     */
     void initializeNow() throws RemoteException {
         try {
-
             if(client.getLoggedUser().equals(auction.getUsernameVendorDB()) && !client.isClosed(auction.getId())) {
                 offerButton.setDisable(true);
                 offerButton.setVisible(false);

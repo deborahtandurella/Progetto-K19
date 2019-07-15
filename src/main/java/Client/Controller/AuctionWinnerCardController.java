@@ -66,6 +66,11 @@ public class AuctionWinnerCardController extends TemplateController {
     @FXML
     public void handleCursor() { popUpStage.getScene().setCursor(Cursor.DEFAULT); }
 
+
+    /**
+     * Il layout cambia a seconda dell'utente che la visualizza, sia esso il venditore o il vincitore
+     * @throws RemoteException
+     */
     void initializeNow() throws RemoteException {
         //PROTECTED VARIATIONS
         auctionName.setText(auction.getDescriptionLot());
