@@ -899,7 +899,6 @@ class InterpreterRDB {
 
     public InterpreterRDB() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
-        logoutAll();
         deleteAuctions();
     }
 
