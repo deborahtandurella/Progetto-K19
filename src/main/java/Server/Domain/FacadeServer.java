@@ -1,3 +1,5 @@
+
+
 package Server.Domain;
 
 import Server.People.User;
@@ -34,13 +36,12 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
 
 
     public void createUser(String username, String password){
-        User user = new User(username,password);
+        User user = new User(username,password,"");
         addUser(user);
     }
     public void createUserDB (String username, String password,String email){
         db.addUser(username,password,email);
     }
-
     public void changeEmail(String email,String username){
         db.changeEmail(email,username);
     }
@@ -74,6 +75,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public boolean alredyTakenUsernameDB(String username) { return db.alredyTakenUsername(username); }
 
     public boolean alredyTakenEmailDB(String email) { return db.alredyTakenEmail(email); }
+
 
 
     public String showAllActiveAuctions() {
@@ -119,7 +121,6 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         auctionList.put(auctionIdCounter,au);
         // Timer for ending the auction
         createTimer(closingTime);
-
         auctionIdCounter++;
     }
 
@@ -171,7 +172,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public boolean checkLoginDB(String username,String pass) { return db.login(username,pass); }
 
 
-    private User userListed(String username) {
+    public User userListed(String username) {
         return usersList.getOrDefault(username,null);
     }
 
@@ -326,11 +327,11 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         System.out.println(files.loadState());
     }
 
-    ConcurrentHashMap<String, User> getUsersList() { return usersList; }
+    public ConcurrentHashMap<String, User> getUsersList() { return usersList; }
 
     void setUsersList(ConcurrentHashMap<String, User> usersList) { this.usersList = usersList; }
 
-    ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
+    public ConcurrentHashMap<Integer, Auction> getAuctionList() { return auctionList; }
 
     void setAuctionList(ConcurrentHashMap<Integer, Auction> auctionList) { this.auctionList = auctionList; }
 

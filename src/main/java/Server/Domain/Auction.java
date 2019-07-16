@@ -48,7 +48,9 @@ public class Auction implements Serializable {
     /**
      * Add bid to the auction
      */
-    void addBid(Bid bid) {
+    public void addBid(Bid bid) {
+        if (bidsList==null)
+            bidsList=new ArrayList<>();
         bidsList.add(bid);
         higherOffer = bid.getAmount();
     }
@@ -66,7 +68,7 @@ public class Auction implements Serializable {
     /**
      * Print info of if the auction is open
      */
-    String auctionInformation() {
+    public String auctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String closeDate = closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
@@ -81,7 +83,7 @@ public class Auction implements Serializable {
     /**
      * Print info of if the auction is closed
      */
-    String closedAuctionInformation() {
+    public String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
@@ -175,7 +177,7 @@ public class Auction implements Serializable {
     
 
     public String getLastActor(){
-        if (bidsList.isEmpty())
+        if (!bidsList.isEmpty())
             return this.getLastBid().getActor();
         else
             return "";

@@ -38,7 +38,7 @@ public class Lot implements Serializable {
     private String vendor;
 
 
-    int getBasePrice() {
+    public int getBasePrice() {
         return basePrice;
     }
 
@@ -49,7 +49,7 @@ public class Lot implements Serializable {
 
     public String getDescription() { return description; }
 
-    String information() {
+    public String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
 
@@ -139,12 +139,12 @@ public class Lot implements Serializable {
 
     public Lot() {}
 
-    Lot(String description, int basePrice) {
+    public Lot(String description, int basePrice) {
         this.description = description;
         this.basePrice = basePrice;
     }
 
-    Lot(String description, int basePrice, String vendor) {
+    public Lot(String description, int basePrice, String vendor) {
         this.description = description;
         this.basePrice = basePrice;
         this.vendor = vendor;
