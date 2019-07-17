@@ -9,8 +9,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -91,6 +89,84 @@ public class AuctionCardController extends TemplateController{
      * @throws RemoteException
      */
     void initializeNow() throws RemoteException {
+        manageButtons();
+        if(auction.getImage() == null) {
+            ControllerServices.getInstance().loadLocalImage(auctionImage);
+        }
+        else {
+            try {
+                Image img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
+                auctionImage.setImage(img);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        initAuctionCard();
+        if(auction.getClosingDate().isAfter(LocalDateTime.now())) { //Andrebbe richiesta data attuale al server
+            manageTimeline();
+        }
+        else {
+            timer.setText("D " + 0 + "  H " + 0 + "  M " + 0 + "  S " + 0);
+        }
+
+    }
+
+    void initAuctionCard() throws RemoteException{
+        //protected variation
+        auctionName.setText(auction.getDescriptionLot());
+        if(auction.getLastBid() != null) {
+            higherOffer.setText("$" + auction.getLastBidAmount());
+            bidderHigher.setText(client.getActualWinner(auction.getId()));
+        }
+        else {
+            higherOffer.setText("$"+auction.getHigherOffer());
+            bidderHigher.setText("null");
+        }
+
+        vendor.setText(auction.getUsernameVendorDB());
+        closeDate.setText(parseDate(auction.getClosingDate()));
+        //
+
+    }
+
+    void manageTimeline(){
+        ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
+        long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
+        countMilliToDay(millis);
+
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), event -> {
+            if (second > 0) {
+                second--;
+            } else {
+                second = 59;
+                if (minute > 0) {
+                    minute--;
+                } else {
+                    minute = 59;
+                    if (hour > 0) {
+                        hour--;
+                    } else {
+                        hour = 23;
+                        if (day > 0) {
+                            day--;
+                        }
+                    }
+                }
+            }
+
+            timer.setText("D " + day + "  H " + hour + "  M " + minute + "  S " + second);
+
+            if (second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
+                timeline.stop();
+            }
+
+        }));
+        timeline.play();
+    }
+
+    void manageButtons(){
         try {
             if(client.getLoggedUser().equals(auction.getUsernameVendorDB()) && !client.isClosed(auction.getId())) {
                 offerButton.setDisable(true);
@@ -108,7 +184,6 @@ public class AuctionCardController extends TemplateController{
             }
             if(!client.userLikeAuction(auction.getId())) { //Se l'asta non e' tra le preferite
                 star.setIcon(FontAwesomeIcon.STAR_ALT);
-
             }
             else {
                 star.setIcon(FontAwesomeIcon.STAR);
@@ -116,73 +191,6 @@ public class AuctionCardController extends TemplateController{
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        //protected variation
-        auctionName.setText(auction.getDescriptionLot());
-        if(auction.getLastBid() != null) {
-            higherOffer.setText("$" + auction.getLastBidAmount());
-            bidderHigher.setText(client.getActualWinner(auction.getId()));
-        }
-        else {
-            higherOffer.setText("$"+auction.getHigherOffer());
-            bidderHigher.setText("null");
-        }
-
-        vendor.setText(auction.getUsernameVendorDB());
-        closeDate.setText(parseDate(auction.getClosingDate()));
-        //
-
-        if(auction.getImage() == null) {
-            ControllerServices.getInstance().loadLocalImage(auctionImage);
-        }
-        else {
-            try {
-                Image img = new Image(new FileInputStream(auction.getImage()),268,226,false,false);
-                auctionImage.setImage(img);
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        if(auction.getClosingDate().isAfter(LocalDateTime.now())) { //Andrebbe richiesta data attuale al server
-            ZonedDateTime zdt = auction.getClosingDate().atZone(ZoneId.of("Europe/Rome"));
-            long millis = zdt.toInstant().toEpochMilli() - System.currentTimeMillis();
-            countMilliToDay(millis);
-
-            timeline = new Timeline();
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.getKeyFrames().addAll(new KeyFrame(Duration.seconds(1), event -> {
-                if (second > 0) {
-                    second--;
-                } else {
-                    second = 59;
-                    if (minute > 0) {
-                        minute--;
-                    } else {
-                        minute = 59;
-                        if (hour > 0) {
-                            hour--;
-                        } else {
-                            hour = 23;
-                            if (day > 0) {
-                                day--;
-                            }
-                        }
-                    }
-                }
-
-                timer.setText("D " + day + "  H " + hour + "  M " + minute + "  S " + second);
-
-                if (second <= 0 && minute <= 0 && hour <= 0 && day <= 0) {
-                    timeline.stop();
-                }
-
-            }));
-            timeline.play();
-        }
-        else {
-            timer.setText("D " + 0 + "  H " + 0 + "  M " + 0 + "  S " + 0);
-        }
-
     }
 
     @FXML
