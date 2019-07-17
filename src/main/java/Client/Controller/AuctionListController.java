@@ -173,29 +173,10 @@ public class AuctionListController extends TemplateController {
             int idChoose = auctionList.getSelectionModel().getSelectedItem().getId();
 
             if(client.isClosed(idChoose) && client.getAuction(idChoose).getLastBid()!= null) {
-                if (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser()) || client.getLoggedUser().equals(client.getAuction(idChoose).getUsernameVendorDB())) { // Apro la winning se l'utente e' il vincitore oppure se il venditore ha venduto!
-                    Stage popUpStageWinnerCard = loadScenePopUp("/View/AuctionWinnerCard.fxml");
-
-                    ((AuctionWinnerCardController)loader.getController()).setPopUpStage(popUpStageWinnerCard);
-                    ((AuctionWinnerCardController) loader.getController()).setAuction(client.getAuction(idChoose));
-                    ((AuctionWinnerCardController) loader.getController()).setClient(client);
-                    ((AuctionWinnerCardController) loader.getController()).initializeNow();
-
-                    popUpStageWinnerCard.show();
-                }
+                popOutWinnerCard(idChoose);
             }
             else if ((!client.isClosed(idChoose) || titleController.getMyAuction().isDisable() || titleController.getFavoriteButton().isDisable()) || (client.isClosed(idChoose) && !(client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser())))) {
-                Stage popUpStageAuctionCard = loadScenePopUp("/View/AuctionCard.fxml");
-
-                ((AuctionCardController)loader.getController()).setPopUpStage(popUpStageAuctionCard);
-
-                ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
-                ((AuctionCardController) loader.getController()).setClient(client);
-                ((AuctionCardController) loader.getController()).initializeNow();
-                ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
-                ((AuctionCardController) loader.getController()).initializeWindow();
-                popUpStageAuctionCard.show();
-
+                popOutAuctionCard(idChoose);
             }
             else {
                 refreshList();
@@ -204,6 +185,32 @@ public class AuctionListController extends TemplateController {
             refreshList();
         }
 
+    }
+
+    void popOutAuctionCard(int idChoose)throws IOException{
+        Stage popUpStageAuctionCard = loadScenePopUp("/View/AuctionCard.fxml");
+
+        ((AuctionCardController)loader.getController()).setPopUpStage(popUpStageAuctionCard);
+
+        ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
+        ((AuctionCardController) loader.getController()).setClient(client);
+        ((AuctionCardController) loader.getController()).initializeNow();
+        ((AuctionCardController) loader.getController()).setAuctionFormController(auctionFormController);
+        ((AuctionCardController) loader.getController()).initializeWindow();
+        popUpStageAuctionCard.show();
+    }
+
+    void popOutWinnerCard(int idChoose) throws IOException{
+        if (client.getAuction(idChoose).getLastBid().getActorDBUsername().equals(client.getLoggedUser()) || client.getLoggedUser().equals(client.getAuction(idChoose).getUsernameVendorDB())) { // Apro la winning se l'utente e' il vincitore oppure se il venditore ha venduto!
+            Stage popUpStageWinnerCard = loadScenePopUp("/View/AuctionWinnerCard.fxml");
+
+            ((AuctionWinnerCardController)loader.getController()).setPopUpStage(popUpStageWinnerCard);
+            ((AuctionWinnerCardController) loader.getController()).setAuction(client.getAuction(idChoose));
+            ((AuctionWinnerCardController) loader.getController()).setClient(client);
+            ((AuctionWinnerCardController) loader.getController()).initializeNow();
+
+            popUpStageWinnerCard.show();
+        }
     }
 
 

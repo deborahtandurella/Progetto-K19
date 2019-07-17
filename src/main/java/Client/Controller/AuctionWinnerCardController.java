@@ -41,6 +41,7 @@ public class AuctionWinnerCardController extends TemplateController {
 
 
 
+
     @FXML
     private Label auctionName;
 
@@ -77,23 +78,30 @@ public class AuctionWinnerCardController extends TemplateController {
         higherOffer.setText("$" + auction.getLastBidAmount());
         ControllerServices.getInstance().setImagetoTheAuction(auction,auctionImage);
         if(client.getLoggedUser().equals(auction.getUsernameVendorDB())) {
-            line1.setText("Congratulazioni! Il tuo oggetto e' stato venduto.");
-            line2.setText("Verrai contattato dal vincitore sul tuo indirizzo email");
-            line3.setText("in alternativa, contattalo entro 48h dalla chiusura.");
-            vendorWinner.setText("Winner");
-            vendor.setText(auction.getLastBid().getActorDBUsername());
-            e_mail.setText(client.getVendorEmail(auction.getLastBid().getActorDBUsername()));
+            writeForVendor();
         }
         else {
-            line1.setText("Congratulazioni! Sei il vincitore dell'asta.");
-            line2.setText("Per effettuare il pagamento e ricevere il prodotto, la");
-            line3.setText("preghiamo di contattare l'indirizzo e-mail del venditore.");
-
-            vendor.setText(auction.getUsernameVendorDB());
-            e_mail.setText(client.getVendorEmail(auction.getUsernameVendorDB()));
+            writeForWinner();
         }
     }
 
+    void writeForVendor()throws RemoteException{
+        line1.setText("Congratulazioni! Il tuo oggetto e' stato venduto.");
+        line2.setText("Verrai contattato dal vincitore sul tuo indirizzo email");
+        line3.setText("in alternativa, contattalo entro 48h dalla chiusura.");
+        vendorWinner.setText("Winner");
+        vendor.setText(auction.getLastBid().getActorDBUsername());
+        e_mail.setText(client.getVendorEmail(auction.getLastBid().getActorDBUsername()));
+    }
+
+    void writeForWinner() throws RemoteException{
+        line1.setText("Congratulazioni! Sei il vincitore dell'asta.");
+        line2.setText("Per effettuare il pagamento e ricevere il prodotto, la");
+        line3.setText("preghiamo di contattare l'indirizzo e-mail del venditore.");
+
+        vendor.setText(auction.getUsernameVendorDB());
+        e_mail.setText(client.getVendorEmail(auction.getUsernameVendorDB()));
+    }
 
     public Auction getAuction() {
         return auction;
