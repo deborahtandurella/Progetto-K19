@@ -49,17 +49,14 @@ public class Auction implements Serializable {
      * Add bid to the auction
      */
     public void addBid(Bid bid) {
-        if (bidsList==null)
-            bidsList=new ArrayList<>();
-        bidsList.add(bid);
-        higherOffer = bid.getAmount();
+        if(bid.getAmount()>higherOffer) {
+            bidsList.add(bid);
+            higherOffer = bid.getAmount();
+        }
     }
 
     void addBidDB(Bid bid) {
         if(bid != null) {
-            if(bidsList == null) {
-                bidsList = new ArrayList<>();
-            }
             bidsList.add(bid);
             bid.setAu(this);
         }
@@ -214,10 +211,15 @@ public class Auction implements Serializable {
     public void setWinnerDB(User winner){
         this.lot.setWinnerDB(winner);
     }
+
+    public String getWinner(){
+        return this.lot.getWinner();
+    }
     public Auction(Lot lot, LocalDateTime closingDate) {
         this.lot = lot;
         this.closingDate = closingDate;
         this.higherOffer=lot.getBasePrice();
+        this.bidsList=new ArrayList<>();
     }
     int getLastBidID(){
        return this.getLastBid().getId();
@@ -229,5 +231,6 @@ public class Auction implements Serializable {
         this.closingDate = closingDate;
         this.lot=lot;
         this.higherOffer=lot.getBasePrice();
+        this.bidsList=new ArrayList<>();
     }
 }

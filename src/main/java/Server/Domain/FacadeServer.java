@@ -143,6 +143,19 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         db.closeAuction(id);
     }
 
+    public void closeActiveAuction(int id){
+        Auction auction=auctionList.get(id);
+        if(!auction.isClosed()){
+            auction.setClosed(true);
+            if (!auction.getBidsList().isEmpty()){
+                auction.setWinner(auction.getLastActor());
+            }
+            else{
+                auction.setWinner("No winner");
+            }
+        }
+    }
+
     public boolean isClosed(int id) { return db.isClosed(id);}
 
 
@@ -206,7 +219,9 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public synchronized void makeBid(String user, int amount,int id){
         Bid bid = new Bid(id,user,amount);
         Auction request = auctionListed(id);
-        request.addBid(bid);
+        if (request.getBidsList().isEmpty() || !request.getLastActor().equals(user)) {
+                    request.addBid(bid);
+        }
     }
     public synchronized boolean makeBidDB(String user, int amount,int id) { return db.makeBid(user,amount,id); }
 

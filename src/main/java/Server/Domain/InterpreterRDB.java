@@ -452,13 +452,17 @@ class InterpreterRDB {
 
     boolean checkActor(String username,int id){
         s = sessionFactory.openSession();
-
         try {
             s.beginTransaction();
-            Bid bid= s.get(Bid.class,id);
-            System.out.println(bid.getActorDBUsername());
-            if (bid.getActorDBUsername().equals(username))
-                return true;
+            Auction au = s.get(Auction.class,id);
+            List<Bid> list = au.getBidsList();
+            if (!list.isEmpty()) {
+                list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
+                int lastOne = list.size() - 1;
+                String lastActor = list.get(lastOne).getActorDBUsername();
+                if (lastActor.equals(username))
+                    return true;
+            }
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -900,6 +904,10 @@ class InterpreterRDB {
     public InterpreterRDB() {
         this.sessionFactory = HibernateUtil.getSessionFactory();
         deleteAuctions();
+    }
+
+    public static void main(String[] args) {
+        InterpreterRDB db = new InterpreterRDB();
     }
 
 

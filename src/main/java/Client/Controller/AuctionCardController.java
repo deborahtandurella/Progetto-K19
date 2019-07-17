@@ -120,7 +120,6 @@ public class AuctionCardController extends TemplateController{
         auctionName.setText(auction.getDescriptionLot());
         if(auction.getLastBid() != null) {
             higherOffer.setText("$" + auction.getLastBidAmount());
-            System.out.println(client.getActualWinner(auction.getId()));
             bidderHigher.setText(client.getActualWinner(auction.getId()));
         }
         else {
