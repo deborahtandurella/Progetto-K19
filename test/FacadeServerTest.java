@@ -1,5 +1,3 @@
-package test;
-
 import Server.Domain.FacadeServer;
 import Server.People.User;
 import org.hamcrest.CoreMatchers;
