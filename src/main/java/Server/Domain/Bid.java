@@ -34,7 +34,7 @@ public class Bid implements Serializable {
         return actor;
     }
 
-    int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
