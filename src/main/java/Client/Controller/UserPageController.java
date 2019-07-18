@@ -63,27 +63,20 @@ public class UserPageController extends TemplateController {
         if (user.checkPassword(psw)){
             int esito = client.changeEmail(emailChanged,user.getUsername());
             if(esito == 1) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText("Email changed succesfully");
-                alert.initOwner(primaryStage);
-
-                alert.showAndWait();
+                String title="Success";
+                String message ="Email changed succesfully";
+                ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.INFORMATION);
             }
             if(esito == -1) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Error e-mail");
-                alert.setHeaderText("E-mail doesn't correspond the pattern ****@****.** ");
-                alert.initOwner(primaryStage);
-                alert.showAndWait();
+                String title="Error e-mail";
+                String message ="E-mail is not valid";
+                ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.WARNING);
             }
         }
         else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Wrong password");
-            alert.setHeaderText("Wrong password");
-            alert.initOwner(popUpStage);
-            alert.showAndWait();
+            String title="Wrong Password";
+            String message ="Password entered incorrectly";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 
@@ -96,33 +89,25 @@ public class UserPageController extends TemplateController {
         if (user.checkPassword(oldPass)){
             int esito = client.changePassword(newPass,repPass,user.getUsername());
             if(esito == 1) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText("Password changed succesfully");
-                alert.initOwner(primaryStage);
-                alert.showAndWait();
+                String title="Success";
+                String message ="Password changed succesfully";
+                ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.INFORMATION);
             }
             if(esito == -1) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Invalid Password");
-                alert.setHeaderText("Invalid Password");
-                alert.initOwner(primaryStage);
-                alert.showAndWait();
+                String title="Invalid Password";
+                String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
             }
             if(esito == -2) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Password doesn't match");
-                alert.setHeaderText("New passwords don't match");
-                alert.initOwner(primaryStage);
-                alert.showAndWait();
+                String title="Password doesn't match";
+                String message = "New passwords don't match";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
             }
         }
         else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Wrong password");
-            alert.setHeaderText("Wrong password");
-            alert.initOwner(popUpStage);
-            alert.showAndWait();
+            String title="Wrong Password";
+            String message ="Password entered incorrectly";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 

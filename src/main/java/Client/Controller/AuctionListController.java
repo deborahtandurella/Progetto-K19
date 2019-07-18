@@ -191,7 +191,6 @@ public class AuctionListController extends TemplateController {
         Stage popUpStageAuctionCard = loadScenePopUp("/View/AuctionCard.fxml");
 
         ((AuctionCardController)loader.getController()).setPopUpStage(popUpStageAuctionCard);
-
         ((AuctionCardController) loader.getController()).setAuction(client.getAuction(idChoose));
         ((AuctionCardController) loader.getController()).setClient(client);
         ((AuctionCardController) loader.getController()).initializeNow();
@@ -208,7 +207,6 @@ public class AuctionListController extends TemplateController {
             ((AuctionWinnerCardController) loader.getController()).setAuction(client.getAuction(idChoose));
             ((AuctionWinnerCardController) loader.getController()).setClient(client);
             ((AuctionWinnerCardController) loader.getController()).initializeNow();
-
             popUpStageWinnerCard.show();
         }
     }

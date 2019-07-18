@@ -60,4 +60,6 @@ public abstract class TemplateController {
 
     public void setPopUpStage(Stage popUpStage) { this.popUpStage = popUpStage; }
 
+
+
 }

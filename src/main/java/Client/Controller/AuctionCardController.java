@@ -262,19 +262,15 @@ public class AuctionCardController extends TemplateController{
         if(!client.isClosed(auction.getId())) {
             //protected variATIONS
             if (client.checkActor(client.getLoggedUser(),auction.getId())) {//come sopra
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Offer");
-                alert.setHeaderText("Error ");
-                alert.setContentText("Non puoi ribattere la tua stessa offerta");
-                alert.initOwner(popUpStage);
-                alert.showAndWait();
+                String title="Error Offer";
+                String message="Non puoi ribattere la tua stessa offerta";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
             } else {
                 TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Offer Dialog");
-                dialog.setHeaderText("Higher Offer:" + auction.getHigherOffer());
-                dialog.setContentText("Your Offer:");
-
-                Optional<String> input = dialog.showAndWait();
+                String title1="Offer Dialog";
+                String headerText1 ="Higher Offer:" + auction.getHigherOffer();
+                String message1 = "Your Offer:";
+                Optional<String> input = ControllerServices.getInstance().getSelectionFromDialog(title1,headerText1,message1,dialog);
                 input.ifPresent(offer -> {
                     int offerInt;
                     try {
@@ -283,12 +279,9 @@ public class AuctionCardController extends TemplateController{
                             auction = client.getAuction(auction.getId());
                             initializeNow();
                         } else {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setTitle("Error Offer");
-                            alert.setHeaderText("Error ");
-                            alert.setContentText("L'offerta e' stata superata, ricarica");
-
-                            alert.showAndWait();
+                            String title="Error Offer";
+                            String message ="L'offerta e' stata superata, ricarica";
+                            ControllerServices.getInstance().showAlert(title,message,popUpStage, Alert.AlertType.ERROR);
                         }
                     } catch (NumberFormatException|RemoteException e) {
                         e.printStackTrace();

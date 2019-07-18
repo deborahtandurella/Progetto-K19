@@ -37,49 +37,29 @@ public class SignUpController extends TemplateController {
         int esito = client.signUpGUI(us,pass,emailText);
 
         if(esito == 1) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Information Dialog");
-            alert.setHeaderText(null);
-            alert.setContentText("User create successfully");
-            alert.initOwner(popUpStage);
-            alert.showAndWait();
-        }
+            String title="Information Dialog";
+            String message ="User created successfully";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
+            }
         if(esito == 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Username alredy exists");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
-
+            String title="Error SignUp";
+            String message ="Username already exists";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
         if(esito == -1) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Use at least 1.....ELENCO PARAMETRI PASS");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+            String title="Error SignUp";
+            String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
         }
         if(esito == -2) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Email non rispetta i parametri reali");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+            String title="Error SignUp";
+            String message ="Email is not valid";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
         }
-
         if(esito == -3) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Error ");
-            alert.setContentText("Email gia' in uso");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+            String title="Error SignUp";
+            String message ="Email already taken";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
         }
     }
 

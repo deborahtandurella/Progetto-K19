@@ -1,9 +1,14 @@
 package Client.Controller;
 
 import Server.Domain.Auction;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +17,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 class ControllerServices {
 
@@ -68,5 +74,28 @@ class ControllerServices {
         });
 
         children.show();
+    }
+
+    void showAlert(String title, String message, Window owner, Alert.AlertType alertType){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(alertType.toString());
+        alert.setContentText(message);
+        alert.initOwner(owner);
+        alert.showAndWait();
+
+    }
+
+    Optional<String> getSelectionFromDialog(String title,String headerText, String message, Dialog dialog){
+        dialog.setTitle(title);
+        dialog.setHeaderText(headerText);
+        dialog.setContentText(message);
+        return dialog.showAndWait();
+    }
+    Optional<ButtonType> getSelectionFromAlert(String title,String headerText, String message, Alert alert){
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setContentText(message);
+        return alert.showAndWait();
     }
 }

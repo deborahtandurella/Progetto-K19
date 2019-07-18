@@ -52,13 +52,10 @@ public class LoginController extends TemplateController {
         int esito = client.loginGUI(us,pass);
 
         if(esito == 1) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ottimo");
-            alert.setHeaderText("Login Eseguito");
-            alert.initOwner(primaryStage);
 
-            alert.showAndWait();
-
+            String title="Success";
+            String message ="Logged in successfully";
+            ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.INFORMATION);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Home.fxml"));
             Parent home = (Parent) loader.load();
 
@@ -71,22 +68,17 @@ public class LoginController extends TemplateController {
         }
 
         if(esito == 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Login");
-            alert.setHeaderText("Username and Password doesn't exist!");
-            alert.initOwner(primaryStage);
 
-            alert.showAndWait();
+            String title="Error Login";
+            String message ="Username and Password doesn't exist!";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
 
         if(esito == -1) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Error SignUp");
-            alert.setHeaderText("Invalid Password");
-            alert.setContentText("Someone is alredy logged in your account,if you believe it is an unauthorized access contact the system's manager ");
-            alert.initOwner(primaryStage);
 
-            alert.showAndWait();
+            String title="Error SignUp";
+            String message ="Someone is alredy logged in your account";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 
@@ -97,9 +89,7 @@ public class LoginController extends TemplateController {
         Stage popUpStageSignUp = loadScenePopUp("/View/SignUp.fxml");
 
         windowsPane.setEffect(blur);
-
         signupController = loader.getController();
-
         signupController.setPopUpStage(popUpStageSignUp);
         signupController.setPrimaryStage(primaryStage);
         signupController.setClient(client);

@@ -67,12 +67,9 @@ public class CreateAuctionFormController extends TemplateController {
             if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg")) {
                 listview.getItems().add(selectedFile.getAbsolutePath());
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error File");
-                alert.setHeaderText("File is not valid! Only jpg and png are allowed");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
+                String title="Error File extension";
+                String message="File is not valid! Only jpg and png are allowed";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
     }
@@ -84,31 +81,21 @@ public class CreateAuctionFormController extends TemplateController {
                 if(selectedFile != null) {
                     client.sendFile(selectedFile);
                 }
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ottimo");
-                alert.setHeaderText("Asta Creata con successo");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
-
+                String title="Success";
+                String message="Auction created successfully";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
                 backToHome();
             }
             else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Date");
-                alert.setHeaderText("La data inserita non e' valida, inserire una data successiva a quella attuale");
-                alert.initOwner(popUpStage);
-
-                alert.showAndWait();
+                String title="Error Date";
+                String message="Inserted date is not valid! Select only dates after the current one";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
         else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error Input");
-            alert.setHeaderText("I campi non posso essere nulli, eccetto descrizione ed immagine");
-            alert.initOwner(popUpStage);
-
-            alert.showAndWait();
+            String title="Error Input";
+            String message="All the fields are required except for the image";
+            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 
@@ -126,21 +113,17 @@ public class CreateAuctionFormController extends TemplateController {
 
         client.modifyAuctio(name,price,auction.getId());
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Ottimo");
-        alert.setHeaderText("Modifiche effettuate con successo, RICARICA LA PAGINA PER VEDERE GLI AGGIORNAMENTI");
-        alert.initOwner(popUpStage);
+        String title="Success";
+        String message="Auction modified successfully. Refresh the page";
+        ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
 
-        alert.showAndWait();
     }
 
     @FXML
     public void closeAuction() throws RemoteException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Auction");
-        alert.setHeaderText("Are you sure want to delete this auction");
-
-        Optional<ButtonType> option = alert.showAndWait();
+        String title="Delete Auction";
+        String headerText="Are you sure want to delete this auction";
+        Optional<ButtonType> option =ControllerServices.getInstance().getSelectionFromAlert(title,headerText,"",new Alert(Alert.AlertType.CONFIRMATION));
         if(option.isPresent()) {
             if (option.get() == ButtonType.OK) {
                 client.closeAuction(auction.getId());
