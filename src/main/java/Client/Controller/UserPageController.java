@@ -1,6 +1,7 @@
 package Client.Controller;
 
 import Client.Domain.ClientManager;
+import Client.Exceptions.*;
 import Server.People.User;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -60,22 +61,23 @@ public class UserPageController extends TemplateController {
     void changeEmail() throws RemoteException{
         String emailChanged= newEmail.getText();
         String psw = password.getText();
-        if (user.checkPassword(psw)){
-            int esito = client.changeEmail(emailChanged,user.getUsername());
-            if(esito == 1) {
-                String title="Success";
-                String header="Email changed";
-                String message ="Email changed succesfully";
-                ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.INFORMATION);
+        try {
+            user.checkPassword(psw);
+            try {
+                client.changeEmail(emailChanged, user.getUsername());
+                String title = "Success";
+                String header = "Email changed";
+                String message = "Email changed succesfully";
+                ControllerServices.getInstance().showAlert(title, header, message, primaryStage, Alert.AlertType.INFORMATION);
             }
-            if(esito == -1) {
+            catch(EmailInvalidException e) {
                 String title="Error e-mail";
                 String header="Invalid input";
                 String message ="E-mail is not valid";
                 ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.WARNING);
             }
         }
-        else{
+        catch (IncorrectPasswordException e){
             String title="Wrong Password";
             String header="Invalid input";
             String message ="Password entered incorrectly";
@@ -89,28 +91,29 @@ public class UserPageController extends TemplateController {
         String oldPass = passwordOld.getText();
         String repPass = passwordRepeat.getText();
 
-        if (user.checkPassword(oldPass)){
-            int esito = client.changePassword(newPass,repPass,user.getUsername());
-            if(esito == 1) {
+        try{
+            user.checkPassword(oldPass);
+            try{
+                client.changePassword(newPass,repPass,user.getUsername());
                 String title="Success";
                 String header="You have a new password!";
                 String message ="Password changed succesfully";
                 ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.INFORMATION);
             }
-            if(esito == -1) {
+            catch(InvalidPasswordException e){
                 String title="Invalid Password";
                 String header="Follow the rules!";
                 String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
                 ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
             }
-            if(esito == -2) {
+            catch(NotMatchingPasswordException e) {
                 String title="Password doesn't match";
                 String header="Passwords must match";
                 String message = "New passwords are different";
                 ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
             }
         }
-        else{
+        catch(IncorrectPasswordException e){
             String title="Wrong Password";
             String header="Invalid input";
             String message ="Password entered incorrectly";

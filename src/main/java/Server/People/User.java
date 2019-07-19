@@ -1,5 +1,7 @@
 package Server.People;
 
+import Client.Exceptions.IncorrectPasswordException;
+import Client.Exceptions.PasswordTakenException;
 import Server.Domain.Auction;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -41,8 +43,9 @@ public class User implements Serializable {
             return false;
     }
 
-    public boolean checkPassword(String password){
-        return this.password.equals(password);
+    public void checkPassword(String password){
+        if(!this.password.equals(password))
+            throw new IncorrectPasswordException();
     }
 
     public boolean isLoggedIn() {

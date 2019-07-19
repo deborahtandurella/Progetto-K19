@@ -1,14 +1,6 @@
 package Client.Domain;
 
-import Client.Exceptions.EmailInvalidException;
-import Client.Exceptions.EmailTakenException;
-import Client.Exceptions.PasswordTakenException;
-import Client.Exceptions.UsernameTakenException;
-
-import Client.Exceptions.AlreadyLoggedInException;
-import Client.Exceptions.BidOfferException;
-import Client.Exceptions.ErrorInputDateException;
-import Client.Exceptions.ErrorLoginException;
+import Client.Exceptions.*;
 
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
@@ -107,7 +99,7 @@ public class ClientManager {
                 }else
                     throw new EmailInvalidException(); //Email non valida
             }else
-                throw new PasswordTakenException(); //Password non valida
+                throw new InvalidPasswordException(); //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
         System.exit(1);
@@ -436,24 +428,22 @@ public class ClientManager {
         return ad.userLikeAuction(loggedUser,id);
     }
 
-    public int changeEmail(String email,String username) throws RemoteException{
+    public void changeEmail(String email,String username) throws RemoteException{
             if(validateEmail(email)) {
                 ad.changeEmail(email,username);
-                return 1;
             }
             else
-                return -1;
+                throw new  EmailInvalidException();
     }
-    public int changePassword(String pswNew,String pswRep,String username) throws RemoteException {
+    public void changePassword(String pswNew,String pswRep,String username) throws RemoteException {
         if (pswNew.equals(pswRep)){
             if (validatePassword(pswNew)) {
                 ad.changePassword(pswNew, username);
-                return 1;
             } else
-                return -1;
+                throw new InvalidPasswordException();
         }
         else
-            return -2;
+            throw new NotMatchingPasswordException();
     }
 
     public String getVendorEmail(String username) throws RemoteException{

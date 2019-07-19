@@ -1,9 +1,6 @@
 package Client.Controller;
 
-import Client.Exceptions.EmailInvalidException;
-import Client.Exceptions.EmailTakenException;
-import Client.Exceptions.PasswordTakenException;
-import Client.Exceptions.UsernameTakenException;
+import Client.Exceptions.*;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
@@ -52,7 +49,7 @@ public class SignUpController extends TemplateController {
             String message ="Username already exists";
             ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
         }
-        catch (PasswordTakenException pte) {
+        catch (InvalidPasswordException pte) {
             String title="Error SignUp";
             String header="Follow the rules!";
             String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
