@@ -76,10 +76,10 @@ class ControllerServices {
         children.show();
     }
 
-    void showAlert(String title, String message, Window owner, Alert.AlertType alertType){
+    void showAlert(String title, String header,String message, Window owner, Alert.AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
-        alert.setHeaderText(alertType.toString());
+        alert.setHeaderText(header);
         alert.setContentText(message);
         alert.initOwner(owner);
         alert.showAndWait();

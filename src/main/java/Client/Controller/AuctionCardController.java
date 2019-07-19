@@ -280,8 +280,9 @@ public class AuctionCardController extends TemplateController{
                         }
                         catch (BidOfferException e){
                             String title="Error Offer";
-                            String message ="L'offerta e' stata superata, ricarica";
-                            ControllerServices.getInstance().showAlert(title,message,popUpStage, Alert.AlertType.ERROR);
+                            String header="Offer rejected";
+                            String message ="Offer must be greater than the actual one";
+                            ControllerServices.getInstance().showAlert(title,header,message,popUpStage, Alert.AlertType.ERROR);
                         }
                     }
                     catch (NumberFormatException|RemoteException e) {
@@ -291,8 +292,9 @@ public class AuctionCardController extends TemplateController{
             }
             catch(BidOfferException e){
                 String title="Error Offer";
-                String message="Non puoi ribattere la tua stessa offerta";
-                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+                String header="Offer rejected";
+                String message="You can raise your own bid";
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
     }

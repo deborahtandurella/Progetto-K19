@@ -42,28 +42,33 @@ public class SignUpController extends TemplateController {
         client.signUpGUI(us,pass,emailText);
 
         String title="Information Dialog";
+        String header="Welcome "+us+"!";
         String message ="User created successfully";
-        ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
+        ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
         }
         catch (UsernameTakenException ute) {
             String title="Error SignUp";
+            String header="Username already taken";
             String message ="Username already exists";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
         }
         catch (PasswordTakenException pte) {
             String title="Error SignUp";
+            String header="Follow the rules!";
             String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
         }
         catch (EmailInvalidException eie){
             String title="Error SignUp";
+            String header="Invalid input";
             String message ="Email is not valid";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
         }
         catch (EmailTakenException ete) {
             String title="Error SignUp";
+            String header="Change your email";
             String message ="Email already taken";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
         }
     }
 

@@ -70,8 +70,9 @@ public class CreateAuctionFormController extends TemplateController {
                 listview.getItems().add(selectedFile.getAbsolutePath());
             } else {
                 String title="Error File extension";
+                String header="Operation failed";
                 String message="File is not valid! Only jpg and png are allowed";
-                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
     }
@@ -87,20 +88,23 @@ public class CreateAuctionFormController extends TemplateController {
                     client.sendFile(selectedFile);
                 }
                 String title="Success";
+                String header="Auction added";
                 String message="Auction created successfully";
-                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
                 backToHome();
             }
            catch(ErrorInputDateException e) {
                 String title="Error Date";
+                String header="Invalid input";
                 String message="Inserted date is not valid! Select only dates after the current one";
-                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
         catch(RequiredInputException e){
             String title="Error Input";
+            String header="Invalid input";
             String message="All the fields are required except for the image";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 
@@ -119,8 +123,9 @@ public class CreateAuctionFormController extends TemplateController {
         client.modifyAuctio(name,price,auction.getId());
 
         String title="Success";
+        String header="Done";
         String message="Auction modified successfully. Refresh the page";
-        ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
+        ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.INFORMATION);
 
     }
 

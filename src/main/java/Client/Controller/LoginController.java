@@ -52,8 +52,9 @@ public class LoginController extends TemplateController {
             String pass = password.getText();
             client.loginGUI(us,pass);
             String title="Success";
+            String header="Welcome back "+us+"!";
             String message ="Logged in successfully";
-            ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.INFORMATION);
+            ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.INFORMATION);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Home.fxml"));
             Parent home = (Parent) loader.load();
             homeController = (HomeController)loader.getController();
@@ -64,13 +65,15 @@ public class LoginController extends TemplateController {
         }
         catch(ErrorLoginException e) {
             String title="Error Login";
+            String header="Check your credentials";
             String message ="Username and Password doesn't exist!";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
         }
         catch(AlreadyLoggedInException e){
             String title="Error SignUp";
+            String header="It seems like you're already signed in!";
             String message ="Someone is alredy logged in your account";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
+            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
         }
     }
 
