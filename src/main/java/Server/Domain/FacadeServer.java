@@ -289,8 +289,10 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     }
 
     public void init() throws RemoteException {
-        reg = LocateRegistry.createRegistry(999);
+        reg = LocateRegistry.createRegistry(1002);
         reg.rebind("progettok19", this);
+
+        db.logoutAll();
     }
 
     public void reloadImages() {

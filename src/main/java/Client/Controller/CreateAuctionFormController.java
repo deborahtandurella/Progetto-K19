@@ -72,13 +72,11 @@ public class CreateAuctionFormController extends TemplateController {
             String extension = selectedFile.getAbsolutePath().replaceAll("^[^.]*.", "");  //Regex per ricavare l'estensione
             if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg")) {
                 listview.getItems().add(selectedFile.getAbsolutePath());
-                 }
-            else {
+            } else {
                 String title="Error File extension";
                 String header="Operation failed";
                 String message="File is not valid! Only jpg and png are allowed";
                 ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
-                selectedFile=null;
             }
         }
     }

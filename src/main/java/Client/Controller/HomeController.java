@@ -1,7 +1,10 @@
 package Client.Controller;
+import animatefx.animation.Flip;
 import animatefx.animation.Pulse;
+import animatefx.animation.RotateIn;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -10,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.AnchorPane;
 
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -36,6 +40,9 @@ public class HomeController extends TemplateController {
     @FXML
     private JFXTextField searchText;
 
+    @FXML
+    private FontAwesomeIconView reloadButton;
+
     private TitleController titleController;
 
     private AuctionListController auctionListController;
@@ -61,6 +68,20 @@ public class HomeController extends TemplateController {
         auctionFormController.setPrimaryStage(primaryStage);
         auctionFormController.initializeWindow();
         auctionFormController.disableModifyDeleteAuction();
+
+    }
+
+    @FXML
+    public void reloadCurrentTab() {
+        if(titleController.getFavoriteButton().isDisable())
+            titleController.viewFavorites();
+        if(titleController.getMyAuction().isDisable())
+            titleController.viewMyAuction();
+        if(!titleController.getMyAuction().isDisable() && !titleController.getFavoriteButton().isDisable())
+            reloadLatestAuction();
+
+        new RotateIn(reloadButton).play();
+
 
     }
 

@@ -70,12 +70,17 @@ public class TitleController extends TemplateController {
     }
 
     @FXML
-    private void viewFavorites() {
+    public  void reloadHomeAuction() {
+        homeController.reloadLatestAuction();
+    }
+
+    @FXML
+    public void viewFavorites() {
         try {
             setVisibleButtons();
 
-            auctionListController.loadFavorite();
             new BounceOut(favoriteButton).play();
+            auctionListController.loadFavorite();
             favoriteButton.setDisable(true);
 
         }catch (Exception e) {
@@ -84,13 +89,13 @@ public class TitleController extends TemplateController {
     }
 
     @FXML
-    private void viewMyAuction () {
+    public void viewMyAuction () {
         try {
             setVisibleButtons();
 
             new BounceOut(myAuction).play();
-            myAuction.setDisable(true);
             auctionListController.loadMyAuction();
+            myAuction.setDisable(true);
 
         }catch (Exception e) {
             e.printStackTrace();
