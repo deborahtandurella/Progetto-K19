@@ -57,6 +57,7 @@ public class Main extends Application {
         try {
             connection = new ConnectionLayer("progettok19");
             while(!connection.isConnected()){
+
             }
             c = new ClientManager(connection, connection.getServer());
 
