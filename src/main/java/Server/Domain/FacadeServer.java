@@ -173,7 +173,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         if(userToCheck != null) {
             if(userToCheck.isLoggedIn())
                 return false;
-            if (userToCheck.checkPassword(pass)) {
+            if (userToCheck.checkPassword2(pass)) {
                 userToCheck.setLoggedIn(true);
                 return true;
             }

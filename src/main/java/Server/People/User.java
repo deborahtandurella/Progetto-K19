@@ -47,7 +47,9 @@ public class User implements Serializable {
         if(!this.password.equals(password))
             throw new IncorrectPasswordException();
     }
-
+    public boolean checkPassword2(String password){
+        return this.password.equals(password);
+    }
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
