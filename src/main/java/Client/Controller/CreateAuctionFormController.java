@@ -77,6 +77,7 @@ public class CreateAuctionFormController extends TemplateController {
                 String header="Operation failed";
                 String message="File is not valid! Only jpg and png are allowed";
                 ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+                selectedFile=null;
             }
         }
     }
