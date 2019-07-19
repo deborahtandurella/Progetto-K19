@@ -59,6 +59,7 @@ public class HomeController extends TemplateController {
         auctionFormController.setClient(client);
         auctionFormController.setPopUpStage(popUpStageCreate);
         auctionFormController.setPrimaryStage(primaryStage);
+        auctionFormController.initializeWindow();
         auctionFormController.disableModifyDeleteAuction();
 
     }

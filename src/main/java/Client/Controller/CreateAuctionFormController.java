@@ -10,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -22,6 +23,9 @@ import java.util.Optional;
 public class CreateAuctionFormController extends TemplateController {
     private  File selectedFile;
     private Auction auction;
+
+    @FXML
+    private AnchorPane windowsPane;
 
     @FXML
     private JFXTextField itemName;
@@ -152,12 +156,12 @@ public class CreateAuctionFormController extends TemplateController {
 
     @FXML
     public void handleCursorHand() {
-        primaryStage.getScene().setCursor(Cursor.HAND);
+        popUpStage.getScene().setCursor(Cursor.HAND);
     }
 
     @FXML
     public void handleCursor() {
-        primaryStage.getScene().setCursor(Cursor.DEFAULT);
+        popUpStage.getScene().setCursor(Cursor.DEFAULT);
     }
 
 
@@ -166,9 +170,10 @@ public class CreateAuctionFormController extends TemplateController {
         ControllerServices.getInstance().setImagetoTheAuction(auction,imageView);
         itemName.setText(auction.getDescriptionLot());//protected var
         basePrice.setText(Integer.toString(auction.getHigherOffer()));
-        basePrice.setDisable(true);
         closeDate.setVisible(false);
         closeTime.setVisible(false);
+        if(auction.getBidsList().size()!=0)
+            basePrice.setDisable(true);
     }
 
     private void validateInput() {
@@ -204,6 +209,16 @@ public class CreateAuctionFormController extends TemplateController {
 
     }
 
+    void initializeWindow() {
+        popUpStage.getScene().setFill(Color.TRANSPARENT);
+        windowsPane.setStyle(
+
+                "-fx-background-insets: 5; " +
+                        "-fx-background-radius: 10; " +
+                        "-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);"
+        );
+    }
+
     @FXML
     private void backToHome() {
         AnchorPane pane = (AnchorPane) primaryStage.getScene().lookup("#windowsPane");
@@ -218,4 +233,6 @@ public class CreateAuctionFormController extends TemplateController {
     public void setAuction(Auction auction) {
         this.auction = auction;
     }
+
+
 }
