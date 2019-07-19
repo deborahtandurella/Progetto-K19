@@ -1,5 +1,9 @@
 package Client.Domain;
 
+import Client.Exceptions.EmailInvalidException;
+import Client.Exceptions.EmailTakenException;
+import Client.Exceptions.PasswordTakenException;
+import Client.Exceptions.UsernameTakenException;
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
 import Server.People.Credentials.CharAnalizer;
@@ -82,28 +86,26 @@ public class ClientManager {
         }
     }
 
-    public int signUpGUI(String username, String password,String email) throws RemoteException {
+    public void signUpGUI(String username, String password,String email) throws RemoteException, UsernameTakenException, PasswordTakenException, EmailInvalidException, EmailTakenException  {
         try {
-
-            if (validatePassword(password)) {
+             if (validatePassword(password)) {
                 if (validateEmail(email)) {
                     if (!ad.alredyTakenUsernameDB(username)) {
                         if (!ad.alredyTakenEmailDB(email)) {
                             ad.createUserDB(username, password, email);
-                            return 1; //Utente inserito con successo
+                            //Utente inserito con successo
                         }else
-                            return -3; //Email gia' in uso
+                            throw new EmailTakenException(); //Email gia' in uso
                     } else
-                        return 0; //Username gia' in uso
+                        throw new UsernameTakenException(); //Username gia' in uso
                 }else
-                    return -2; //Email non valida
+                    throw new EmailInvalidException(); //Email non valida
             }else
-                return -1; //Password non valida
+                throw new PasswordTakenException(); //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
         System.exit(1);
     }
-        return -1;
 
     }
 

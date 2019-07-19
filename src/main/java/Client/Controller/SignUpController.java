@@ -1,5 +1,9 @@
 package Client.Controller;
 
+import Client.Exceptions.EmailInvalidException;
+import Client.Exceptions.EmailTakenException;
+import Client.Exceptions.PasswordTakenException;
+import Client.Exceptions.UsernameTakenException;
 import com.jfoenix.controls.*;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
@@ -29,34 +33,34 @@ public class SignUpController extends TemplateController {
     private AnchorPane windowsPane;
 
     @FXML
-    private void handleRegistration() throws RemoteException {
+    private void handleRegistration() throws RemoteException, UsernameTakenException, PasswordTakenException, EmailInvalidException, EmailTakenException {
+        try {
         String us = username.getText();
         String emailText = email.getText();
         String pass = password.getText();
 
-        int esito = client.signUpGUI(us,pass,emailText);
+        client.signUpGUI(us,pass,emailText);
 
-        if(esito == 1) {
-            String title="Information Dialog";
-            String message ="User created successfully";
-            ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
-            }
-        if(esito == 0) {
+        String title="Information Dialog";
+        String message ="User created successfully";
+        ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
+        }
+        catch (UsernameTakenException ute) {
             String title="Error SignUp";
             String message ="Username already exists";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
-        if(esito == -1) {
+        catch (PasswordTakenException pte) {
             String title="Error SignUp";
             String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
         }
-        if(esito == -2) {
+        catch (EmailInvalidException eie){
             String title="Error SignUp";
             String message ="Email is not valid";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
         }
-        if(esito == -3) {
+        catch (EmailTakenException ete) {
             String title="Error SignUp";
             String message ="Email already taken";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.WARNING);
