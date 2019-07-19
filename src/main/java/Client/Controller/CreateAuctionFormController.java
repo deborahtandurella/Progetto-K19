@@ -1,5 +1,7 @@
 package Client.Controller;
 
+import Client.Exceptions.ErrorInputDateException;
+import Client.Exceptions.RequiredInputException;
 import Server.Domain.Auction;
 import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
@@ -76,8 +78,11 @@ public class CreateAuctionFormController extends TemplateController {
 
     @FXML
     public void createAuctionAction() throws RemoteException {
-        if(validateInput()) {
-            if(client.createAuctionGUI(name,price,close) == 1) {
+        try{
+            validateInput();
+            try{
+                client.createAuctionGUI(name,price,close);
+
                 if(selectedFile != null) {
                     client.sendFile(selectedFile);
                 }
@@ -86,13 +91,13 @@ public class CreateAuctionFormController extends TemplateController {
                 ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.INFORMATION);
                 backToHome();
             }
-            else {
+           catch(ErrorInputDateException e) {
                 String title="Error Date";
                 String message="Inserted date is not valid! Select only dates after the current one";
                 ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
-        else {
+        catch(RequiredInputException e){
             String title="Error Input";
             String message="All the fields are required except for the image";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
@@ -159,25 +164,23 @@ public class CreateAuctionFormController extends TemplateController {
         closeTime.setVisible(false);
     }
 
-    private boolean validateInput() {
+    private void validateInput() {
         try {
             if (itemName.getText().equals(""))
-                return false;
+                throw new RequiredInputException();
             name = itemName.getText();
             if (basePrice.getText().equals(""))
-                return false;
+                throw new RequiredInputException();
             price = Integer.parseInt(basePrice.getText());
             if (closeDate.getValue() == null)
-                return false;
+                throw new RequiredInputException();
             if (closeTime.getValue() == null)
-                return false;
+                throw new RequiredInputException();
             LocalDate date = closeDate.getValue();
             LocalTime time = closeTime.getValue();
             close = LocalDateTime.of(date, time);
-
-            return true;
         }catch (NumberFormatException e) {
-            return false;
+            throw new RequiredInputException();
         }
     }
 

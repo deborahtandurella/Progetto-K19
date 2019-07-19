@@ -1,6 +1,8 @@
 package Client.Controller;
 
 import Client.Domain.ClientManager;
+import Client.Exceptions.AlreadyLoggedInException;
+import Client.Exceptions.ErrorLoginException;
 import animatefx.animation.*;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
@@ -45,37 +47,27 @@ public class LoginController extends TemplateController {
 
     @FXML
     private void handleSignIn() throws IOException {
-
-        String us = username.getText();
-        String pass = password.getText();
-
-        int esito = client.loginGUI(us,pass);
-
-        if(esito == 1) {
-
+        try{
+            String us = username.getText();
+            String pass = password.getText();
+            client.loginGUI(us,pass);
             String title="Success";
             String message ="Logged in successfully";
             ControllerServices.getInstance().showAlert(title,message,primaryStage,Alert.AlertType.INFORMATION);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/Home.fxml"));
             Parent home = (Parent) loader.load();
-
             homeController = (HomeController)loader.getController();
             homeController.setPrimaryStage(primaryStage);
             homeController.setClient(client);
             homeController.init();
-
             primaryStage.setScene(new Scene(home));
         }
-
-        if(esito == 0) {
-
+        catch(ErrorLoginException e) {
             String title="Error Login";
             String message ="Username and Password doesn't exist!";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
         }
-
-        if(esito == -1) {
-
+        catch(AlreadyLoggedInException e){
             String title="Error SignUp";
             String message ="Someone is alredy logged in your account";
             ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
@@ -85,9 +77,7 @@ public class LoginController extends TemplateController {
     @FXML
     private void changeSceneSignUp() throws IOException {
         BoxBlur blur = new BoxBlur(5,5,5);
-
         Stage popUpStageSignUp = loadScenePopUp("/View/SignUp.fxml");
-
         windowsPane.setEffect(blur);
         signupController = loader.getController();
         signupController.setPopUpStage(popUpStageSignUp);

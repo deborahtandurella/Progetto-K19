@@ -50,7 +50,6 @@ class FileManager {
         loadUser();
         loadTimer();
         loadClosedAuction();
-
         reloadTimer();
 
         result = "Auction state restored from: " + AUCTION_FILE + "\nUsers state restored from: " + USERS_FILE;

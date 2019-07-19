@@ -1,9 +1,9 @@
 package Client.Domain;
 
-import Client.Exceptions.EmailInvalidException;
-import Client.Exceptions.EmailTakenException;
-import Client.Exceptions.PasswordTakenException;
-import Client.Exceptions.UsernameTakenException;
+import Client.Exceptions.AlreadyLoggedInException;
+import Client.Exceptions.BidOfferException;
+import Client.Exceptions.ErrorInputDateException;
+import Client.Exceptions.ErrorLoginException;
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
 import Server.People.Credentials.CharAnalizer;
@@ -86,26 +86,28 @@ public class ClientManager {
         }
     }
 
-    public void signUpGUI(String username, String password,String email) throws RemoteException, UsernameTakenException, PasswordTakenException, EmailInvalidException, EmailTakenException  {
+    public int signUpGUI(String username, String password,String email) throws RemoteException {
         try {
-             if (validatePassword(password)) {
+
+            if (validatePassword(password)) {
                 if (validateEmail(email)) {
                     if (!ad.alredyTakenUsernameDB(username)) {
                         if (!ad.alredyTakenEmailDB(email)) {
                             ad.createUserDB(username, password, email);
-                            //Utente inserito con successo
+                            return 1; //Utente inserito con successo
                         }else
-                            throw new EmailTakenException(); //Email gia' in uso
+                            return -3; //Email gia' in uso
                     } else
-                        throw new UsernameTakenException(); //Username gia' in uso
+                        return 0; //Username gia' in uso
                 }else
-                    throw new EmailInvalidException(); //Email non valida
+                    return -2; //Email non valida
             }else
-                throw new PasswordTakenException(); //Password non valida
+                return -1; //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
         System.exit(1);
     }
+        return -1;
 
     }
 
@@ -134,23 +136,21 @@ public class ClientManager {
         }
     }
 
-    public int loginGUI(String username, String password) throws RemoteException {
+    public void loginGUI(String username, String password) throws RemoteException {
         try {
             if (loggedUser == null) {
                 if (ad.checkLoginDB(username, password)) {
-                    loggedUser = username;
-                    return 1; //Login effettuato con successo
+                    loggedUser = username; //Login effettuato con successo
                 } else {
-                    return 0; //Dati inseriti errati
+                    throw new ErrorLoginException(); //Dati inseriti errati
                 }
             } else {
-                return -1; //Qualcuno e' gia' loggato
+                throw new AlreadyLoggedInException(); //Qualcuno e' gia' loggato
             }
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
             System.exit(1);
         }
-        return -1;
     }
 
 
@@ -205,19 +205,17 @@ public class ClientManager {
         }
     }
 
-    public int createAuctionGUI(String name,int basePrice,LocalDateTime close) throws RemoteException {
+    public void createAuctionGUI(String name,int basePrice,LocalDateTime close) throws RemoteException {
         try {
 
             if (!close.isBefore(ad.currentiTime()) && !close.isEqual(ad.currentiTime())) {
                 ad.addAuctionDB(name, basePrice, loggedUser, close);
-                return 1;
             } else
-                return 0;
+                throw new ErrorInputDateException();
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
             System.exit(1);
         }
-        return 0;
     }
 
     public void modifyAuctio(String title,int price, int id) throws RemoteException {
@@ -262,14 +260,14 @@ public class ClientManager {
             System.out.println("L'id inserito non e' abbinato a nessun'asta esistente");
     }
 
-    public boolean makeBid(String user,int amout, int id) throws RemoteException{
+    public void makeBid(String user,int amout, int id) throws RemoteException{
         try {
-            return ad.makeBidDB(user,amout,id);
+            if(!ad.makeBidDB(user,amout,id))
+               throw new BidOfferException() ;
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
             System.exit(1);
         }
-        return false;
     }
 
     /**
@@ -466,7 +464,8 @@ public class ClientManager {
         ad = bind;
     }
 
-    public boolean checkActor(String username,int id) throws RemoteException{
-        return ad.checkActor(username,id);
+    public void checkActor(String username,int id) throws RemoteException{
+        if(ad.checkActor(username,id))
+            throw new BidOfferException();
     }
 }

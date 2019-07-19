@@ -1,6 +1,7 @@
 package Client.Controller;
 
 
+import Client.Exceptions.BidOfferException;
 import Server.Domain.Auction;
 import Server.People.User;
 import animatefx.animation.FadeIn;
@@ -261,11 +262,8 @@ public class AuctionCardController extends TemplateController{
     private void makeAnOffer() throws RemoteException {
         if(!client.isClosed(auction.getId())) {
             //protected variATIONS
-            if (client.checkActor(client.getLoggedUser(),auction.getId())) {//come sopra
-                String title="Error Offer";
-                String message="Non puoi ribattere la tua stessa offerta";
-                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
-            } else {
+            try {
+                client.checkActor(client.getLoggedUser(), auction.getId());//come sopra
                 TextInputDialog dialog = new TextInputDialog();
                 String title1="Offer Dialog";
                 String headerText1 ="Higher Offer:" + auction.getHigherOffer();
@@ -275,18 +273,26 @@ public class AuctionCardController extends TemplateController{
                     int offerInt;
                     try {
                         offerInt = Integer.parseInt(offer);
-                        if (client.makeBid(client.getLoggedUser(), offerInt, auction.getId())) {
+                        try{
+                            client.makeBid(client.getLoggedUser(), offerInt, auction.getId());
                             auction = client.getAuction(auction.getId());
                             initializeNow();
-                        } else {
+                        }
+                        catch (BidOfferException e){
                             String title="Error Offer";
                             String message ="L'offerta e' stata superata, ricarica";
                             ControllerServices.getInstance().showAlert(title,message,popUpStage, Alert.AlertType.ERROR);
                         }
-                    } catch (NumberFormatException|RemoteException e) {
+                    }
+                    catch (NumberFormatException|RemoteException e) {
                         e.printStackTrace();
                     }
                 });
+            }
+            catch(BidOfferException e){
+                String title="Error Offer";
+                String message="Non puoi ribattere la tua stessa offerta";
+                ControllerServices.getInstance().showAlert(title,message,popUpStage,Alert.AlertType.ERROR);
             }
         }
     }
