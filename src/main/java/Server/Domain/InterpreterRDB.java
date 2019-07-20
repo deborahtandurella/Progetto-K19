@@ -865,25 +865,17 @@ class InterpreterRDB {
             ArrayList<Integer> numbers = (ArrayList<Integer>) query.getResultList();
             if (!numbers.isEmpty()) {
                     sql = "delete from favorites where id in :numbers";
-                    query = s.createSQLQuery(sql);
-                    query.setParameterList("numbers", numbers);
-                    query.executeUpdate();
+                    executeUpdate(sql,numbers);
                     sql = "delete from partecipants where id in :numbers";
-                    query = s.createSQLQuery(sql);
-                    query.setParameterList("numbers", numbers);
-                    query.executeUpdate();
+                    executeUpdate(sql,numbers);
                     sql = "delete from bid where auctionid in :numbers";
-                    query = s.createSQLQuery(sql);
-                    query.setParameterList("numbers", numbers);
-                    query.executeUpdate();
+                    executeUpdate(sql,numbers);
                     sql = "delete from lot where auctionid in :numbers";
-                    query = s.createSQLQuery(sql);
-                    query.setParameterList("numbers", numbers);
-                    query.executeUpdate();
+                    executeUpdate(sql,numbers);
+                    sql = "delete from timer where id in :numbers";
+                    executeUpdate(sql,numbers);
                     sql = "delete from auction where id in :numbers";
-                    query = s.createSQLQuery(sql);
-                    query.setParameterList("numbers", numbers);
-                    query.executeUpdate();
+                    executeUpdate(sql,numbers);
                     s.getTransaction().commit();
                     deleteImages(numbers);
             }
@@ -892,6 +884,12 @@ class InterpreterRDB {
         } finally {
             s.close();
         }
+    }
+    void executeUpdate(String sql,ArrayList<Integer> numbers ){
+        NativeQuery query = s.createSQLQuery(sql);
+        query.setParameterList("numbers", numbers);
+        query.executeUpdate();
+
     }
     void deleteImages(ArrayList<Integer> numbers){
         for(Integer id:numbers){
@@ -908,6 +906,7 @@ class InterpreterRDB {
 
     public static void main(String[] args) {
         InterpreterRDB db = new InterpreterRDB();
+
     }
 
 
