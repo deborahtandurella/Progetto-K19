@@ -285,12 +285,13 @@ public class AuctionCardController extends TemplateController{
                             ControllerServices.getInstance().showAlert(title,header,message,popUpStage, Alert.AlertType.ERROR);
                         }
                     }
-                    catch (NumberFormatException e){   String title="Error Offer";
-                            String header="Offer rejected";
-                            String message ="Offer must be an integer!";
-                            ControllerServices.getInstance().showAlert(title,header,message,popUpStage, Alert.AlertType.ERROR);
-                       
-catch(RemoteException e) {
+                    catch (NumberFormatException e) {
+                        String title = "Error Offer";
+                        String header = "Offer rejected";
+                        String message = "Offer must be an integer!";
+                        ControllerServices.getInstance().showAlert(title, header, message, popUpStage, Alert.AlertType.ERROR);
+                    }
+                    catch(RemoteException e) {
                         e.printStackTrace();
                     }
                 });
