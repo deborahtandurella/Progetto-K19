@@ -89,6 +89,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         }
         return toPrint2.toString();
     }
+
     public String showAllActiveAuctionsDB() { return db.showAllActive(); }
 
 
@@ -103,6 +104,7 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
         }
         return toPrint2.toString();
     }
+
     public String showClosedAuctionsDB() { return db.showAllClosed(); }
 
 
@@ -291,7 +293,6 @@ public class FacadeServer extends UnicastRemoteObject implements Proxy {
     public void init() throws RemoteException {
         reg = LocateRegistry.createRegistry(1002);
         reg.rebind("progettok19", this);
-
         db.logoutAll();
     }
 

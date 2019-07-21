@@ -257,7 +257,7 @@ class InterpreterRDB {
             if (list.size() != 0) {
                 list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
                 int lastOne = list.size()-1;
-                String winner = list.get(lastOne).getActorDBUsername();//questo si può cambiare c'è già il metodo
+                String winner = list.get(lastOne).getActorDBUsername();
                 User u = s.get(User.class,winner);
                 au.setWinnerDB(u);
             }
@@ -282,7 +282,7 @@ class InterpreterRDB {
             if (list.size() != 0) {
                 list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
                 int lastOne = list.size()-1;
-               return list.get(lastOne).getActorDBUsername();//questo si può cambiare c'è già il metodo
+               return list.get(lastOne).getActorDBUsername();
             }
             else {
                 return "No Winner!";
@@ -571,8 +571,7 @@ class InterpreterRDB {
                 Auction a = list.get(i);
                 File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                 a.setImage(image);
-                String title = a.getLot().getDescription().toLowerCase();
-
+                String title = a.getDescriptionLot().toLowerCase();
                 textToSearch = ".*" + textToSearch.toLowerCase() + ".*";
                 Pattern PATTERN = Pattern.compile(textToSearch); //Uso la regex     ".*STRINGA.*"      per matchare ogni corrispondenza
 
@@ -638,7 +637,7 @@ class InterpreterRDB {
             Hibernate.initialize(user.getPartecipantAuction());
             for (int i = 0; i < list.size() && i <= 9; i++) {
                 Auction a = list.get(i);
-                if(a.getLot().getVendorDB().equals(user) || user.isAPartecipant(a)) {// si può cambiare anche questo getVendorDB in au
+                if(a.getVendorDB().equals(user) || user.isAPartecipant(a)) {
                     File image = new File("src\\main\\resources\\Images\\" + a.getId() + ".png");
                     a.setImage(image);
 

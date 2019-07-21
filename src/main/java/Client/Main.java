@@ -81,7 +81,7 @@ public class Main extends Application {
             new FadeIn(rootLayout).play();
 
             //Passo riferimento a stage e connessione
-            loginDataController = (LoginController) loader.getController();
+            loginDataController = loader.getController();
             loginDataController.setPrimaryStage(primaryStage);
             loginDataController.setClient(c);
 
