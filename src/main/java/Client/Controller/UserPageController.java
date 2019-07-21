@@ -71,17 +71,11 @@ public class UserPageController extends TemplateController {
                 ControllerServices.getInstance().showAlert(title, header, message, primaryStage, Alert.AlertType.INFORMATION);
             }
             catch(EmailInvalidException e) {
-                String title="Error e-mail";
-                String header="Invalid input";
-                String message ="E-mail is not valid";
-                ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.WARNING);
+                e.show(primaryStage);
             }
         }
         catch (IncorrectPasswordException e){
-            String title="Wrong Password";
-            String header="Invalid input";
-            String message ="Password entered incorrectly";
-            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+                e.show(primaryStage);
         }
     }
 
@@ -101,23 +95,14 @@ public class UserPageController extends TemplateController {
                 ControllerServices.getInstance().showAlert(title,header,message,primaryStage,Alert.AlertType.INFORMATION);
             }
             catch(InvalidPasswordException e){
-                String title="Invalid Password";
-                String header="Follow the rules!";
-                String message ="Password requires at least 8 characters. Password must contain lowercase and uppercase letter,numbers and at least one special character";
-                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
+                e.show(popUpStage);
             }
             catch(NotMatchingPasswordException e) {
-                String title="Password doesn't match";
-                String header="Passwords must match";
-                String message = "New passwords are different";
-                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.WARNING);
+                e.show(popUpStage);
             }
         }
         catch(IncorrectPasswordException e){
-            String title="Wrong Password";
-            String header="Invalid input";
-            String message ="Password entered incorrectly";
-            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+            e.show(popUpStage);
         }
     }
 

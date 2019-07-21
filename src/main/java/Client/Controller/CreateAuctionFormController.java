@@ -66,8 +66,6 @@ public class CreateAuctionFormController extends TemplateController {
     public void loadImageAction() {
         FileChooser fc = new FileChooser();
         selectedFile = fc.showOpenDialog(null);
-
-
         if (selectedFile != null) {
             String extension = selectedFile.getAbsolutePath().replaceAll("^[^.]*.", "");  //Regex per ricavare l'estensione
             if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg")) {
@@ -99,17 +97,11 @@ public class CreateAuctionFormController extends TemplateController {
                 backToHome();
             }
            catch(ErrorInputDateException e) {
-                String title="Error Date";
-                String header="Invalid input";
-                String message="Inserted date is not valid! Select only dates after the current one";
-                ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+                e.show(popUpStage);
             }
         }
         catch(RequiredInputException e){
-            String title="Error Input";
-            String header="Invalid input";
-            String message="All the fields are required except for the image";
-            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+            e.show(popUpStage);
         }
     }
 

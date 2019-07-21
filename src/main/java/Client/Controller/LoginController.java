@@ -64,16 +64,10 @@ public class LoginController extends TemplateController {
             primaryStage.setScene(new Scene(home));
         }
         catch(ErrorLoginException e) {
-            String title="Error Login";
-            String header="Check your credentials";
-            String message ="Username and Password doesn't exist!";
-            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+            e.show(popUpStage);
         }
         catch(AlreadyLoggedInException e){
-            String title="Error SignUp";
-            String header="It seems like you're already signed in!";
-            String message ="Someone is alredy logged in your account";
-            ControllerServices.getInstance().showAlert(title,header,message,popUpStage,Alert.AlertType.ERROR);
+            e.show(popUpStage);
         }
     }
 

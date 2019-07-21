@@ -19,11 +19,11 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-class ControllerServices {
+public class ControllerServices {
 
     private static ControllerServices instance;
 
-    static ControllerServices getInstance() {
+    public static ControllerServices getInstance() {
         if(instance==null)
             instance = new ControllerServices();
         return instance;
@@ -76,7 +76,7 @@ class ControllerServices {
         children.show();
     }
 
-    void showAlert(String title, String header,String message, Window owner, Alert.AlertType alertType){
+    public void showAlert(String title, String header,String message, Window owner, Alert.AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);

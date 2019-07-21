@@ -84,7 +84,7 @@ public class ClientManager {
         }
     }
 
-    public void signUpGUI(String username, String password,String email) throws RemoteException, UsernameTakenException, PasswordTakenException, EmailInvalidException, EmailTakenException  {
+    public void signUpGUI(String username, String password,String email) throws RemoteException, UsernameTakenException, EmailInvalidException, EmailTakenException  {
         try {
              if (validatePassword(password)) {
                 if (validateEmail(email)) {

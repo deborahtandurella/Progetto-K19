@@ -1,7 +1,6 @@
 package Server.People;
 
 import Client.Exceptions.IncorrectPasswordException;
-import Client.Exceptions.PasswordTakenException;
 import Server.Domain.Auction;
 import org.hibernate.annotations.GenericGenerator;
 

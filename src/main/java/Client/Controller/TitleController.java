@@ -58,11 +58,10 @@ public class TitleController extends TemplateController {
                 ((LoginController) loader.getController()).setPrimaryStage(primaryStage);
                 ((LoginController) loader.getController()).setClient(client);
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Logout");
-                alert.setHeaderText("Some error occured, contact your administrator");
-
-                alert.showAndWait();
+                String title="Error Logout";
+                String header="Error";
+                String message="Some error occured, contact your administrator";
+                ControllerServices.getInstance().showAlert(title,header,message,primaryStage, Alert.AlertType.ERROR);
             }
         } catch (IOException e) {
             e.printStackTrace();
