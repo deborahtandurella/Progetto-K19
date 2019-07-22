@@ -1,5 +1,7 @@
 package Server.Domain;
 
+import Server.Services.AuctionService;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,9 +25,9 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
     private ArrayList<AuctionDBTimerStrategy> timerTasks;
 
     @Transient
-    private InterpreterRDB dbManager;
+    private AuctionService dbManager;
 
-    void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, InterpreterRDB db){
+    void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, AuctionService db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -72,7 +74,7 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
         this.closeMillis = closeMillis;
     }
 
-    public void setDbManager(InterpreterRDB dbManager) {
+    public void setDbManager(AuctionService dbManager) {
         this.dbManager = dbManager;
     }
 

@@ -55,7 +55,7 @@ public class Auction implements Serializable {
         }
     }
 
-    void addBidDB(Bid bid) {
+    public void addBidDB(Bid bid) {
         if(bid != null) {
             bidsList.add(bid);
             bid.setAu(this);
@@ -71,7 +71,7 @@ public class Auction implements Serializable {
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.information() + "\t"  + "Data Fine:" + closeDate + "\n";
     }
 
-    String openAuctionInfoDB() {
+    public String openAuctionInfoDB() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String closeDate = closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.informationDB() + "\t"  + "Data Fine:" + closeDate + "\n";
@@ -80,13 +80,13 @@ public class Auction implements Serializable {
     /**
      * Print info of if the auction is closed
      */
-    public String closedAuctionInformation() {
+    String closedAuctionInformation() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformation() + "\n";
     }
 
-    String closedAuctionInfoDB() {
+    public String closedAuctionInfoDB() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         closingDate.format(formatter);
         return "Id:"+ id + "\t" + "Current value:" + higherOffer + "\t" + lot.closedInformationDB() + "\n";
@@ -125,7 +125,7 @@ public class Auction implements Serializable {
 
     public int getHigherOffer() { return higherOffer; }
 
-    void setHigherOffer(int higherOffer) { this.higherOffer = higherOffer; }
+    public void setHigherOffer(int higherOffer) { this.higherOffer = higherOffer; }
 
     public Lot getLot() { return lot; }
 
@@ -139,9 +139,9 @@ public class Auction implements Serializable {
 
     public void setClosingDate(LocalDateTime closingDate) { this.closingDate = closingDate; }
 
-    boolean isClosed() { return closed; }
+    public boolean isClosed() { return closed; }
 
-    void setClosed(boolean closed) { this.closed = closed; }
+    public void setClosed(boolean closed) { this.closed = closed; }
 
     public List<User> getPartecipantsList() { return partecipantsList; }
 
@@ -188,10 +188,10 @@ public class Auction implements Serializable {
         return this.lot.getDescription();
     }
 
-    void setDescriptionLot(String title){
+    public void setDescriptionLot(String title){
          this.lot.setDescription(title);
     }
-    void setBasePriceLot(int price){
+    public void setBasePriceLot(int price){
          this.lot.setBasePrice(price);
     }
     public String getUsernameVendorDB(){
@@ -205,7 +205,7 @@ public class Auction implements Serializable {
     }
 
 
-    void setWinner(String winner){
+    public void setWinner(String winner){
         this.lot.setWinner(winner);
     }
     public void setWinnerDB(User winner){
@@ -221,7 +221,7 @@ public class Auction implements Serializable {
         this.higherOffer=lot.getBasePrice();
         this.bidsList=new ArrayList<>();
     }
-    int getLastBidID(){
+    public int getLastBidID(){
        return this.getLastBid().getId();
     }
 

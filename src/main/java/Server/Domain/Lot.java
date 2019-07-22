@@ -49,7 +49,7 @@ public class Lot implements Serializable {
 
     public String getDescription() { return description; }
 
-    public String information() {
+    String information() {
         return "Name:" + description + "\t" + "Vendor: " + vendor + "\t" + "Base Price:" + basePrice + "\n";
     }
 
@@ -76,7 +76,7 @@ public class Lot implements Serializable {
             return winnerDB.getUsername();
     }
 
-    void setWinner(String winner) {
+    public void setWinner(String winner) {
         this.winner = winner;
     }
 
@@ -88,11 +88,11 @@ public class Lot implements Serializable {
         this.vendor = vendor;
     }
 
-    public User getVendorDB() {
+    User getVendorDB() {
         return vendorDB;
     }
 
-    void setVendorDB(User vendorDB) {
+    public void setVendorDB(User vendorDB) {
         this.vendorDB = vendorDB;
     }
 

@@ -50,7 +50,7 @@ public class Bid implements Serializable {
         return au;
     }
 
-    void setAu(Auction au) {
+    public void setAu(Auction au) {
         this.au = au;
     }
 
@@ -58,7 +58,7 @@ public class Bid implements Serializable {
         this.actor = actor;
     }
 
-    void setAmount(int amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -70,7 +70,7 @@ public class Bid implements Serializable {
         this.idAu = idAu;
     }
 
-    User getActorDB() {
+    public User getActorDB() {
         return actorDB;
     }
     
