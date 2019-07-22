@@ -16,9 +16,7 @@ class UserRepositoryImpl {
     private SessionFactory sessionFactory;
     private Session s;
 
-    /**
-     * Create the user and store it in the DB
-     */
+
     void addUser(String username, String pass,String email) {
         s = sessionFactory.openSession();
 
@@ -34,9 +32,6 @@ class UserRepositoryImpl {
         }
     }
 
-    /**
-     * Return an User given the username
-     */
     User getUser(String username) {
         s = sessionFactory.openSession();
         String sql = "FROM User where username=:user";
@@ -70,9 +65,6 @@ class UserRepositoryImpl {
         return null;
     }
 
-    /**
-     * Update the User's stats
-     */
     synchronized void saveUserStateFavorites(User user, Auction au, int choose) {
         s = sessionFactory.openSession();
 

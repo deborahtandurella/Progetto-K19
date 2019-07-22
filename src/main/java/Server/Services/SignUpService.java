@@ -16,9 +16,6 @@ public class SignUpService {
         userRepository.addUser(username,password,email);
     }
 
-    /**
-     * Check if the username is alredy registered
-     */
     public boolean alredyTakenUsername(String userna) {
         s = sessionFactory.openSession();
 
@@ -37,9 +34,6 @@ public class SignUpService {
         return false;
     }
 
-    /**
-     * Check if the email is alredy registered
-     */
     public boolean alredyTakenEmail(String email) {
         s = sessionFactory.openSession();
 

@@ -4519,7 +4519,7 @@
 											"top": 215,
 											"width": 93.18359375,
 											"height": 13,
-											"text": "InterpreterRDB"
+											"text": "DBConnection"
 										},
 										{
 											"_type": "LabelView",
@@ -7514,7 +7514,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "InterpreterRDB",
+					"name": "DBConnection",
 					"ownedElements": [
 						{
 							"_type": "UMLDependency",

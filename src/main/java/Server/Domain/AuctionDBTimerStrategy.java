@@ -25,9 +25,9 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
     private ArrayList<AuctionDBTimerStrategy> timerTasks;
 
     @Transient
-    private AuctionService dbManager;
+    private DBConnection dbManager;
 
-    void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, AuctionService db){
+    void passArgument(ArrayList<AuctionDBTimerStrategy> timerTasks, DBConnection db){
         this.timerTasks = timerTasks;
         this.dbManager = db;
     }
@@ -74,7 +74,7 @@ public class AuctionDBTimerStrategy extends TimerTask implements Serializable,St
         this.closeMillis = closeMillis;
     }
 
-    public void setDbManager(AuctionService dbManager) {
+    public void setDbManager(DBConnection dbManager) {
         this.dbManager = dbManager;
     }
 

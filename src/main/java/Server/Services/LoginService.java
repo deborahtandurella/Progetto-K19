@@ -10,9 +10,6 @@ public class LoginService {
     private Session s;
 
 
-    /**
-     * Check if the user is registered and login
-     */
     public boolean login(String username, String pass) {
         s = sessionFactory.openSession();
 
@@ -38,9 +35,6 @@ public class LoginService {
         return false;
     }
 
-    /**
-     * Check if the user is registered and logout
-     */
     public boolean logout(String username) {
         s = sessionFactory.openSession();
 

@@ -13,9 +13,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 
 public class AuctionService {
     private SessionFactory sessionFactory;
@@ -25,6 +23,95 @@ public class AuctionService {
     private UserRepositoryImpl userRepository;
     private TimerRepositoryImpl timerRepository;
 
+    public void closeAuction(int id) {
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            Auction au = s.get(Auction.class,id);
+            au.setClosed(true);
+            s.saveOrUpdate(au);
+            s.getTransaction().commit();
+            ArrayList<Integer> numbers=new ArrayList<>();
+            numbers.add(au.getId());
+            deleteImages(numbers);
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    }
+
+    public synchronized int latestId() {
+        s = sessionFactory.openSession();
+
+        String sql = "SELECT max(id) FROM auction";
+        try {
+            s.beginTransaction();
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            if(sqlQuery.getSingleResult() != null) {
+                int id = ((Number) sqlQuery.getSingleResult()).intValue();
+                s.getTransaction().commit();
+                return id;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return  1;
+    }
+
+    public synchronized boolean makeBid(String user, int amount,int id) {
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            User u = s.get(User.class,user);
+            Bid b = new Bid();
+            b.setActorDB(u);
+            b.setAmount(amount);
+            Auction a = s.get(Auction.class,id);
+            Hibernate.initialize(u.getPartecipantAuction());
+            if(amount> a.getHigherOffer()) {
+                a.addBidDB(b);
+                a.setHigherOffer(amount);
+                u.getPartecipantAuction().add(a);
+                s.saveOrUpdate(a);
+                s.getTransaction().commit();
+                return true;
+            }
+            return false;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
+    }
+
+    public boolean checkExistingAuction(int id) {
+        s = sessionFactory.openSession();
+
+        try {
+            String sql = "SELECT COUNT(*) FROM auction where auction.id= :idA AND closed=false";
+            NativeQuery sqlQuery = s.createSQLQuery(sql);
+            sqlQuery.setParameter("idA",id);
+            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
+            if (numb == 1)
+                return true;
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
+    }
+
+    public void winner(int id) { auctionRepository.winner(id); }
+
+    public void deleteAuctions() { auctionRepository.deleteAuctions(); }
+
     public String showAllActive() {
         return auctionRepository.showAllActive();
     }
@@ -33,25 +120,19 @@ public class AuctionService {
         return auctionRepository.showAllClosed();
     }
 
-    public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
-        auctionRepository.addAuction(title,price,vendor,closingTime);
-    }
+    public void addAuction(String title, int price, String vendor, LocalDateTime closingTime) { auctionRepository.addAuction(title,price,vendor,closingTime); }
 
     public Auction getAuction(int id) {
         return auctionRepository.getAuction(id);
     }
 
-    public void modifyAuction(String title, int price,int id) {
-        auctionRepository.modifyAuction(title,price,id);
-    }
+    public void modifyAuction(String title, int price,int id) { auctionRepository.modifyAuction(title,price,id); }
 
     public int highestOffer (int id) {
         return auctionRepository.highestOffer(id);
     }
 
-    public boolean vendorOfAuction(int idAuction,String logged) {
-        return auctionRepository.vendorOfAuction(idAuction,logged);
-    }
+    public boolean vendorOfAuction(int idAuction,String logged) { return auctionRepository.vendorOfAuction(idAuction,logged); }
 
     public void saveTimer( ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         timerRepository.saveTimer(timerTasksDB);
@@ -81,180 +162,23 @@ public class AuctionService {
         return auctionRepository.AuctionList();
     }
 
-    public ArrayList<Auction> searchAuctionList(String textToSearch) {
-        return auctionRepository.searchAuctionList(textToSearch);
-    }
+    public ArrayList<Auction> searchAuctionList(String textToSearch) { return auctionRepository.searchAuctionList(textToSearch); }
 
     public User getUser(String username) {
         return userRepository.getUser(username);
     }
 
-    public void saveUserStateFavorites(User user, Auction au, int choose) {
-        userRepository.saveUserStateFavorites(user,au,choose);
-    }
+    public void saveUserStateFavorites(User user, Auction au, int choose) { userRepository.saveUserStateFavorites(user,au,choose); }
 
-    public void saveAuctionState(Auction auction) {
-        auctionRepository.saveAuctionState(auction);
-    }
+    public void saveAuctionState(Auction auction) { auctionRepository.saveAuctionState(auction); }
 
-    public String getVendorEmail(String username) {
-        return userRepository.getVendorEmail(username);
-    }
+    public String getVendorEmail(String username) { return userRepository.getVendorEmail(username); }
 
-    public boolean checkActor(String username,int id) {
-        return userRepository.checkActor(username,id);
-    }
+    public boolean checkActor(String username,int id) { return userRepository.checkActor(username,id); }
 
-    public String getActualWinner(int id) {
-        return userRepository.getActualWinner(id);
-    }
-    /**
-     * Check if the auction is closed
-     */
-    public boolean isClosed(int id) {
-        s = sessionFactory.openSession();
+    public String getActualWinner(int id) { return userRepository.getActualWinner(id); }
 
-        try {
-            s.beginTransaction();
-            Auction au = s.get(Auction.class,id);
-            s.getTransaction().commit();
-            return au.isClosed();
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-        return false;
-    }
-
-    /**
-     * Close the auction
-     */
-    public void closeAuction(int id) {
-        s = sessionFactory.openSession();
-
-        try {
-            s.beginTransaction();
-            Auction au = s.get(Auction.class,id);
-            au.setClosed(true);
-            s.saveOrUpdate(au);
-            s.getTransaction().commit();
-            ArrayList<Integer> numbers=new ArrayList<>();
-            numbers.add(au.getId());
-            deleteImages(numbers);
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-    }
-
-    /**
-     * Set the winner of the auction (the biggest offer), in addition the method order the bids
-     */
-    public void winner(int id) {
-        s = sessionFactory.openSession();
-        try {
-            s.beginTransaction();
-            Auction au = s.get(Auction.class,id);
-            List<Bid> list = au.getBidsList();
-            if (list.size() != 0) {
-                list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
-                int lastOne = list.size()-1;
-                String winner = list.get(lastOne).getActorDBUsername();
-                User u = s.get(User.class,winner);
-                au.setWinnerDB(u);
-            }
-            else {
-                au.setWinner("No Winner!");
-            }
-            s.saveOrUpdate(au);
-            s.getTransaction().commit();
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-    }
-
-    /**
-     * Used to get the latest used id for the auction
-     */
-    public synchronized int latestId() {
-        s = sessionFactory.openSession();
-
-        String sql = "SELECT max(id) FROM auction";
-        try {
-            s.beginTransaction();
-            NativeQuery sqlQuery = s.createSQLQuery(sql);
-            if(sqlQuery.getSingleResult() != null) {
-                int id = ((Number) sqlQuery.getSingleResult()).intValue();
-                s.getTransaction().commit();
-                return id;
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-        return  1;
-    }
-
-    /**
-     * Add a bid to the auction's bids list
-     */
-    public synchronized boolean makeBid(String user, int amount,int id) {
-        s = sessionFactory.openSession();
-
-        try {
-            s.beginTransaction();
-            User u = s.get(User.class,user);
-            Bid b = new Bid();
-            b.setActorDB(u);
-            b.setAmount(amount);
-            Auction a = s.get(Auction.class,id);
-            Hibernate.initialize(u.getPartecipantAuction());
-            if(amount> a.getHigherOffer()) {
-                a.addBidDB(b);
-                a.setHigherOffer(amount);
-                u.getPartecipantAuction().add(a);
-                s.saveOrUpdate(a);
-                s.getTransaction().commit();
-                return true;
-            }
-            return false;
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-        return false;
-    }
-
-    /**
-     * Check if an auction exists
-     */
-    public boolean checkExistingAuction(int id) {
-        s = sessionFactory.openSession();
-
-        try {
-            String sql = "SELECT COUNT(*) FROM auction where auction.id= :idA AND closed=false";
-            NativeQuery sqlQuery = s.createSQLQuery(sql);
-            sqlQuery.setParameter("idA",id);
-            int numb = ((Number)sqlQuery.getSingleResult()).intValue();
-            if (numb == 1)
-                return true;
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            s.close();
-        }
-        return false;
-    }
-
-    public void deleteAuctions() {
-        auctionRepository.deleteAuctions();
-    }
+    public boolean isClosed(int id) { return auctionRepository.isClosed(id); }
 
     private void deleteImages(ArrayList<Integer> numbers){
         for(Integer id:numbers){

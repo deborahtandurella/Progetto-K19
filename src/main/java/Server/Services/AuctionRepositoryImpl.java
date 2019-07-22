@@ -1,6 +1,7 @@
 package Server.Services;
 
 import Server.Domain.Auction;
+import Server.Domain.Bid;
 import Server.Domain.Lot;
 import Server.People.User;
 import org.hibernate.Hibernate;
@@ -13,6 +14,7 @@ import org.hibernate.query.Query;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,9 +22,7 @@ class AuctionRepositoryImpl {
     private SessionFactory sessionFactory;
     private Session s;
 
-    /**
-     * Create a new auction
-     */
+
     void addAuction(String title, int price, String vendor, LocalDateTime closingTime) {
         s = sessionFactory.openSession();
 
@@ -42,9 +42,6 @@ class AuctionRepositoryImpl {
         }
     }
 
-    /**
-     * Modify an existing (and not closed) auction
-     */
     void modifyAuction(String title, int price,int id) {
         s = sessionFactory.openSession();
 
@@ -67,9 +64,6 @@ class AuctionRepositoryImpl {
         }
     }
 
-    /**
-     * Used to check if the user that is trying to do something is the vendor
-     */
     boolean vendorOfAuction(int idAuction,String logged) {
         s = sessionFactory.openSession();
 
@@ -88,9 +82,6 @@ class AuctionRepositoryImpl {
         return false;
     }
 
-    /**
-     * Return the highest for a specific auction
-     */
     int highestOffer(int id) {
         s = sessionFactory.openSession();
 
@@ -105,9 +96,6 @@ class AuctionRepositoryImpl {
         return -1;
     }
 
-    /**
-     * Return all the open auctions
-     */
     String showAllActive() {
         s = sessionFactory.openSession();
         String toPrint = "";
@@ -133,9 +121,6 @@ class AuctionRepositoryImpl {
         return "NAN";
     }
 
-    /**
-     * Return all the closed auctions
-     */
     String showAllClosed() {
         s = sessionFactory.openSession();
         String toPrint = "";
@@ -160,9 +145,6 @@ class AuctionRepositoryImpl {
         return "NAN";
     }
 
-    /**
-     * Return a list of open auction (used by the GUI)
-     */
     ArrayList<Auction> AuctionList() {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -189,9 +171,6 @@ class AuctionRepositoryImpl {
         return null;
     }
 
-    /**
-     * Update Auction's state
-     */
     synchronized void saveAuctionState(Auction auction) {
         s = sessionFactory.openSession();
 
@@ -206,9 +185,6 @@ class AuctionRepositoryImpl {
         }
     }
 
-    /**
-     * Return if the User likes a specific Auction
-     */
     synchronized boolean userLikeAuction(String username, int id) {
         s = sessionFactory.openSession();
 
@@ -227,9 +203,6 @@ class AuctionRepositoryImpl {
         return false;
     }
 
-    /**
-     * Return a list of auction that have a specific text in the title
-     */
     ArrayList<Auction> searchAuctionList(String textToSearch) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -261,9 +234,6 @@ class AuctionRepositoryImpl {
         return null;
     }
 
-    /**
-     * Return a list of favorite auctions for a specific user
-     */
     ArrayList<Auction> favoriteAuction(String user) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -294,9 +264,6 @@ class AuctionRepositoryImpl {
         return null;
     }
 
-    /**
-     * Return a list of auction where the user has participated or has sold
-     */
     ArrayList<Auction> myAuctionList(String username) {
         s = sessionFactory.openSession();
         ArrayList<Auction> Alist = new ArrayList<>();
@@ -326,9 +293,6 @@ class AuctionRepositoryImpl {
         return null;
     }
 
-    /**
-     * Return an Auction given the id
-     */
     Auction getAuction(int id) {
         s = sessionFactory.openSession();
         String sql = "FROM Auction where id=:id";
@@ -374,6 +338,47 @@ class AuctionRepositoryImpl {
                 deleteImages(numbers);
             }
         }catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+    }
+
+    public boolean isClosed(int id) {
+        s = sessionFactory.openSession();
+
+        try {
+            s.beginTransaction();
+            Auction au = s.get(Auction.class,id);
+            s.getTransaction().commit();
+            return au.isClosed();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
+        return false;
+    }
+
+    public void winner(int id) {
+        s = sessionFactory.openSession();
+        try {
+            s.beginTransaction();
+            Auction au = s.get(Auction.class,id);
+            List<Bid> list = au.getBidsList();
+            if (list.size() != 0) {
+                list.sort(Comparator.comparing(Bid::getAmount)); //ordino in base all'amount
+                int lastOne = list.size()-1;
+                String winner = list.get(lastOne).getActorDBUsername();
+                User u = s.get(User.class,winner);
+                au.setWinnerDB(u);
+            }
+            else {
+                au.setWinner("No Winner!");
+            }
+            s.saveOrUpdate(au);
+            s.getTransaction().commit();
+        } catch (Exception e){
             e.printStackTrace();
         } finally {
             s.close();

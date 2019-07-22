@@ -16,9 +16,7 @@ class TimerRepositoryImpl {
     private SessionFactory sessionFactory;
     private Session s;
 
-    /**
-     * Save the Timers
-     */
+
     void saveTimer( ArrayList<AuctionDBTimerStrategy> timerTasksDB) {
         s = sessionFactory.openSession();
 
@@ -36,9 +34,6 @@ class TimerRepositoryImpl {
         }
     }
 
-    /**
-     * Reload the Timers
-     */
     HashMap<Integer, BigInteger> reloadTimer() {
         s = sessionFactory.openSession();
 
@@ -66,9 +61,6 @@ class TimerRepositoryImpl {
         return null;
     }
 
-    /**
-     * Delete all the Timers
-     */
     void deleteTimer() {
         s = sessionFactory.openSession();
         String sql = "DELETE FROM AuctionDBTimerStrategy";
