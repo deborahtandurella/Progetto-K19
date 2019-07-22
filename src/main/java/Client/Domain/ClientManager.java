@@ -1,11 +1,13 @@
 package Client.Domain;
 
+import Client.Controller.ControllerServices;
 import Client.Exceptions.*;
 
 import Server.Domain.Auction;
 import Server.Domain.Proxy;
 import Server.People.Credentials.CharAnalizer;
 import Server.People.User;
+import javafx.scene.control.Alert;
 
 import java.io.File;
 import java.rmi.ConnectException;
@@ -56,6 +58,7 @@ public class ClientManager {
             return false;
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
         return false;
@@ -102,7 +105,8 @@ public class ClientManager {
                 throw new InvalidPasswordException(); //Password non valida
         } catch (ConnectException e) {
         System.out.println("The Remote server isn't responding... the application will shut down");
-        System.exit(1);
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
+            System.exit(1);
     }
 
     }
@@ -145,6 +149,7 @@ public class ClientManager {
             }
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
     }
@@ -210,6 +215,7 @@ public class ClientManager {
                 throw new ErrorInputDateException();
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
     }
@@ -262,6 +268,7 @@ public class ClientManager {
                throw new BidOfferException() ;
         } catch (ConnectException e) {
             System.out.println("The Remote server isn't responding... the application will shut down");
+            ControllerServices.getInstance().showAlert("Connection failed","","The Remote server isn't responding... the application will shut down",null, Alert.AlertType.ERROR);
             System.exit(1);
         }
     }
