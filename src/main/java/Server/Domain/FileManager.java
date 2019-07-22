@@ -10,10 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class FileManager {
     private FacadeServer s;
-    private static final String USERS_FILE = "utenti.bin";
-    private static final String AUCTION_FILE = "auctions.bin";
-    private static final String TIMERS_FILE = "timers.bin";
-    private static final String CLOSED_AUCTION = "closedAuction.bin";
+    private static final String USERS_FILE = "./src/main/resources/StoreFiles/utenti.bin";
+    private static final String AUCTION_FILE = "./src/main/resources/StoreFiles/auctions.bin";
+    private static final String TIMERS_FILE = "./src/main/resources/StoreFiles/timers.bin";
+    private static final String CLOSED_AUCTION = "./src/main/resources/StoreFiles/closedAuction.bin";
 
     /**
      * Used from the Textual Application (not DB) to save the Server's state
